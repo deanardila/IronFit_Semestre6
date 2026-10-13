@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -57,7 +58,7 @@ export interface RutinaResumen {
     providedIn: 'root',
 })
 export class Planes {
-    private apiUrl = 'https://ironfit-backend-production.up.railway.app/api/planes';
+    private apiUrl = `${environment.apiUrl}/api/planes`;
 
     constructor(private http: HttpClient) {}
 

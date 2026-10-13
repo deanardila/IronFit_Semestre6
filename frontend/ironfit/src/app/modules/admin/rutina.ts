@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -57,8 +58,8 @@ export interface RutinaEjercicioRequest {
   providedIn: 'root',
 })
 export class RutinaService {
-  private apiRutinas = 'https://ironfit-backend-production.up.railway.app/api/rutinas';
-  private apiRutinaEjercicios = 'https://ironfit-backend-production.up.railway.app/api/rutina-ejercicios';
+  private apiRutinas = `${environment.apiUrl}/api/rutinas`;
+  private apiRutinaEjercicios = `${environment.apiUrl}/api/rutina-ejercicios`;
 
   constructor(private http: HttpClient) {}
 

@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -29,7 +30,7 @@ export interface PaginaResponse<T> {
 })
 export class Usuarios {
 
-    private baseUrl = 'https://ironfit-backend-production.up.railway.app/api/usuarios';
+    private baseUrl = `${environment.apiUrl}/api/usuarios`;
 
     constructor(private http: HttpClient) {}
 

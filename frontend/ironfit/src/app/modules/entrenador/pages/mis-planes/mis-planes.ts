@@ -1,3 +1,4 @@
+import { environment } from '../../../../../environments/environment';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -68,7 +69,7 @@ export class MisPlanes implements OnInit {
     this.cargando = true;
     this.error = null;
 
-    this.http.get<any>('https://ironfit-backend-production.up.railway.app/api/usuarios/me')
+    this.http.get<any>(`${environment.apiUrl}/api/usuarios/me`)
       .pipe(timeout(this.requestTimeoutMs))
       .subscribe({
         next: (res) => {

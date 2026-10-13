@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -36,7 +37,7 @@ export interface PaginaResponse<T> {
     providedIn: 'root',
 })
 export class Ejercicios {
-    private apiUrl = 'https://ironfit-backend-production.up.railway.app/api/ejercicios';
+    private apiUrl = `${environment.apiUrl}/api/ejercicios`;
 
     constructor(private http: HttpClient) {}
 

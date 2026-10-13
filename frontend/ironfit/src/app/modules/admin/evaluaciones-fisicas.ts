@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -53,7 +54,7 @@ export interface PaginaResponse<T> {
 })
 export class EvaluacionesFisicasService {
 
-    private readonly apiUrl = 'https://ironfit-backend-production.up.railway.app/api/evaluaciones-fisicas';
+    private readonly apiUrl = `${environment.apiUrl}/api/evaluaciones-fisicas`;
 
     constructor(private http: HttpClient) {}
 

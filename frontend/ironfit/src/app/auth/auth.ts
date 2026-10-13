@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   
-  private apiUrl = 'https://ironfit-backend-production.up.railway.app/api/auth/login';
+  private apiUrl = `${environment.apiUrl}/api/auth/login`;
 
   constructor(private http: HttpClient) {}
 
