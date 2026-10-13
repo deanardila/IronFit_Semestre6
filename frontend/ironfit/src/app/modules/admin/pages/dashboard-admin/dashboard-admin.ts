@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Dashboard } from '../../dashboard';
+import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
+import { finalize, timeout } from 'rxjs';
+import { Dashboard, DashboardAdminDTO, GraficoDatoDTO } from '../../dashboard';
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -11,34 +14,212 @@ import { Dashboard } from '../../dashboard';
 })
 export class DashboardAdmin implements OnInit {
 
-  // Observables para las tarjetas
-  clientesActivos$!: Observable<number>;
-  entrenadoresActivos$!: Observable<number>;
-  ejerciciosRegistrados$!: Observable<number>;
-  auditoriasMes$!: Observable<number>;
+  nombreUsuario = '';
+  showMenu = false;
 
-  // Estado del menú hamburguesa
-  showMenu: boolean = false;
+  cargando = false;
+  error = '';
+  fechaDashboard = '';
+  data: DashboardAdminDTO | null = null;
 
-    //nombre del usuario logueado
-  nombreUsuario: string = ''; 
+  usuariosActivos = 0;
+  clientesActivos = 0;
+  entrenadoresActivos = 0;
+  planesActivos = 0;
+  asistenciasMes = 0;
+  asistenciaGlobal = 0;
+  evaluacionesRegistradas = 0;
+  clientesSinPlan = 0;
+
+  lineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Asistencia %',
+        tension: 0.35,
+        fill: true,
+        pointRadius: 4,
+      }
+    ]
+  };
+
+  barEntrenadoresData: ChartConfiguration<'bar'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Planes',
+      }
+    ]
+  };
+
+  doughnutRolesData: ChartConfiguration<'doughnut'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+      }
+    ]
+  };
+
+  barObjetivosData: ChartConfiguration<'bar'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Planes por objetivo',
+      }
+    ]
+  };
+
+  chartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: '#f5f5f5'
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#9ca3af' },
+        grid: { color: 'rgba(255,255,255,0.08)' }
+      },
+      y: {
+        ticks: { color: '#9ca3af' },
+        grid: { color: 'rgba(255,255,255,0.08)' }
+      }
+    }
+  };
+
+  doughnutOptions: ChartOptions<'doughnut'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#f5f5f5'
+        }
+      }
+    }
+  };
 
   constructor(
     private router: Router,
-    private dashboard: Dashboard
+    private dashboard: Dashboard,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Leer nombre guardado en localStorage
     this.nombreUsuario = localStorage.getItem('nombreUsuario') ?? 'Admin';
-    console.log('Nombre leído en DashboardAdmin:', this.nombreUsuario);
-    this.clientesActivos$ = this.dashboard.getClientesActivos();
-    this.entrenadoresActivos$ = this.dashboard.getEntrenadoresActivos();
-    this.ejerciciosRegistrados$ = this.dashboard.getEjerciciosRegistrados();
-    this.auditoriasMes$ = this.dashboard.getAuditoriasMes();
+    this.fechaDashboard = this.construirFechaDashboard();
+    this.cargarDashboard();
   }
 
-  // --- Menú hamburguesa ---
+  private construirFechaDashboard(): string {
+    const fecha = new Date();
+
+    return fecha.toLocaleDateString('es-CO', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  }
+
+  cargarDashboard(): void {
+    this.cargando = true;
+    this.error = '';
+    this.cdr.detectChanges();
+
+    this.dashboard.getDashboardAdmin()
+      .pipe(
+        timeout(15000),
+        finalize(() => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (!res) {
+            this.error = 'No se recibieron métricas del dashboard.';
+            return;
+          }
+
+          this.data = res;
+
+          this.usuariosActivos = res.usuariosActivos ?? 0;
+          this.clientesActivos = res.clientesActivos ?? 0;
+          this.entrenadoresActivos = res.entrenadoresActivos ?? 0;
+          this.planesActivos = res.planesActivos ?? 0;
+          this.asistenciasMes = res.asistenciasMes ?? 0;
+          this.asistenciaGlobal = res.asistenciaGlobal ?? 0;
+          this.evaluacionesRegistradas = res.evaluacionesRegistradas ?? 0;
+          this.clientesSinPlan = res.clientesSinPlan ?? 0;
+
+          this.construirGraficas(res);
+        },
+        error: (err) => {
+          console.error('Error cargando dashboard admin', err);
+          this.error = 'No se pudieron cargar las métricas del dashboard.';
+        }
+      });
+  }
+  construirGraficas(res: DashboardAdminDTO): void {
+    this.lineChartData = this.construirLineChart(res.asistenciaUltimosDias || [], 'Asistencia %');
+    this.barEntrenadoresData = this.construirBarChart(res.planesPorEntrenador || [], 'Planes');
+    this.doughnutRolesData = this.construirDoughnutChart(res.usuariosPorRol || []);
+    this.barObjetivosData = this.construirBarChart(res.planesPorObjetivo || [], 'Objetivos');
+  }
+
+  construirLineChart(datos: GraficoDatoDTO[], label: string): ChartConfiguration<'line'>['data'] {
+    const datosValidos = datos && datos.length > 0
+      ? datos
+      : [
+          { label: 'Sin datos', valor: 0 }
+        ];
+
+    return {
+      labels: datosValidos.map(d => d.label),
+      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 4 }]
+    };
+  }
+
+  construirBarChart(datos: GraficoDatoDTO[], label: string): ChartConfiguration<'bar'>['data'] {
+    const datosValidos = datos && datos.length > 0
+      ? datos
+      : [
+          { label: 'Sin datos', valor: 0 }
+        ];
+
+    return {
+      labels: datosValidos.map(d => d.label),
+      datasets: [{ data: datosValidos.map(d => d.valor), label }]
+    };
+  }
+
+  construirDoughnutChart(datos: GraficoDatoDTO[]): ChartConfiguration<'doughnut'>['data'] {
+    const datosValidos = this.tieneDatos(datos)
+      ? datos
+      : [
+          { label: 'Sin registros', valor: 1 }
+        ];
+
+    return {
+      labels: datosValidos.map(d => d.label),
+      datasets: [{ data: datosValidos.map(d => d.valor) }]
+    };
+  }
+
+  private tieneDatos(datos: GraficoDatoDTO[] | undefined | null): boolean {
+    return !!datos && datos.length > 0 && datos.some(d => (d.valor ?? 0) > 0);
+  }
+
   toggleMenu(): void {
     this.showMenu = !this.showMenu;
   }
@@ -47,41 +228,10 @@ export class DashboardAdmin implements OnInit {
     this.showMenu = false;
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
     localStorage.removeItem('nombreUsuario');
     this.router.navigate(['/login']);
   }
- // Tarjeta "CLIENTES ACTIVOS"
-  onClientesActivosClick(): void {
-    this.router.navigate(
-  ['/admin/usuarios'],
-  { queryParams: { tipo: 'cliente', estado: 'ACTIVO' } }
-);
-  }
-
-  //  Tarjeta "ENTRENADORES"
-  onEntrenadoresActivosClick(): void {
-    this.router.navigate(['/admin/usuarios'], {
-      queryParams: {
-        tipo: 'entrenador',
-        estado: 'ACTIVO'
-      }
-    });
-  }
-
-  // Click en EJERCICIOS
-  onEjerciciosClick(): void {
-    this.router.navigate(['/admin/ejercicios'], {
-      queryParams: { registrados: 'SI' }
-    });
-  }
-
-  // Click en AUDITORÍAS
-  onAuditoriasClick(): void {
-    this.router.navigate(['/admin/auditoria']);
-  }
-
-  
 }

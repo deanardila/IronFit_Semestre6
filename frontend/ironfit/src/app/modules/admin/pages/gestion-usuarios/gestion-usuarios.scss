@@ -50,17 +50,21 @@
 
     /* Campo de búsqueda */
     .busqueda-container {
-        flex: 0 1 auto;
-        min-width: 250px;
-        max-width: 400px;
+    flex: 0 1 500px;
+    min-width: 320px;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
     }
 
     .input-busqueda {
-        width: 100%;
+        flex: 1;
+        width: auto;
         padding: 0.6rem 1rem;
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 138, 31, 0.3);
-        border-radius: 8px;
+        border-radius: 999px;
         color: #fff;
         font-size: 0.9rem;
         transition: all 0.3s ease;
@@ -75,6 +79,27 @@
             background: rgba(255, 255, 255, 0.08);
             box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.1);
         }
+    }
+
+    .btn-buscar-usuarios {
+        border-radius: 999px;
+        padding: 0.6rem 1.1rem;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--ironfit-text);
+        border: 1px solid var(--ironfit-border);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.12s ease;
+    }
+
+    .btn-buscar-usuarios:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 138, 31, 0.5);
+        transform: translateY(-1px);
     }
 
     /* Texto de filtros activos */
@@ -147,6 +172,38 @@
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75);
     }
 
+    .btn-reset-password {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-actualizar {
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    cursor: pointer;
+    transition: all 0.12s ease;
+    }
+
+    .btn-actualizar:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 138, 31, 0.5);
+    transform: translateY(-1px);
+    }
+
     /* ---------- FORMULARIO CREAR USUARIO ---------- */
 
     .crear-usuario-form {
@@ -212,10 +269,60 @@
     }
 
     .form-row input[type='checkbox'] {
-    width: 18px;
-    height: 18px;
-    border-radius: 6px;
+    width: 38px;
+    height: 20px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 138, 31, 0.45);
     cursor: pointer;
+    appearance: none;
+    position: relative;
+    transition: background 0.2s ease, border 0.2s ease;
+    }
+
+    .form-row input[type='checkbox']::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255, 138, 31, 0.9);
+    transition: transform 0.2s ease;
+    }
+
+    .form-row input[type='checkbox']::after {
+    content: '✕';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(245, 245, 245, 0.85);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .form-row input[type='checkbox']:checked {
+    background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+    border-color: rgba(255, 138, 31, 1);
+    }
+
+    .form-row input[type='checkbox']:checked::before {
+    transform: translateX(18px);
+    }
+
+    .form-row input[type='checkbox']:checked::after {
+    content: '✔';
+    right: 6px;
+    opacity: 1;
+    color: #111111;
+    }
+
+    .form-row input[type='checkbox']:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.35);
     }
 
     /* Botones del formulario */
@@ -303,24 +410,32 @@
 
     /* Badge de estado */
     .estado-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
+    border: none;
+    cursor: pointer;
+    padding: 6px 14px;
     border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: rgba(239, 68, 68, 0.15);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.35);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: transparent;
+    transition: 0.2s ease-in-out;
     }
 
     .estado-badge.activo {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border-color: rgba(34, 197, 94, 0.35);
+    background-color: rgba(0, 170, 85, 0.15);
+    color: #32d27a;
+    border: 1px solid rgba(50, 210, 122, 0.35);
     }
 
+    .estado-badge.inactivo {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    }
+
+    .estado-badge:hover {
+    transform: scale(1.03);
+    }
     /* Mensaje cuando no hay usuarios o cargando */
     section p {
     font-size: 0.9rem;
@@ -333,24 +448,229 @@
     box-shadow: var(--ironfit-shadow-soft);
     }
 
-    /* ---------- RESPONSIVE GENERAL ---------- */
+    /* ---------- ASIGNACIÓN CLIENTE - ENTRENADOR ---------- */
 
-    @media (max-width: 768px) {
-    .usuarios-layout {
-        padding: 1.25rem 1.1rem;
+    .asignar-entrenador-form {
+        margin-top: 1rem;
+        padding: 1.25rem;
+        border-radius: var(--ironfit-radius-lg);
+        background: linear-gradient(145deg, #111111, #050505);
+        border: 1px solid var(--ironfit-border);
+        box-shadow: var(--ironfit-shadow-soft);
     }
 
-    .usuarios-header {
+    .asignar-entrenador-form h2 {
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .cliente-asignacion-resumen {
+        margin-bottom: 1rem;
+        padding: 0.9rem 1rem;
+        border-radius: 12px;
+        background: rgba(255, 138, 31, 0.08);
+        border: 1px solid rgba(255, 138, 31, 0.24);
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        gap: 0.25rem;
     }
 
-    .usuarios-tabla {
+    .cliente-asignacion-resumen span {
+        color: var(--ironfit-text-muted);
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+    }
+
+    .cliente-asignacion-resumen strong {
+        color: var(--ironfit-text);
+        font-size: 0.95rem;
+    }
+
+    .cliente-asignacion-resumen small {
+        color: var(--ironfit-text-muted);
+        font-weight: 700;
+    }
+
+    .asignacion-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 110px;
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        background-color: rgba(0, 170, 85, 0.15);
+        color: #32d27a;
+        border: 1px solid rgba(50, 210, 122, 0.35);
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+    }
+
+    .asignacion-label.sin-asignar {
+        background-color: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .acciones-usuario {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-asignar-entrenador {
+        border-radius: 999px;
+        padding: 0.45rem 0.85rem;
+        background: rgba(255, 138, 31, 0.12);
+        color: #ffb347;
+        border: 1px solid rgba(255, 138, 31, 0.35);
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+
+    .btn-asignar-entrenador:hover {
+        background: rgba(255, 138, 31, 0.22);
+        border-color: rgba(255, 138, 31, 0.65);
+        transform: translateY(-1px);
+    }
+
+    .asignar-entrenador-form select {
+        padding: 0.7rem 0.85rem;
+        border-radius: 8px;
+        background: #171717;
+        border: 1px solid rgba(255, 138, 31, 0.28);
+        color: var(--ironfit-text);
+        outline: none;
+    }
+
+    .asignar-entrenador-form select:focus {
+        border-color: #ff8a1f;
+    }
+
+
+    .usuarios-tabla th:nth-last-child(2),
+    .usuarios-tabla td:nth-last-child(2) {
+        min-width: 170px;
+    }
+
+    .acciones-usuario {
+        justify-content: flex-start;
+    }
+
+    .paginacion-usuarios {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+    .paginacion-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .paginacion-info span {
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ironfit-text);
+    }
+
+    .paginacion-info small {
+        color: var(--ironfit-text-muted);
+        font-size: 0.78rem;
+    }
+
+    .paginacion-controles {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .btn-paginacion {
+        border-radius: 999px;
+        padding: 0.55rem 1.1rem;
         font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+        color: #111111;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
     }
 
-    .usuarios-tabla th,
-    .usuarios-tabla td {
-        padding: 0.5rem 0.65rem;
+    .btn-paginacion:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+
+    .btn-paginacion:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.4);
+    }
+
+    .select-paginacion {
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        background: #171717;
+        border: 1px solid rgba(255, 138, 31, 0.35);
+        color: var(--ironfit-text);
+        outline: none;
+        font-weight: 700;
+    }
+
+    .select-paginacion:focus {
+        border-color: #ff8a1f;
+    }
+
+        /* ---------- RESPONSIVE GENERAL ---------- */
+    @media (max-width: 768px) { 
+        .paginacion-usuarios {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+    .paginacion-controles {
+            justify-content: space-between;
+            flex-wrap: wrap;
+    }
+
+    .btn-paginacion,
+    .select-paginacion {
+            flex: 1;
+        }
+
+    .busqueda-container {
+        min-width: 100%;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-busqueda,
+    .btn-buscar-usuarios {
+        width: 100%;
     }
 }
+

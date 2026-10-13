@@ -1,57 +1,184 @@
 <div class="ejercicios-layout">
 
-    <!-- HEADER -->
     <header class="ejercicios-header">
         <div class="ejercicios-header-left">
             <button class="btn-volver" (click)="volver()">← Volver</button>
             <h1>Catálogo de Ejercicios</h1>
         </div>
+
         <div class="ejercicios-header-right">
+            <div class="busqueda-container">
+                <input
+                    type="text"
+                    class="input-busqueda"
+                    placeholder="🔍 Buscar por nombre, categoría o grupo muscular..."
+                    [(ngModel)]="terminoBusqueda"
+                    (keyup.enter)="aplicarFiltros()"
+                />
+
+                <button
+                    type="button"
+                    class="btn-buscar-ejercicios"
+                    (click)="aplicarFiltros()">
+                    Buscar
+                </button>
+            </div>
+
+            <button class="btn-crear-ejercicio" (click)="toggleFormularioCrear()">
+                {{ (mostrarFormularioCrear || modoEdicion) ? 'Ocultar formulario' : '+ Nuevo ejercicio' }}
+            </button>
+
             <button class="btn-actualizar" (click)="actualizar()">Actualizar</button>
         </div>
     </header>
 
-    <!-- LOADER -->
+    <section *ngIf="mostrarFormularioCrear || modoEdicion" class="crear-ejercicio-form">
+        <h2>{{ modoEdicion ? 'Editar ejercicio' : 'Crear ejercicio' }}</h2>
+
+        <form (ngSubmit)="guardarEjercicio()" #ejercicioForm="ngForm">
+            <div class="form-row">
+                <label>Nombre</label>
+                <input type="text" name="nombre" [(ngModel)]="formulario.nombre" required />
+            </div>
+
+            <div class="form-row">
+                <label>Descripción</label>
+                <textarea name="descripcion" [(ngModel)]="formulario.descripcion" required></textarea>
+            </div>
+
+            <div class="form-row">
+                <label>Categoría</label>
+                <input type="text" name="categoria" [(ngModel)]="formulario.categoria" required />
+            </div>
+
+            <div class="form-row">
+                <label>Grupo muscular</label>
+                <input type="text" name="grupoMuscular" [(ngModel)]="formulario.grupoMuscular" required />
+            </div>
+
+            <div class="form-row">
+                <label>Series sugeridas</label>
+                <input type="number" name="seriesSugeridas" [(ngModel)]="formulario.seriesSugeridas" />
+            </div>
+
+            <div class="form-row">
+                <label>Repeticiones sugeridas</label>
+                <input type="number" name="repeticionesSugeridas" [(ngModel)]="formulario.repeticionesSugeridas" />
+            </div>
+
+            <div class="form-row">
+                <label>Tipo de equipo</label>
+                <input type="text" name="tipoEquipo" [(ngModel)]="formulario.tipoEquipo" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit">
+                    {{ modoEdicion ? 'Actualizar' : 'Crear' }}
+                </button>
+
+                <button type="button" (click)="cancelarCrear()">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </section>
+
     <section *ngIf="cargando">
         <p>⏳ Cargando ejercicios...</p>
     </section>
 
-    <!-- MENSAJE DE ERROR -->
     <section *ngIf="!cargando && error">
-        <p style="color: #fda4af;">⚠️ {{ error }}</p>
+        <p class="mensaje-error">⚠️ {{ error }}</p>
     </section>
 
-    <!-- MENSAJE SIN RESULTADOS -->
-    <section *ngIf="!cargando && !error && ejercicios.length === 0">
-        <p>📋 No hay ejercicios registrados.</p>
+    <section *ngIf="!cargando && !error && ejerciciosFiltrados.length === 0">
+        <p>📋 No hay ejercicios que coincidan con la búsqueda.</p>
     </section>
 
-    <!-- TABLA DE EJERCICIOS -->
-    <section *ngIf="!cargando && !error && ejercicios.length > 0">
+    <section *ngIf="!cargando && !error && ejerciciosFiltrados.length > 0">
         <table class="ejercicios-tabla">
-        <thead>
-            <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Series</th>
-            <th>Reps</th>
-            <th>Equipo</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let e of ejercicios">
-            <td>{{ e.idEjercicio }}</td>
-            <td>{{ e.nombre }}</td>
-            <td>{{ e.descripcion }}</td>
-            <td>{{ e.seriesSugeridas }}</td>
-            <td>{{ e.repeticionesSugeridas }}</td>
-            <td>{{ e.tipoEquipo || '—' }}</td>
-            </tr>
-        </tbody>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Grupo muscular</th>
+                    <th>Series</th>
+                    <th>Reps</th>
+                    <th>Equipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let e of ejerciciosFiltrados">
+                    <td>{{ e.id }}</td>
+                    <td>{{ e.nombre }}</td>
+                    <td>{{ e.descripcion }}</td>
+                    <td>{{ e.categoria }}</td>
+                    <td>{{ e.grupoMuscular }}</td>
+                    <td>{{ e.seriesSugeridas ?? '—' }}</td>
+                    <td>{{ e.repeticionesSugeridas ?? '—' }}</td>
+                    <td>{{ e.tipoEquipo || '—' }}</td>
+                    <td>
+                        <div class="acciones-ejercicio">
+                            <button
+                                type="button"
+                                class="btn-actualizar"
+                                (click)="editarEjercicio(e)">
+                                Editar
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn-crear-ejercicio btn-eliminar"
+                                (click)="eliminarEjercicio(e.id)">
+                                Inactivar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
         </table>
+
+        <div class="paginacion-ejercicios" *ngIf="totalElementos > 0">
+            <div class="paginacion-info">
+                <span>
+                    Mostrando página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
+                </span>
+                <small>
+                    Total ejercicios: {{ totalElementos }}
+                </small>
+            </div>
+
+            <div class="paginacion-controles">
+                <button
+                    type="button"
+                    class="btn-paginacion"
+                    (click)="irPaginaAnterior()"
+                    [disabled]="paginaActual === 0">
+                    ← Anterior
+                </button>
+
+                <select
+                    class="select-paginacion"
+                    [(ngModel)]="tamanoPagina"
+                    (change)="cambiarTamanoPagina()">
+                    <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                        {{ opcion }} por página
+                    </option>
+                </select>
+
+                <button
+                    type="button"
+                    class="btn-paginacion"
+                    (click)="irPaginaSiguiente()"
+                    [disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
+                    Siguiente →
+                </button>
+            </div>
+        </div>
     </section>
 
 </div>
-
-

@@ -1,0 +1,293 @@
+<div class="rutina-ejercicios-page">
+
+    <header class="page-header">
+        <div class="header-left">
+            <button class="btn-volver" type="button" (click)="volver()">
+                ← Volver
+            </button>
+
+            <div>
+                <h1>Ejercicios de rutina</h1>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button
+                class="btn-nuevo"
+                type="button"
+                (click)="mostrarCrear()"
+                [disabled]="cargando || guardando">
+                + Agregar ejercicio
+            </button>
+
+            <button
+                class="btn-actualizar"
+                type="button"
+                (click)="actualizar()"
+                [disabled]="cargando || guardando">
+                {{ cargando ? 'Cargando...' : 'Actualizar' }}
+            </button>
+        </div>
+    </header>
+
+    <section *ngIf="cargando" class="estado-panel">
+        <p>⏳ Cargando ejercicios...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="estado-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && mensajeExito" class="estado-panel exito-panel">
+        <p>✅ {{ mensajeExito }}</p>
+    </section>
+
+    <section *ngIf="!cargando" class="content">
+
+        <section *ngIf="mostrarFormulario" class="form-card">
+            <h2>{{ modoEdicion ? 'Editar ejercicio asignado' : 'Agregar ejercicio a rutina' }}</h2>
+
+            <div *ngIf="!modoEdicion" class="catalogo-panel">
+
+                <div class="busqueda-container">
+                    <input
+                        type="text"
+                        class="input-busqueda"
+                        placeholder="🔍 Buscar ejercicio por nombre, categoría o grupo muscular..."
+                        [(ngModel)]="terminoBusqueda"
+                        (keyup.enter)="aplicarBusqueda()">
+
+                    <button
+                        type="button"
+                        class="btn-buscar-catalogo"
+                        (click)="aplicarBusqueda()">
+                        Buscar
+                    </button>
+                </div>
+
+                <div class="paginacion-catalogo" *ngIf="totalElementosCatalogo > 0">
+                    <div class="paginacion-info">
+                        <span>
+                            Página {{ paginaCatalogoActual + 1 }} de {{ totalPaginasCatalogo || 1 }}
+                        </span>
+                        <small>
+                            Total ejercicios: {{ totalElementosCatalogo }}
+                        </small>
+                    </div>
+
+                    <div class="paginacion-controles">
+                        <button
+                            type="button"
+                            class="btn-paginacion"
+                            (click)="irPaginaCatalogoAnterior()"
+                            [disabled]="paginaCatalogoActual === 0 || cargandoCatalogo">
+                            ← Anterior
+                        </button>
+
+                        <select
+                            class="select-paginacion"
+                            [(ngModel)]="tamanoPaginaCatalogo"
+                            (change)="cambiarTamanoPaginaCatalogo()"
+                            [disabled]="cargandoCatalogo">
+                            <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                                {{ opcion }} por página
+                            </option>
+                        </select>
+
+                        <button
+                            type="button"
+                            class="btn-paginacion"
+                            (click)="irPaginaCatalogoSiguiente()"
+                            [disabled]="ultimaPaginaCatalogo || paginaCatalogoActual >= totalPaginasCatalogo - 1 || cargandoCatalogo">
+                            Siguiente →
+                        </button>
+                    </div>
+                </div>
+
+                <section *ngIf="cargandoCatalogo" class="estado-panel catalogo-loading">
+                    <p>⏳ Cargando catálogo de ejercicios...</p>
+                </section>
+
+                <section *ngIf="!cargandoCatalogo && ejerciciosFiltrados.length === 0" class="estado-panel catalogo-vacio">
+                    <p>📋 No hay ejercicios disponibles para esta búsqueda.</p>
+                </section>
+
+                <div *ngIf="!cargandoCatalogo && ejerciciosFiltrados.length > 0" class="catalogo-lista">
+                    <article
+                        class="catalogo-card"
+                        *ngFor="let ejercicio of ejerciciosFiltrados"
+                        [class.seleccionado]="formulario.ejercicioId === ejercicio.id"
+                        (click)="seleccionarEjercicioCatalogo(ejercicio)">
+
+                        <div>
+                            <h3>{{ ejercicio.nombre }}</h3>
+                            <p>
+                                {{ ejercicio.grupoMuscular || 'Sin grupo' }}
+                                · {{ ejercicio.categoria || 'Sin categoría' }}
+                            </p>
+                            <small *ngIf="ejercicio.descripcion">
+                                {{ ejercicio.descripcion }}
+                            </small>
+                        </div>
+
+                        <span>
+                            {{ ejercicio.seriesSugeridas || '-' }} x {{ ejercicio.repeticionesSugeridas || '-' }}
+                        </span>
+                    </article>
+                </div>
+
+            </div>
+
+            <form (ngSubmit)="guardar()" #formEjercicio="ngForm">
+
+                <div class="form-grid">
+
+                    <label>
+                        Series
+                        <input
+                            type="number"
+                            name="series"
+                            min="0"
+                            [(ngModel)]="formulario.series"
+                            required>
+                    </label>
+
+                    <label>
+                        Repeticiones
+                        <input
+                            type="number"
+                            name="repeticiones"
+                            min="0"
+                            [(ngModel)]="formulario.repeticiones"
+                            required>
+                    </label>
+
+                    <label>
+                        Descanso segundos
+                        <input
+                            type="number"
+                            name="descansoSegundos"
+                            min="0"
+                            [(ngModel)]="formulario.descansoSegundos">
+                    </label>
+
+                    <label>
+                        Tiempo segundos
+                        <input
+                            type="number"
+                            name="tiempoSegundos"
+                            min="0"
+                            [(ngModel)]="formulario.tiempoSegundos">
+                    </label>
+
+                    <label>
+                        Peso sugerido
+                        <input
+                            type="number"
+                            name="pesoSugerido"
+                            min="0"
+                            step="0.5"
+                            [(ngModel)]="formulario.pesoSugerido">
+                    </label>
+
+                    <label>
+                        Orden
+                        <input
+                            type="number"
+                            name="orden"
+                            min="1"
+                            [(ngModel)]="formulario.orden"
+                            required>
+                    </label>
+
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-guardar" type="submit" [disabled]="guardando">
+                        {{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar ejercicio' : 'Agregar ejercicio') }}
+                    </button>
+
+                    <button class="btn-cancelar" type="button" (click)="cancelarFormulario()" [disabled]="guardando">
+                        Cancelar
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <section class="resumen-card">
+            <div>
+                <span class="label">Ejercicios asignados</span>
+                <h2>{{ ejerciciosRutina.length }}</h2>
+            </div>
+
+            <p>Agrega y organiza los ejercicios asignados a esta rutina</p>
+        </section>
+
+        <section *ngIf="ejerciciosRutina.length === 0" class="estado-panel">
+            <p>📋 Esta rutina todavía no tiene ejercicios asignados.</p>
+        </section>
+
+        <section class="ejercicios-lista" *ngIf="ejerciciosRutina.length > 0">
+
+            <article class="ejercicio-card" *ngFor="let item of ejerciciosRutina">
+
+                <div class="ejercicio-icono">
+                    💪
+                </div>
+
+                <div class="ejercicio-info">
+                    <h3>{{ item.ejercicioNombre }}</h3>
+                    <p>
+                        {{ item.grupoMuscular || 'Sin grupo muscular' }}
+                        <span> · {{ item.categoria || 'Sin categoría' }}</span>
+                    </p>
+
+                    <small *ngIf="item.ejercicioDescripcion">
+                        {{ item.ejercicioDescripcion }}
+                    </small>
+                </div>
+
+                <div class="ejercicio-stats">
+                    <div>
+                        <strong>{{ item.series || 0 }}</strong>
+                        <span>series</span>
+                    </div>
+
+                    <div>
+                        <strong>{{ item.repeticiones || 0 }}</strong>
+                        <span>reps</span>
+                    </div>
+
+                    <div>
+                        <strong>{{ item.pesoSugerido || 0 }}</strong>
+                        <span>kg</span>
+                    </div>
+
+                    <div>
+                        <strong>{{ item.descansoSegundos || 0 }}</strong>
+                        <span>desc</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button type="button" class="btn-card" (click)="editarEjercicio(item)">
+                        Editar
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn-card danger"
+                        (click)="eliminar(item)"
+                        [disabled]="eliminandoId === item.id">
+                        {{ eliminandoId === item.id ? 'Eliminando...' : 'Eliminar' }}
+                    </button>
+                </div>
+
+            </article>
+
+        </section>
+
+    </section>
+
+</div>

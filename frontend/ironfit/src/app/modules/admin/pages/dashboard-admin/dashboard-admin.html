@@ -11,12 +11,19 @@
         </div>
 
         <div class="dashboard-header-right">
-            <span class="dashboard-username">Hola, {{ nombreUsuario }}</span>
+                    <p> {{ nombreUsuario }}</p>
             <button class="dashboard-logout-btn" (click)="logout()">
                 Cerrar sesión
             </button>
         </div>
     </header>
+
+    <section class="dashboard-welcome">
+    <div>
+        <h1>Panel de administración</h1>
+        <span class="dashboard-username">{{ fechaDashboard }} · Control general de usuarios, planes, asistencias y reportes</span>
+    </div>
+</section>
 
     <!-- BOTÓN MENÚ HAMBURGUESA -->
     <div class="quick-menu-container">
@@ -35,6 +42,18 @@
 
     <div class="quick-menu-panel" *ngIf="showMenu">
         <h3 class="quick-menu-title">Accesos del administrador</h3>
+
+        <button
+            class="quick-menu-item"
+            routerLink="/admin/perfil"
+            (click)="closeMenu()"
+        >
+            <div class="quick-menu-textblock">
+                <span class="item-title">Mi perfil</span>
+                <span class="item-subtitle">Información personal</span>
+            </div>
+            <span class="item-pill">Ver perfil</span>
+        </button>
 
         <button
             class="quick-menu-item"
@@ -86,48 +105,153 @@
     </div>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="dashboard-main">
-        <!-- Resumen rápido -->
+<main class="dashboard-main">
+
+    <section *ngIf="cargando" class="dashboard-panel">
+        <p>⏳ Cargando métricas del sistema...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="dashboard-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <ng-container *ngIf="!cargando && !error">
+
         <section class="dashboard-summary">
-            <!-- CLIENTES ACTIVOS -->
-            <div class="stat-card clickable" (click)="onClientesActivosClick()">
-                <div class="stat-card-header">
-                    <span class="stat-label">Clientes activos</span>
-                </div>
-                <div class="stat-value">{{ (clientesActivos$ | async) ?? 0 }}</div>
-                <div class="stat-footer">este mes</div>
+        <div class="stat-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Usuarios activos</span>
             </div>
+            <div class="stat-value">{{ usuariosActivos }}</div>
+            <div class="stat-footer">usuarios habilitados</div>
+        </div>
 
-            <!-- ENTRENADORES -->
-            <div class="stat-card clickable" (click)="onEntrenadoresActivosClick()">
-                <div class="stat-card-header">
-                    <span class="stat-label">Entrenadores</span>
-                </div>
-                <div class="stat-value">{{ (entrenadoresActivos$ | async) ?? 0 }}</div>
-                <div class="stat-footer">nuevos</div>
+        <div class="stat-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Clientes activos</span>
             </div>
+            <div class="stat-value">{{ clientesActivos }}</div>
+            <div class="stat-footer">clientes registrados</div>
+        </div>
 
-            <!-- EJERCICIOS REGISTRADOS -->
-            <div class="stat-card clickable" (click)="onEjerciciosClick()">
-                <div class="stat-card-header">
-                    <span class="stat-label">Ejercicios registrados</span>
-                </div>
-                <div class="stat-value">{{ (ejerciciosRegistrados$ | async) ?? 0 }}</div>
-                <div class="stat-footer">Catálogo actualizado</div>
+        <div class="stat-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Planes activos</span>
             </div>
+            <div class="stat-value">{{ planesActivos }}</div>
+            <div class="stat-footer">planes en ejecución</div>
+        </div>
 
-            <!-- AUDITORÍAS DEL MES -->
-            <div
-                class="stat-card stat-card--highlight clickable"
-                (click)="onAuditoriasClick()"
-            >
-                <div class="stat-card-header">
-                    <span class="stat-label">Auditorías del mes</span>
-                </div>
-                <div class="stat-value">{{ (auditoriasMes$ | async) ?? 0 }}</div>
-                <div class="stat-footer">Revisa detalles en Reportes</div>
+        <div class="stat-card stat-card--highlight">
+            <div class="stat-card-header">
+            <span class="stat-label">Asistencia global</span>
             </div>
+            <div class="stat-value">{{ asistenciaGlobal }}%</div>
+            <div class="stat-footer">cumplimiento del mes</div>
+        </div>
         </section>
+
+        <section class="dashboard-summary dashboard-summary-secondary">
+        <div class="stat-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Entrenadores</span>
+            </div>
+            <div class="stat-value">{{ entrenadoresActivos }}</div>
+            <div class="stat-footer">activos</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Asistencias mes</span>
+            </div>
+            <div class="stat-value">{{ asistenciasMes }}</div>
+            <div class="stat-footer">registros del mes</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Evaluaciones</span>
+            </div>
+            <div class="stat-value">{{ evaluacionesRegistradas }}</div>
+            <div class="stat-footer">registradas</div>
+        </div>
+
+        <div class="stat-card alert-card">
+            <div class="stat-card-header">
+            <span class="stat-label">Clientes sin plan</span>
+            </div>
+            <div class="stat-value">{{ clientesSinPlan }}</div>
+            <div class="stat-footer">requieren seguimiento</div>
+        </div>
+        </section>
+
+        <section class="charts-grid">
+        <article class="chart-card chart-wide">
+            <div class="chart-header">
+            <h2>Asistencia últimos 14 días</h2>
+            <span>Porcentaje diario</span>
+            </div>
+
+            <div class="chart-box">
+            <canvas
+                baseChart
+                [data]="lineChartData"
+                [options]="chartOptions"
+                [type]="'line'">
+            </canvas>
+            </div>
+        </article>
+
+        <article class="chart-card">
+            <div class="chart-header">
+            <h2>Usuarios por rol</h2>
+            <span>Distribución general</span>
+            </div>
+
+            <div class="chart-box">
+            <canvas
+                baseChart
+                [data]="doughnutRolesData"
+                [options]="doughnutOptions"
+                [type]="'doughnut'">
+            </canvas>
+            </div>
+        </article>
+
+        <article class="chart-card">
+            <div class="chart-header">
+            <h2>Planes por entrenador</h2>
+            <span>Top entrenadores</span>
+            </div>
+
+            <div class="chart-box">
+            <canvas
+                baseChart
+                [data]="barEntrenadoresData"
+                [options]="chartOptions"
+                [type]="'bar'">
+            </canvas>
+            </div>
+        </article>
+
+        <article class="chart-card chart-wide">
+            <div class="chart-header">
+            <h2>Planes por objetivo</h2>
+            <span>Objetivos más frecuentes</span>
+            </div>
+
+            <div class="chart-box">
+            <canvas
+                baseChart
+                [data]="barObjetivosData"
+                [options]="chartOptions"
+                [type]="'bar'">
+            </canvas>
+            </div>
+        </article>
+        </section>
+
+    </ng-container>
 
     </main>
 </div>

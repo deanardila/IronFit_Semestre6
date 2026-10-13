@@ -1,1 +1,99 @@
-<p>mi-perfil works!</p>
+<div class="perfil-layout">
+    <div class="perfil-header">
+        <div class="perfil-header-left">
+            <button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver</button>
+            <h1>Mi perfil</h1>
+        </div>
+        <p>Actualiza tu información personal y tu contraseña.</p>
+    </div>
+
+    <div *ngIf="mensajeExito" class="mensaje exito">
+        {{ mensajeExito }}
+    </div>
+
+    <div *ngIf="mensajeError" class="mensaje error">
+        {{ mensajeError }}
+    </div>
+
+    <div class="perfil-grid">
+
+        <section class="perfil-card">
+        <h2>Datos personales</h2>
+
+        <div class="form-row">
+            <label for="nombres">Nombres</label>
+            <input id="nombres" type="text" [(ngModel)]="perfil.nombres" name="nombres">
+        </div>
+
+        <div class="form-row">
+            <label for="apellidos">Apellidos</label>
+            <input id="apellidos" type="text" [(ngModel)]="perfil.apellidos" name="apellidos">
+        </div>
+
+        <div class="form-row">
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" [(ngModel)]="perfil.correo" name="correo">
+        </div>
+
+        <div class="form-row">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" type="text" [(ngModel)]="perfil.telefono" name="telefono">
+        </div>
+
+        <div class="form-row">
+            <label>Tipo de documento</label>
+            <input type="text" [value]="perfil.tipoDoc || '-'" disabled>
+        </div>
+
+        <div class="form-row">
+            <label>Número de documento</label>
+            <input type="text" [value]="perfil.numDoc || '-'" disabled>
+        </div>
+
+        <div class="form-row">
+            <label>Rol</label>
+            <input type="text" [value]="obtenerRolPrincipal()" disabled>
+        </div>
+
+        <div class="form-row">
+            <label>Estado</label>
+            <input type="text" [value]="perfil.activo ? 'Activo' : 'Inactivo'" disabled>
+        </div>
+
+        <div class="acciones">
+            <button type="button" class="btn-principal" (click)="guardarPerfil()">
+            Guardar cambios
+            </button>
+        </div>
+        </section>
+
+        <section class="perfil-card">
+        <h2>Cambiar contraseña</h2>
+
+        <div class="form-row">
+            <label for="nuevaPassword">Nueva contraseña</label>
+            <input
+            id="nuevaPassword"
+            type="password"
+            [(ngModel)]="password.nueva"
+            name="nuevaPassword">
+        </div>
+
+        <div class="form-row">
+            <label for="confirmarPassword">Confirmar contraseña</label>
+            <input
+            id="confirmarPassword"
+            type="password"
+            [(ngModel)]="password.confirmar"
+            name="confirmarPassword">
+        </div>
+
+        <div class="acciones">
+            <button type="button" class="btn-principal" (click)="cambiarPassword()">
+            Actualizar contraseña
+            </button>
+        </div>
+        </section>
+
+    </div>
+</div>

@@ -1,30 +1,40 @@
-/* ================== MIS RUTINAS (ENTRENADOR) ================== */
-
-/* Contenedor principal de la página */
-.rutinas-layout {
+:host {
+    display: block;
     min-height: 100vh;
-    background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
-    color: var(--ironfit-text);
-    padding: 1.75rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+    background:
+        radial-gradient(circle at top left, rgba(255, 138, 31, 0.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255, 138, 31, 0.08), transparent 30%),
+        #050505;
+    color: #f5f5f5;
+
+    --ironfit-orange: #ff8a1f;
+    --ironfit-orange-soft: rgba(255, 138, 31, 0.16);
+    --ironfit-text: #f5f5f5;
+    --ironfit-text-muted: #a3a3a3;
+    --ironfit-border: rgba(255, 255, 255, 0.1);
+    --ironfit-card: #101010;
+    --ironfit-radius-lg: 18px;
+    --ironfit-radius-md: 14px;
+    --ironfit-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.35);
+    font-family: inherit;
 }
 
-/* ---------- HEADER ---------- */
+.rutinas-page {
+    padding: 1rem 1.25rem 2rem;
+}
 
 .rutinas-header {
+    min-height: 78px;
+    padding: 1rem 1.3rem;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #0d0d0d, #050505);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: var(--ironfit-radius-lg);
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
+    margin-bottom: 1.5rem;
 }
 
 .rutinas-header-left {
@@ -33,203 +43,658 @@
     gap: 1rem;
 }
 
-.rutinas-header h1 {
+.rutinas-header-left h1 {
     margin: 0;
     font-size: 1.35rem;
-    letter-spacing: 0.06em;
+    font-weight: 900;
+    letter-spacing: 0.45em;
     text-transform: uppercase;
-}
-
-.rutinas-header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* ---------- BOTÓN VOLVER ---------- */
-
-.btn-volver {
-    border: none;
-    border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.75);
     color: var(--ironfit-text);
-    border: 1px solid var(--ironfit-border);
+}
+
+.btn-volver,
+.btn-actualizar,
+.btn-nueva-rutina {
+    border-radius: 999px;
+    padding: 0.75rem 1.35rem;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
     cursor: pointer;
     transition: all 0.15s ease;
 }
 
+.btn-volver {
+    background: #050505;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+}
+
 .btn-volver:hover {
-    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 138, 31, 0.45);
+    transform: translateY(-1px);
+}
+
+.rutinas-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-actualizar {
+    background: #050505;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+}
+
+.btn-nueva-rutina {
+    background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+    color: #111111;
+    border: none;
+}
+
+.btn-actualizar:hover:not(:disabled),
+.btn-nueva-rutina:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---------- ESTADOS ---------- */
+
+.estado-panel {
+    margin: 1rem 0;
+    padding: 1.2rem 1.4rem;
+    border-radius: var(--ironfit-radius-md);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--ironfit-border);
+    color: var(--ironfit-text-muted);
+    font-weight: 700;
+}
+
+.estado-panel p {
+    margin: 0;
+}
+
+.error-panel {
+    border-color: rgba(239, 68, 68, 0.45);
+    background: rgba(239, 68, 68, 0.08);
+    color: #fecaca;
+}
+
+.exito-panel {
+    border-color: rgba(34, 197, 94, 0.45);
+    background: rgba(34, 197, 94, 0.08);
+    color: #bbf7d0;
+}
+
+/* ---------- CONTENIDO GENERAL ---------- */
+
+.rutinas-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.toolbar-rutinas {
+    padding: 1rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #101010, #070707);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ---------- FILTROS ---------- */
+
+.filtros-tabs,
+.dias-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.filtro-tab,
+.dia-tab {
+    border-radius: 0.55rem;
+    padding: 0.8rem 1.2rem;
+    background: #070707;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filtro-tab:hover,
+.dia-tab:hover {
+    border-color: rgba(255, 138, 31, 0.45);
+    transform: translateY(-1px);
+}
+
+.filtro-tab.activo,
+.dia-tab.activo {
+    background: var(--ironfit-orange);
+    border-color: var(--ironfit-orange);
+    color: #111111;
+}
+
+/* ---------- BUSCADOR ---------- */
+
+.busqueda-container {
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.input-busqueda {
+    flex: 1;
+    height: 44px;
+    border-radius: 999px;
+    padding: 0 1rem;
+    background: #0b0b0b;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    outline: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.input-busqueda::placeholder {
+    color: #737373;
+}
+
+.input-busqueda:focus {
+    border-color: rgba(255, 138, 31, 0.75);
+    box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.12);
+}
+
+.btn-buscar-rutinas {
+    height: 44px;
+    border-radius: 999px;
+    padding: 0 1.2rem;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.btn-buscar-rutinas:hover {
+    background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 138, 31, 0.5);
     transform: translateY(-1px);
 }
 
-/* ---------- BOTÓN NUEVA RUTINA ---------- */
+/* ---------- PAGINACIÓN ---------- */
 
-.btn-crear-rutina {
-    border: none;
-    border-radius: 999px;
-    padding: 0.55rem 1.35rem;
+.paginacion-rutinas {
+    padding: 1rem 1.25rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.paginacion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.paginacion-info span {
+    color: var(--ironfit-text);
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.paginacion-info small {
+    color: var(--ironfit-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.paginacion-controles {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-paginacion {
+    border-radius: 999px;
+    padding: 0.62rem 1.1rem;
+    font-size: 0.78rem;
+    font-weight: 900;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
     color: #111111;
+    border: none;
     cursor: pointer;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75);
-    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    transition: all 0.15s ease;
 }
 
-.btn-crear-rutina:hover {
+.btn-paginacion:hover:not(:disabled) {
     transform: translateY(-1px);
     filter: brightness(1.05);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
 }
 
-.btn-crear-rutina:active {
-    transform: translateY(0);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75);
+.btn-paginacion:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(0.4);
 }
 
-/* ---------- TABLA DE RUTINAS ---------- */
-
-.rutinas-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.3rem;
-    border-radius: var(--ironfit-radius-lg);
-    overflow: hidden;
-    background: var(--ironfit-surface);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-.rutinas-tabla thead {
-    background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
-
-.rutinas-tabla th,
-.rutinas-tabla td {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.88rem;
-    border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
-
-.rutinas-tabla th {
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.78rem;
-    color: var(--ironfit-text-muted);
-}
-
-.rutinas-tabla tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.35);
-}
-
-.rutinas-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
-
-/* Badge de estado */
-.estado-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
+.select-paginacion {
+    height: 40px;
     border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    padding: 0 0.9rem;
+    background: #171717;
+    border: 1px solid rgba(255, 138, 31, 0.35);
+    color: var(--ironfit-text);
+    outline: none;
+    font-weight: 800;
 }
 
-.estado-badge.activo {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
+.select-paginacion:focus {
+    border-color: #ff8a1f;
+}
+
+/* ---------- LISTA DE PLANES ---------- */
+
+.planes-lista,
+.rutinas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.plan-card,
+.rutina-card {
+    padding: 1.1rem 1.2rem;
+    border-radius: var(--ironfit-radius-md);
+    background: linear-gradient(145deg, #101010, #070707);
+    border: 1px solid var(--ironfit-border);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    transition: all 0.15s ease;
+}
+
+.plan-card:hover,
+.rutina-card:hover {
+    border-color: rgba(255, 138, 31, 0.35);
+    transform: translateY(-1px);
+}
+
+.plan-icono,
+.rutina-icono {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 138, 31, 0.12);
+    border: 1px solid rgba(255, 138, 31, 0.28);
+}
+
+.plan-info h3,
+.rutina-info h3 {
+    margin: 0 0 0.25rem;
+    color: var(--ironfit-text);
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.plan-info p,
+.rutina-info p {
+    margin: 0;
+    color: #d4d4d4;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.plan-info small,
+.rutina-info small {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--ironfit-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.plan-meta,
+.rutina-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+}
+
+.estado-rutinas,
+.estado-badge {
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.estado-rutinas.pendiente {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fecaca;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.estado-rutinas.en_proceso {
+    background: rgba(234, 179, 8, 0.12);
+    color: #fde68a;
+    border: 1px solid rgba(234, 179, 8, 0.35);
+}
+
+.estado-rutinas.completo {
+    background: rgba(34, 197, 94, 0.12);
+    color: #bbf7d0;
     border: 1px solid rgba(34, 197, 94, 0.35);
 }
 
-.estado-badge.completado {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.35);
+.estado-badge.activo {
+    background: rgba(34, 197, 94, 0.12);
+    color: #bbf7d0;
+    border: 1px solid rgba(34, 197, 94, 0.35);
 }
 
-.estado-badge.pendiente {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.35);
+.estado-badge.inactivo {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fecaca;
+    border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
-/* Botones de acción en tabla */
-.btn-accion {
+.estado-click {
+    cursor: pointer;
+}
+
+.btn-gestionar,
+.btn-card {
     border: none;
-    border-radius: 6px;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 600;
+    background: transparent;
+    color: var(--ironfit-orange);
+    font-size: 0.82rem;
+    font-weight: 900;
     cursor: pointer;
     transition: all 0.15s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
-.btn-ver {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.35);
+.btn-gestionar:hover,
+.btn-card:hover {
+    color: #ffb347;
+    transform: translateX(2px);
 }
 
-.btn-ver:hover {
-    background: rgba(59, 130, 246, 0.25);
-    transform: translateY(-1px);
-}
+/* ---------- PLAN SELECCIONADO ---------- */
 
-.btn-editar {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.35);
-}
-
-.btn-editar:hover {
-    background: rgba(234, 179, 8, 0.25);
-    transform: translateY(-1px);
-}
-
-/* Mensaje cuando no hay rutinas o cargando */
-section p {
-    font-size: 0.9rem;
-    color: var(--ironfit-text-muted);
-    padding: 1.5rem;
-    text-align: center;
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
+.plan-resumen {
+    padding: 1.25rem;
     border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #101010, #070707);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--ironfit-orange);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.plan-resumen h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 900;
+}
+
+.plan-resumen p {
+    margin: 0.35rem 0 0;
+    color: var(--ironfit-text-muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+/* ---------- FORMULARIO ---------- */
+
+.formulario-rutina {
+    padding: 1.25rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #101010, #070707);
+    border: 1px solid var(--ironfit-border);
     box-shadow: var(--ironfit-shadow-soft);
 }
 
-/* ---------- RESPONSIVE GENERAL ---------- */
+.formulario-rutina h2 {
+    margin: 0 0 1rem;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
 
-@media (max-width: 768px) {
-    .rutinas-layout {
-        padding: 1.25rem 1.1rem;
-    }
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
 
+.formulario-rutina label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--ironfit-text);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+}
+
+.formulario-rutina input,
+.formulario-rutina select,
+.formulario-rutina textarea {
+    width: 100%;
+    border-radius: 12px;
+    padding: 0.75rem 0.85rem;
+    background: #090909;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    outline: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.formulario-rutina input:focus,
+.formulario-rutina select:focus,
+.formulario-rutina textarea:focus {
+    border-color: rgba(255, 138, 31, 0.75);
+    box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.12);
+}
+
+.descripcion-label {
+    margin-top: 1rem;
+}
+
+.form-actions {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.btn-guardar,
+.btn-cancelar {
+    border-radius: 999px;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.btn-guardar {
+    background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+    color: #111111;
+    border: none;
+}
+
+.btn-cancelar {
+    background: transparent;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+}
+
+.rutina-card.inactiva {
+    opacity: 0.65;
+}
+
+/* ---------- ACCIONES RUTINA ---------- */
+
+.rutina-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1050px) {
     .rutinas-header {
         flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rutinas-header-left,
+    .rutinas-header-actions {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .busqueda-container {
+        max-width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-busqueda,
+    .btn-buscar-rutinas {
+        width: 100%;
+    }
+
+    .paginacion-rutinas {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .paginacion-controles {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .btn-paginacion,
+    .select-paginacion {
+        flex: 1;
+    }
+
+    .plan-card,
+    .rutina-card {
+        grid-template-columns: 1fr;
         align-items: flex-start;
     }
 
-    .rutinas-tabla {
-        font-size: 0.82rem;
+    .plan-meta,
+    .rutina-meta {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
     }
 
-    .rutinas-tabla th,
-    .rutinas-tabla td {
-        padding: 0.5rem 0.65rem;
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-resumen {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .rutinas-page {
+        padding: 0.8rem;
+    }
+
+    .rutinas-header-left h1 {
+        font-size: 1rem;
+        letter-spacing: 0.28em;
+    }
+
+    .btn-volver,
+    .btn-actualizar,
+    .btn-nueva-rutina {
+        width: 100%;
+    }
+
+    .rutinas-header-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .filtros-tabs,
+    .dias-tabs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filtro-tab,
+    .dia-tab {
+        width: 100%;
+    }
+
+    .paginacion-controles {
+        flex-direction: column;
+        align-items: stretch;
     }
 }

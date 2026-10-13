@@ -1,67 +1,183 @@
 <div class="asistencias-layout">
+
 	<header class="asistencias-header">
 		<div class="asistencias-header-left">
-			<button class="btn-volver" (click)="volver()">← Volver</button>
-			<h1>Sesiones cumplidas</h1>
+			<button class="btn-volver" type="button" (click)="volver()">
+				← Volver
+			</button>
+
+			<h1>Asistencias de clientes</h1>
 		</div>
+
 		<div class="asistencias-header-right">
 			<div class="busqueda-container">
 				<input
 					type="text"
 					class="input-busqueda"
-					placeholder="🔍 Buscar cliente o plan..."
+					placeholder="🔍 Buscar cliente, documento, plan o rutina..."
 					[(ngModel)]="terminoBusqueda"
-					(input)="aplicarFiltros()" />
+					(keyup.enter)="aplicarFiltros()" />
+
+				<button
+					type="button"
+					class="btn-buscar-asistencias"
+					(click)="aplicarFiltros()">
+					Buscar
+				</button>
 			</div>
-			<span class="asistencias-filtros" *ngIf="terminoBusqueda">Filtrando: "{{ terminoBusqueda }}"</span>
-			<button class="btn-actualizar" (click)="actualizar()">🔄 Actualizar</button>
+
+			<input
+				type="date"
+				class="input-fecha"
+				[(ngModel)]="fechaInicio"
+				title="Fecha inicio">
+
+			<input
+				type="date"
+				class="input-fecha"
+				[(ngModel)]="fechaFin"
+				title="Fecha fin">
+
+			<select
+				class="select-estado"
+				[(ngModel)]="filtroEstado"
+				(change)="aplicarFiltros()">
+				<option value="TODOS">Todos</option>
+				<option value="ASISTIO">Asistió</option>
+				<option value="NO_ASISTIO">No asistió</option>
+				<option value="ASISTIO_SIN_RUTINA">Sin rutina</option>
+			</select>
+
+			<button
+				class="btn-limpiar"
+				type="button"
+				(click)="limpiarFiltros()"
+				[disabled]="cargando">
+				Limpiar
+			</button>
+
+			<button
+				class="btn-actualizar"
+				type="button"
+				(click)="actualizar()"
+				[disabled]="cargando">
+				{{ cargando ? 'Cargando...' : 'Actualizar' }}
+			</button>
 		</div>
 	</header>
 
-	<section *ngIf="cargando"><p>Cargando asistencias...</p></section>
-	<section *ngIf="!cargando && error"><p>{{ error }}</p></section>
+	<section class="metricas-grid" *ngIf="!cargando && !error">
+		<article class="metrica-card">
+			<span>Total registros</span>
+			<strong>{{ totalRegistros }}</strong>
+			<small>asistencias encontradas</small>
+		</article>
 
-	<section *ngIf="!cargando && !error">
-		<table class="asistencias-tabla" *ngIf="asistenciasFiltradas.length > 0; else noAsistencias">
+		<article class="metrica-card ok">
+			<span>Asistieron</span>
+			<strong>{{ totalAsistio }}</strong>
+			<small>en esta página</small>
+		</article>
+
+		<article class="metrica-card danger">
+			<span>No asistieron</span>
+			<strong>{{ totalNoAsistio }}</strong>
+			<small>en esta página</small>
+		</article>
+
+		<article class="metrica-card warning">
+			<span>Sin rutina</span>
+			<strong>{{ totalSinRutina }}</strong>
+			<small>en esta página</small>
+		</article>
+
+		<article class="metrica-card main">
+			<span>Cumplimiento</span>
+			<strong>{{ porcentajeCumplimiento }}%</strong>
+			<small>según página actual</small>
+		</article>
+	</section>
+
+	<section *ngIf="cargando" class="estado-panel">
+		<p>⏳ Cargando asistencias...</p>
+	</section>
+
+	<section *ngIf="!cargando && error" class="estado-panel error-panel">
+		<p>⚠️ {{ error }}</p>
+	</section>
+
+	<section *ngIf="!cargando && !error && asistenciasFiltradas.length === 0" class="estado-panel">
+		<p>📋 No hay registros de asistencia para mostrar.</p>
+	</section>
+
+	<section *ngIf="!cargando && !error && asistenciasFiltradas.length > 0">
+		<table class="asistencias-tabla">
 			<thead>
 				<tr>
+					<th>Fecha</th>
 					<th>Cliente</th>
+					<th>Documento</th>
 					<th>Plan</th>
-					<th>Sesiones Plan</th>
-					<th>Asistidas</th>
-					<th>% Asistencia</th>
-					<th>Completas</th>
-					<th>% Completas</th>
+					<th>Rutina</th>
+					<th>Estado</th>
+					<th>Observaciones</th>
 				</tr>
 			</thead>
+
 			<tbody>
-				<tr *ngFor="let r of asistenciasFiltradas">
-					<td>{{ r.nombreCliente }}</td>
-					<td>{{ r.nombrePlan }}</td>
-					<td>{{ r.totalSesionesPlan }}</td>
-					<td>{{ r.sesionesAsistidas }}</td>
+				<tr *ngFor="let a of asistenciasFiltradas">
+					<td>{{ a.fechaAsistencia }}</td>
+					<td>{{ a.clienteNombre || '-' }}</td>
+					<td>{{ a.clienteDocumento || '-' }}</td>
+					<td>{{ a.planNombre || '-' }}</td>
+					<td>{{ a.rutinaNombre || '-' }}</td>
 					<td>
-						<span class="pct-badge"
-							[class.alto]="r.porcentajeAsistencia >= 80"
-							[class.medio]="r.porcentajeAsistencia >= 50 && r.porcentajeAsistencia < 80"
-							[class.bajo]="r.porcentajeAsistencia < 50">
-							{{ r.porcentajeAsistencia | number:'1.0-1' }}%
+						<span class="estado-badge" [ngClass]="claseEstado(a.estadoAsistencia)">
+							{{ a.estadoAsistencia }}
 						</span>
 					</td>
-					<td>{{ r.sesionesCompletas }}</td>
-					<td>
-						<span class="pct-badge"
-							[class.alto]="r.porcentajeCompletas >= 80"
-							[class.medio]="r.porcentajeCompletas >= 50 && r.porcentajeCompletas < 80"
-							[class.bajo]="r.porcentajeCompletas < 50">
-							{{ r.porcentajeCompletas | number:'1.0-1' }}%
-						</span>
-					</td>
+					<td>{{ a.observaciones || '-' }}</td>
 				</tr>
 			</tbody>
 		</table>
-		<ng-template #noAsistencias>
-			<p>No hay registros de sesiones cumplidas.</p>
-		</ng-template>
+
+		<div class="paginacion-asistencias" *ngIf="totalElementos > 0">
+			<div class="paginacion-info">
+				<span>
+					Mostrando página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
+				</span>
+				<small>
+					Total asistencias: {{ totalElementos }}
+				</small>
+			</div>
+
+			<div class="paginacion-controles">
+				<button
+					type="button"
+					class="btn-paginacion"
+					(click)="irPaginaAnterior()"
+					[disabled]="paginaActual === 0">
+					← Anterior
+				</button>
+
+				<select
+					class="select-paginacion"
+					[(ngModel)]="tamanoPagina"
+					(change)="cambiarTamanoPagina()">
+					<option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+						{{ opcion }} por página
+					</option>
+				</select>
+
+				<button
+					type="button"
+					class="btn-paginacion"
+					(click)="irPaginaSiguiente()"
+					[disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
+					Siguiente →
+				</button>
+			</div>
+		</div>
 	</section>
+
 </div>

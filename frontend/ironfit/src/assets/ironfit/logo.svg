@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 680" width="512" height="512">
+  <title>Fitness Kettlebell Logo</title>
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF2424"/>
+      <stop offset="100%" style="stop-color:#B91C1C"/>
+    </linearGradient>
+    <linearGradient id="kettleGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" style="stop-color:#FBBF24"/>
+      <stop offset="100%" style="stop-color:#EA580C"/>
+    </linearGradient>
+    <linearGradient id="handleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FCD34D"/>
+      <stop offset="100%" style="stop-color:#D97706"/>
+    </linearGradient>
+    <filter id="innerShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#7f1d1d" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Hexagonal shield (Angular style) -->
+  <polygon points="340,60 560,175 560,505 340,620 120,505 120,175"
+    fill="url(#shieldGrad)"
+    stroke="#991B1B"
+    stroke-width="4"
+    filter="url(#innerShadow)"/>
+
+  <!-- Inner shield edge highlight -->
+  <polygon points="340,80 544,188 544,492 340,600 136,492 136,188"
+    fill="none"
+    stroke="#F87171"
+    stroke-width="2"
+    opacity="0.35"/>
+
+  <!-- Handle outer arc -->
+  <path d="M238,305 Q238,195 340,195 Q442,195 442,305"
+    fill="none"
+    stroke="url(#handleGrad)"
+    stroke-width="52"
+    stroke-linecap="round"/>
+
+  <!-- Handle hole (dark interior) -->
+  <path d="M258,305 Q258,222 340,222 Q422,222 422,305"
+    fill="none"
+    stroke="#7f1d1d"
+    stroke-width="22"
+    stroke-linecap="round"/>
+
+  <!-- Kettlebell body -->
+  <ellipse cx="340" cy="390" rx="115" ry="105"
+    fill="url(#kettleGrad)"
+    stroke="#C2410C"
+    stroke-width="3"/>
+
+  <!-- Body highlight -->
+  <ellipse cx="320" cy="355" rx="40" ry="28"
+    fill="#FDE68A"
+    opacity="0.25"/>
+
+  <!-- Neck -->
+  <rect x="285" y="296" width="110" height="38" rx="8"
+    fill="url(#kettleGrad)"
+    stroke="#C2410C"
+    stroke-width="2"/>
+
+  <!-- Head silhouette -->
+  <ellipse cx="340" cy="352" rx="18" ry="20"
+    fill="#1c0a00"
+    opacity="0.75"/>
+
+  <!-- Left arm -->
+  <path d="M322,368 Q290,345 268,358 Q258,364 268,374 Q285,376 308,378"
+    fill="#1c0a00"
+    opacity="0.75"/>
+  <ellipse cx="278" cy="362" rx="16" ry="11"
+    fill="#1c0a00"
+    opacity="0.75"/>
+
+  <!-- Right arm -->
+  <path d="M358,368 Q390,345 412,358 Q422,364 412,374 Q395,376 372,378"
+    fill="#1c0a00"
+    opacity="0.75"/>
+  <ellipse cx="402" cy="362" rx="16" ry="11"
+    fill="#1c0a00"
+    opacity="0.75"/>
+
+  <!-- Upper back/shoulders -->
+  <path d="M308,378 Q310,370 340,368 Q370,370 372,378 Q360,395 340,398 Q320,395 308,378Z"
+    fill="#1c0a00"
+    opacity="0.75"/>
+
+  <!-- Lower torso -->
+  <path d="M320,396 Q340,410 360,396 Q355,420 340,425 Q325,420 320,396Z"
+    fill="#1c0a00"
+    opacity="0.7"/>
+</svg>

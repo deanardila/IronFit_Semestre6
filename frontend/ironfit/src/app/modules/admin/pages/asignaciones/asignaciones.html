@@ -1,0 +1,137 @@
+<div class="asignaciones-layout">
+
+    <header class="asignaciones-header">
+        <div class="asignaciones-header-left">
+        <button class="btn-volver" type="button" (click)="volverAlDashboard()">
+            ← Volver
+        </button>
+
+        <h1>Asignaciones</h1>
+        </div>
+
+        <div class="asignaciones-header-right">
+
+        <div class="busqueda-container">
+            <input
+            type="text"
+            class="input-busqueda"
+            placeholder="🔍 Buscar cliente o entrenador..."
+            [(ngModel)]="terminoBusqueda"
+            (input)="aplicarFiltros()">
+        </div>
+
+        <button
+            class="btn-crear-asignacion"
+            type="button"
+            (click)="toggleFormularioCrear()">
+            {{ mostrarFormularioCrear ? 'Ocultar formulario' : '+ Nueva asignación' }}
+        </button>
+
+        <button
+            class="btn-actualizar"
+            type="button"
+            (click)="actualizar()"
+            [disabled]="cargando || guardando">
+            Actualizar
+        </button>
+
+        </div>
+    </header>
+
+    <section *ngIf="mostrarFormularioCrear" class="crear-asignacion-form">
+        <h2>Asignar cliente a entrenador</h2>
+
+        <form (ngSubmit)="guardarAsignacion()">
+
+        <div class="form-row">
+            <label>Cliente</label>
+            <select
+            name="clienteId"
+            [(ngModel)]="nuevaAsignacion.clienteId"
+            required>
+            <option value="">Selecciona un cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.id">
+                {{ nombreCompleto(cliente) }} - {{ cliente.numDoc || 'Sin documento' }}
+            </option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label>Entrenador</label>
+            <select
+            name="entrenadorId"
+            [(ngModel)]="nuevaAsignacion.entrenadorId"
+            required>
+            <option value="">Selecciona un entrenador</option>
+            <option *ngFor="let entrenador of entrenadores" [value]="entrenador.id">
+                {{ nombreCompleto(entrenador) }} - {{ entrenador.correo || 'Sin correo' }}
+            </option>
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" [disabled]="guardando">
+            {{ guardando ? 'Guardando...' : 'Guardar asignación' }}
+            </button>
+
+            <button type="button" (click)="cancelarCrear()" [disabled]="guardando">
+            Cancelar
+            </button>
+        </div>
+
+        </form>
+    </section>
+
+    <section *ngIf="cargando">
+        <p>Cargando asignaciones...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="mensaje-error">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && mensajeExito" class="mensaje-exito">
+        <p>✅ {{ mensajeExito }}</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && asignacionesFiltradas.length === 0">
+        <p>No hay asignaciones registradas.</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && asignacionesFiltradas.length > 0">
+        <table class="asignaciones-tabla">
+        <thead>
+            <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Documento</th>
+            <th>Entrenador</th>
+            <th>Correo entrenador</th>
+            <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let a of asignacionesFiltradas">
+            <td>{{ a.id }}</td>
+            <td>{{ a.clienteNombre || a.clienteId }}</td>
+            <td>{{ a.clienteDocumento || '-' }}</td>
+            <td>{{ a.entrenadorNombre || a.entrenadorId }}</td>
+            <td>{{ a.entrenadorCorreo || '-' }}</td>
+            <td>
+                <button
+                type="button"
+                class="estado-badge"
+                [class.activo]="a.activo"
+                [class.inactivo]="!a.activo"
+                (click)="cambiarEstado(a)"
+                [disabled]="cambiandoEstadoId === a.id">
+                {{ cambiandoEstadoId === a.id ? 'Procesando...' : (a.activo ? 'ACTIVO' : 'INACTIVO') }}
+                </button>
+            </td>
+            </tr>
+        </tbody>
+        </table>
+    </section>
+
+</div>

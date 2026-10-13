@@ -1,1 +1,252 @@
-<p>mis-evaluaciones works!</p>
+<div class="mis-evaluaciones-layout">
+
+    <header class="mis-evaluaciones-header">
+        <div class="header-left">
+            <button class="btn-volver" type="button" (click)="volver()">← Volver</button>
+            <h1>Mis evaluaciones</h1>
+        </div>
+
+        <button
+            class="btn-actualizar"
+            type="button"
+            (click)="actualizar()"
+            [disabled]="cargando">
+            {{ cargando ? 'Cargando...' : 'Actualizar' }}
+        </button>
+    </header>
+
+    <section *ngIf="cargando">
+        <p>⏳ Cargando tus evaluaciones físicas...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="mensaje-error">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && !ultimaEvaluacion">
+        <p>📋 Aún no tienes evaluaciones físicas registradas.</p>
+    </section>
+
+    <ng-container *ngIf="!cargando && !error && ultimaEvaluacion">
+
+        <section class="resumen-grid">
+
+            <article class="resumen-card">
+                <span class="resumen-label">Peso corporal</span>
+                <strong>{{ ultimaEvaluacion.pesoCorporal }} kg</strong>
+                <small [class]="obtenerClaseDiferencia(calcularDiferenciaPeso())">
+                    {{ formatearDiferencia(calcularDiferenciaPeso(), 'kg') }}
+                </small>
+            </article>
+
+            <article class="resumen-card">
+                <span class="resumen-label">IMC</span>
+                <strong>{{ ultimaEvaluacion.imc }}</strong>
+                <small [class]="obtenerClaseDiferencia(calcularDiferenciaImc())">
+                    {{ formatearDiferencia(calcularDiferenciaImc(), '') }}
+                </small>
+            </article>
+
+            <article class="resumen-card">
+                <span class="resumen-label">Grasa corporal</span>
+                <strong>
+                    {{ ultimaEvaluacion.porcentajeGraso != null ? ultimaEvaluacion.porcentajeGraso + '%' : 'No registra' }}
+                </strong>
+                <small [class]="obtenerClaseDiferencia(calcularDiferenciaGrasa())">
+                    {{ formatearDiferencia(calcularDiferenciaGrasa(), '%') }}
+                </small>
+            </article>
+
+        </section>
+
+        <section class="ultima-evaluacion-card">
+            <div class="ultima-evaluacion-header">
+                <div>
+                    <h2>Última evaluación física</h2>
+                    <span>{{ formatearFecha(ultimaEvaluacion.fecha) }}</span>
+                </div>
+
+                <div class="badge-imc">
+                    IMC {{ ultimaEvaluacion.imc }}
+                </div>
+            </div>
+
+            <div class="detalle-grid">
+                <div class="detalle-item">
+                    <span>Talla</span>
+                    <strong>{{ ultimaEvaluacion.talla }} m</strong>
+                </div>
+
+                <div class="detalle-item">
+                    <span>Entrenador</span>
+                    <strong>{{ ultimaEvaluacion.entrenadorNombre || 'No registra' }}</strong>
+                </div>
+            </div>
+
+            <div class="observaciones-box">
+                <span>Observaciones</span>
+                <p>{{ ultimaEvaluacion.observaciones || 'Sin observaciones registradas.' }}</p>
+            </div>
+        </section>
+
+        <section class="metricas-detalladas">
+            <h2>Métricas detalladas</h2>
+
+            <article class="metrica-card">
+                <div class="metrica-icon cintura">↔</div>
+
+                <div class="metrica-info">
+                    <div class="metrica-top">
+                        <div>
+                            <strong>Cintura</strong>
+                            <span>Última medición</span>
+                        </div>
+
+                        <strong class="metrica-valor">
+                            {{ ultimaEvaluacion.medidasCorporales?.cintura ?? '-' }} cm
+                        </strong>
+                    </div>
+
+                    <div class="barra">
+                        <div
+                            class="barra-progreso cintura"
+                            [style.width.%]="obtenerPorcentajeBarra(ultimaEvaluacion.medidasCorporales?.cintura, 120)">
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="metrica-card">
+                <div class="metrica-icon pecho">▣</div>
+
+                <div class="metrica-info">
+                    <div class="metrica-top">
+                        <div>
+                            <strong>Pecho</strong>
+                            <span>Última medición</span>
+                        </div>
+
+                        <strong class="metrica-valor">
+                            {{ ultimaEvaluacion.medidasCorporales?.pecho ?? '-' }} cm
+                        </strong>
+                    </div>
+
+                    <div class="barra">
+                        <div
+                            class="barra-progreso pecho"
+                            [style.width.%]="obtenerPorcentajeBarra(ultimaEvaluacion.medidasCorporales?.pecho, 140)">
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="metrica-card">
+                <div class="metrica-icon brazo">💪</div>
+
+                <div class="metrica-info">
+                    <div class="metrica-top">
+                        <div>
+                            <strong>Brazo</strong>
+                            <span>Última medición</span>
+                        </div>
+
+                        <strong class="metrica-valor">
+                            {{ ultimaEvaluacion.medidasCorporales?.brazo ?? '-' }} cm
+                        </strong>
+                    </div>
+
+                    <div class="barra">
+                        <div
+                            class="barra-progreso brazo"
+                            [style.width.%]="obtenerPorcentajeBarra(ultimaEvaluacion.medidasCorporales?.brazo, 60)">
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="metrica-card">
+                <div class="metrica-icon pierna">▥</div>
+
+                <div class="metrica-info">
+                    <div class="metrica-top">
+                        <div>
+                            <strong>Pierna</strong>
+                            <span>Última medición</span>
+                        </div>
+
+                        <strong class="metrica-valor">
+                            {{ ultimaEvaluacion.medidasCorporales?.pierna ?? '-' }} cm
+                        </strong>
+                    </div>
+
+                    <div class="barra">
+                        <div
+                            class="barra-progreso pierna"
+                            [style.width.%]="obtenerPorcentajeBarra(ultimaEvaluacion.medidasCorporales?.pierna, 90)">
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="historial-section">
+            <div class="historial-header">
+                <div>
+                    <h2>Historial de evaluaciones</h2>
+                    <small *ngIf="totalElementos > 0">
+                        Página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }} · {{ totalElementos }} registros
+                    </small>
+                </div>
+
+                <div class="paginacion-controles" *ngIf="totalElementos > 0">
+                    <button
+                        type="button"
+                        class="btn-paginacion"
+                        (click)="irPaginaAnterior()"
+                        [disabled]="paginaActual === 0">
+                        ← Anterior
+                    </button>
+
+                    <select
+                        class="select-paginacion"
+                        [(ngModel)]="tamanoPagina"
+                        (change)="cambiarTamanoPagina()">
+                        <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                            {{ opcion }} por página
+                        </option>
+                    </select>
+
+                    <button
+                        type="button"
+                        class="btn-paginacion"
+                        (click)="irPaginaSiguiente()"
+                        [disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
+                        Siguiente →
+                    </button>
+                </div>
+            </div>
+
+            <div class="historial-lista">
+                <article class="historial-card" *ngFor="let evaluacion of evaluaciones">
+                    <div class="historial-fecha">
+                        <strong>{{ formatearFecha(evaluacion.fecha) }}</strong>
+                        <span>{{ evaluacion.entrenadorNombre || 'Entrenador' }}</span>
+                    </div>
+
+                    <div class="historial-datos">
+                        <span>Peso: <strong>{{ evaluacion.pesoCorporal }} kg</strong></span>
+                        <span>IMC: <strong>{{ evaluacion.imc }}</strong></span>
+                        <span>
+                            Grasa:
+                            <strong>
+                                {{ evaluacion.porcentajeGraso != null ? evaluacion.porcentajeGraso + '%' : '-' }}
+                            </strong>
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+    </ng-container>
+
+</div>

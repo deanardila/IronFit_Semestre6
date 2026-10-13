@@ -1,0 +1,334 @@
+/* ================== ASIGNACIONES ADMIN ================== */
+
+    .asignaciones-layout {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
+    color: var(--ironfit-text);
+    padding: 1.75rem 2rem;
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    }
+
+    /* ---------- HEADER ---------- */
+
+    .asignaciones-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .asignaciones-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    }
+
+    .asignaciones-header h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ironfit-text);
+    }
+
+    .asignaciones-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex: 1;
+    }
+
+    /* ---------- BOTONES ---------- */
+
+    .btn-volver,
+    .btn-actualizar,
+    .btn-crear-asignacion {
+    border-radius: 999px;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    cursor: pointer;
+    transition: 0.15s ease;
+    white-space: nowrap;
+    }
+
+    .btn-volver,
+    .btn-actualizar {
+    background: rgba(0, 0, 0, 0.75);
+    }
+
+    .btn-crear-asignacion {
+    background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+    color: #111111;
+    border: none;
+    }
+
+    .btn-volver:hover,
+    .btn-actualizar:hover,
+    .btn-crear-asignacion:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 138, 31, 0.55);
+    }
+
+    .btn-actualizar:disabled,
+    button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    }
+
+    /* ---------- BUSCADOR ---------- */
+
+    .busqueda-container {
+    width: 330px;
+    max-width: 100%;
+    }
+
+    .input-busqueda {
+    width: 93%;
+    padding: 0.58rem 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 138, 31, 0.32);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.85rem;
+    transition: 0.2s ease;
+    }
+
+    .input-busqueda::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+    }
+
+    .input-busqueda:focus {
+    outline: none;
+    border-color: #ff8a1f;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 2px rgba(255, 138, 31, 0.22);
+    }
+
+    /* ---------- FORMULARIO ---------- */
+
+    .crear-asignacion-form {
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    border-radius: var(--ironfit-radius-lg);
+    box-shadow: var(--ironfit-shadow-soft);
+    padding: 1.25rem;
+    }
+
+    .crear-asignacion-form h2 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    }
+
+    .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.85rem;
+    }
+
+    .form-row label {
+    color: var(--ironfit-text-muted);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    }
+
+    .form-row select {
+    padding: 0.7rem 0.85rem;
+    border-radius: 8px;
+    background: #171717;
+    border: 1px solid rgba(255, 138, 31, 0.28);
+    color: var(--ironfit-text);
+    outline: none;
+    }
+
+    .form-row select:focus {
+    border-color: #ff8a1f;
+    }
+
+    .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    }
+
+    .form-actions button {
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--ironfit-border);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ironfit-text);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    }
+
+    .form-actions button[type="submit"] {
+    background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+    color: #111;
+    border: none;
+    }
+
+    /* ---------- TABLA ---------- */
+
+    .asignaciones-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: var(--ironfit-radius-lg);
+    overflow: hidden;
+    background: var(--ironfit-surface);
+    box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .asignaciones-tabla thead {
+    background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
+    }
+
+    .asignaciones-tabla th,
+    .asignaciones-tabla td {
+    padding: 0.7rem 0.95rem;
+    font-size: 0.88rem;
+    border-bottom: 1px solid rgba(38, 38, 38, 0.9);
+    }
+
+    .asignaciones-tabla th {
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    color: var(--ironfit-text-muted);
+    }
+
+    .asignaciones-tabla tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.35);
+    }
+
+    .asignaciones-tabla tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.025);
+    }
+
+    .asignaciones-tabla td:first-child {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
+
+    /* ---------- BADGE ---------- */
+
+    .estado-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    }
+
+    .estado-badge.activo {
+    background-color: rgba(0, 170, 85, 0.15);
+    color: #32d27a;
+    border-color: rgba(50, 210, 122, 0.35);
+    }
+
+    /* ---------- MENSAJES ---------- */
+
+    section p {
+    font-size: 0.9rem;
+    color: var(--ironfit-text-muted);
+    padding: 1.2rem;
+    text-align: center;
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    border-radius: var(--ironfit-radius-lg);
+    box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .mensaje-error,
+    .mensaje-exito {
+    padding: 1rem 1.25rem;
+    border-radius: 14px;
+    font-weight: 600;
+    }
+
+    .mensaje-error {
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    background: rgba(127, 29, 29, 0.18);
+    color: #fca5a5;
+    }
+
+    .mensaje-exito {
+    border: 1px solid rgba(34, 197, 94, 0.45);
+    background: rgba(20, 83, 45, 0.18);
+    color: #86efac;
+    }
+
+    .mensaje-error p,
+    .mensaje-exito p {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: inherit;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 900px) {
+    .asignaciones-layout {
+        padding: 1.25rem 1rem;
+    }
+
+    .asignaciones-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .asignaciones-header-right {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .busqueda-container {
+        width: 100%;
+    }
+
+    .asignaciones-tabla {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

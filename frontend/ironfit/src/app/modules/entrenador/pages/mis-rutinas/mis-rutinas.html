@@ -1,1 +1,327 @@
-<p>mis-rutinas works!</p>
+<div class="rutinas-page">
+
+    <header class="rutinas-header">
+        <div class="rutinas-header-left">
+            <button class="btn-volver" type="button" (click)="volver()">
+                ← Volver
+            </button>
+
+            <div>
+                <h1>Mis rutinas</h1>
+            </div>
+        </div>
+
+        <div class="rutinas-header-actions">
+            <button
+                *ngIf="planIdSeleccionado"
+                class="btn-nueva-rutina"
+                type="button"
+                (click)="mostrarCrearRutina()"
+                [disabled]="cargando || guardando">
+                + Nueva rutina
+            </button>
+
+            <button
+                class="btn-actualizar"
+                type="button"
+                (click)="actualizar()"
+                [disabled]="cargando || guardando || !!cambiandoEstadoId">
+                {{ cargando ? 'Cargando...' : 'Actualizar' }}
+            </button>
+        </div>
+    </header>
+
+    <section *ngIf="cargando" class="estado-panel">
+        <p>⏳ Cargando rutinas...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="estado-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && mensajeExito" class="estado-panel exito-panel">
+        <p>✅ {{ mensajeExito }}</p>
+    </section>
+
+    <!-- ================= TABLERO DE PLANES ================= -->
+    <section *ngIf="!cargando && !planIdSeleccionado" class="rutinas-content">
+
+        <div class="toolbar-rutinas">
+            <div class="filtros-tabs">
+                <button
+                    type="button"
+                    *ngFor="let filtro of filtrosPlan"
+                    class="filtro-tab"
+                    [class.activo]="filtroEstadoPlan === filtro.valor"
+                    (click)="seleccionarFiltroPlan(filtro.valor)">
+                    {{ filtro.etiqueta }}
+                </button>
+            </div>
+
+            <div class="busqueda-container">
+                <input
+                    type="text"
+                    class="input-busqueda"
+                    placeholder="🔍 Buscar plan, cliente u objetivo..."
+                    [(ngModel)]="terminoBusqueda"
+                    (keyup.enter)="aplicarFiltrosPlanes()">
+
+                <button
+                    type="button"
+                    class="btn-buscar-rutinas"
+                    (click)="aplicarFiltrosPlanes()">
+                    Buscar
+                </button>
+            </div>
+        </div>
+
+        <div class="paginacion-rutinas" *ngIf="totalPlanes > 0">
+            <div class="paginacion-info">
+                <span>
+                    Mostrando página {{ paginaPlanesActual + 1 }} de {{ totalPaginasPlanes || 1 }}
+                </span>
+                <small>
+                    Total planes: {{ totalPlanes }}
+                </small>
+            </div>
+
+            <div class="paginacion-controles">
+                <button
+                    type="button"
+                    class="btn-paginacion"
+                    (click)="irPaginaPlanesAnterior()"
+                    [disabled]="paginaPlanesActual === 0">
+                    ← Anterior
+                </button>
+
+                <select
+                    class="select-paginacion"
+                    [(ngModel)]="tamanoPaginaPlanes"
+                    (change)="cambiarTamanoPaginaPlanes()">
+                    <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                        {{ opcion }} por página
+                    </option>
+                </select>
+
+                <button
+                    type="button"
+                    class="btn-paginacion"
+                    (click)="irPaginaPlanesSiguiente()"
+                    [disabled]="ultimaPaginaPlanes || paginaPlanesActual >= totalPaginasPlanes - 1">
+                    Siguiente →
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="planesResumenFiltrados.length === 0" class="estado-panel">
+            <p>📋 No hay planes para mostrar.</p>
+        </div>
+
+        <div class="planes-lista" *ngIf="planesResumenFiltrados.length > 0">
+
+            <article
+                class="plan-card"
+                *ngFor="let item of planesResumenFiltrados">
+
+                <div class="plan-icono">
+                    📋
+                </div>
+
+                <div class="plan-info">
+                    <h3>{{ item.plan.nombre }}</h3>
+                    <p>
+                        Cliente: {{ item.plan.clienteNombre || item.plan.clienteId }}
+                    </p>
+                    <small>
+                        {{ item.plan.objetivo }} · {{ item.rutinasActivas }} rutinas activas
+                    </small>
+                </div>
+
+                <div class="plan-meta">
+                    <span
+                        class="estado-rutinas"
+                        [class.pendiente]="item.estadoRutinas === 'PENDIENTE'"
+                        [class.en_proceso]="item.estadoRutinas === 'EN_PROCESO'"
+                        [class.completo]="item.estadoRutinas === 'COMPLETO'">
+                        {{ obtenerTextoEstadoPlan(item.estadoRutinas) }}
+                    </span>
+
+                    <button
+                        type="button"
+                        class="btn-gestionar"
+                        (click)="gestionarRutinas(item.plan)">
+                        Gestionar →
+                    </button>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- ================= GESTIÓN DE RUTINAS DE UN PLAN ================= -->
+    <section *ngIf="!cargando && planIdSeleccionado && planSeleccionado" class="rutinas-content">
+
+        <div class="plan-resumen">
+            <div>
+                <span class="label">Plan seleccionado</span>
+                <h2>{{ planSeleccionado.nombre }}</h2>
+                <p>
+                    {{ planSeleccionado.objetivo }}
+                    <span> · Cliente: {{ planSeleccionado.clienteNombre || planSeleccionado.clienteId }}</span>
+                </p>
+            </div>
+
+            <span
+                class="estado-badge"
+                [class.activo]="planSeleccionado.activo"
+                [class.inactivo]="!planSeleccionado.activo">
+                {{ planSeleccionado.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+        </div>
+
+        <section *ngIf="mostrarFormulario" class="formulario-rutina">
+            <h2>{{ modoEdicion ? 'Editar rutina' : 'Crear rutina' }}</h2>
+
+            <form (ngSubmit)="guardarRutina()" #rutinaForm="ngForm">
+
+                <div class="form-grid">
+
+                    <label>
+                        Nombre
+                        <input
+                            type="text"
+                            name="nombre"
+                            [(ngModel)]="formulario.nombre"
+                            required
+                            placeholder="Ej: Rutina Pecho y Tríceps">
+                    </label>
+
+                    <label>
+                        Día de la semana
+                        <select
+                            name="diaSemana"
+                            [(ngModel)]="formulario.diaSemana"
+                            required>
+                            <option value="Lunes">Lunes</option>
+                            <option value="Martes">Martes</option>
+                            <option value="Miércoles">Miércoles</option>
+                            <option value="Jueves">Jueves</option>
+                            <option value="Viernes">Viernes</option>
+                            <option value="Sábado">Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Orden
+                        <input
+                            type="number"
+                            name="orden"
+                            min="1"
+                            [(ngModel)]="formulario.orden"
+                            required>
+                    </label>
+
+                </div>
+
+                <label class="descripcion-label">
+                    Descripción
+                    <textarea
+                        name="descripcion"
+                        rows="3"
+                        [(ngModel)]="formulario.descripcion"
+                        placeholder="Describe el enfoque de la rutina...">
+                    </textarea>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-guardar" [disabled]="guardando">
+                        {{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar rutina' : 'Crear rutina') }}
+                    </button>
+
+                    <button type="button" class="btn-cancelar" (click)="cancelarFormulario()" [disabled]="guardando">
+                        Cancelar
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <div class="dias-tabs">
+            <button
+                *ngFor="let dia of dias"
+                type="button"
+                class="dia-tab"
+                [class.activo]="diaSeleccionado === dia.valor"
+                (click)="seleccionarDia(dia.valor)">
+                {{ dia.etiqueta }}
+            </button>
+        </div>
+
+        <div *ngIf="rutinasFiltradas.length === 0" class="estado-panel">
+            <p>📋 Este plan todavía no tiene rutinas para este filtro.</p>
+        </div>
+
+        <div class="rutinas-lista" *ngIf="rutinasFiltradas.length > 0">
+
+            <article
+                class="rutina-card"
+                *ngFor="let rutina of rutinasFiltradas"
+                [class.inactiva]="!rutina.activo">
+
+                <div class="rutina-icono">
+                    🏋️
+                </div>
+
+                <div class="rutina-info">
+                    <h3>{{ rutina.nombre }}</h3>
+                    <p>
+                        {{ rutina.diaSemana || 'Sin día' }}
+                        <span> · Orden {{ rutina.orden || '-' }}</span>
+                    </p>
+                    <small *ngIf="rutina.descripcion">
+                        {{ rutina.descripcion }}
+                    </small>
+                </div>
+
+                <div class="rutina-meta">
+
+                    <div class="rutina-actions">
+                        <button
+                            type="button"
+                            class="estado-badge estado-click"
+                            [class.activo]="rutina.activo"
+                            [class.inactivo]="!rutina.activo"
+                            (click)="cambiarEstadoRutina(rutina)"
+                            [disabled]="guardando || cambiandoEstadoId === rutina.id">
+
+                            {{ cambiandoEstadoId === rutina.id ? 'Procesando...' : (rutina.activo ? 'ACTIVA' : 'INACTIVA') }}
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-card"
+                            (click)="editarRutina(rutina)"
+                            [disabled]="guardando || cambiandoEstadoId === rutina.id">
+                            Editar
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-card"
+                            (click)="irAEjercicios(rutina)"
+                            [disabled]="guardando || cambiandoEstadoId === rutina.id">
+                            Ejercicios
+                        </button>
+                    </div>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</div>

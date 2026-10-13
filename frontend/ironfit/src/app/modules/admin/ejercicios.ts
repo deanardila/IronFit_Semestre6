@@ -1,69 +1,96 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
-export interface EjercicioDTO{
-    idEjercicio: number;
+export interface EjercicioDTO {
+    id: string;
     nombre: string;
     descripcion: string;
-    categoria: CategoriaDTO;
-    grupoMuscular: GrupoMuscularDTO;
-    seriesSugeridas: number;
-    repeticionesSugeridas: number;
-    tipoEquipo: string;
+    categoria: string;
+    grupoMuscular: string;
+    seriesSugeridas: number | null;
+    repeticionesSugeridas: number | null;
+    tipoEquipo: string | null;
 }
 
 export interface EjercicioCrearDTO {
     nombre: string;
     descripcion: string;
-    idCategoria: number;
-    idGrupoMuscular: number;
-    seriesSugeridas: number;
-    repeticionesSugeridas: number;
-    tipoEquipo: string;
+    categoria: string;
+    grupoMuscular: string;
+    seriesSugeridas: number | null;
+    repeticionesSugeridas: number | null;
+    tipoEquipo: string | null;
 }
 
-export interface CategoriaDTO {
-    idCategoria: number;
-    nombre: string;
-    estado: boolean;
+export interface PaginaResponse<T> {
+    contenido: T[];
+    pagina: number;
+    tamano: number;
+    totalElementos: number;
+    totalPaginas: number;
+    ultima: boolean;
 }
 
-export interface GrupoMuscularDTO {
-    idGrupoMuscular: number;
-    nombre: string;
-    estado: boolean;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root',
+})
 export class Ejercicios {
-    private baseUrl      = 'http://localhost:8080/api/ejercicios';
-private categoriasUrl = 'http://localhost:8080/api/ejercicios/categorias';
-private gruposUrl     = 'http://localhost:8080/api/ejercicios/grupos-musculares';
+    private apiUrl = `${environment.apiUrl}/api/ejercicios`;
 
     constructor(private http: HttpClient) {}
 
-    // LISTAR EJERCICIOS (DTO)
     getEjercicios(): Observable<EjercicioDTO[]> {
-        // Backend expone listado en /api/ejercicios (sin sufijo /ejercicios)
-        return this.http.get<EjercicioDTO[]>(`${this.baseUrl}`);
+        return this.http.get<EjercicioDTO[]>(this.apiUrl);
     }
 
-    // CREAR EJERCICIO
-    crearEjercicio(dto: EjercicioCrearDTO): Observable<any> {
-        // Crear en /api/ejercicios
-        return this.http.post(`${this.baseUrl}`, dto);
+    getEjerciciosPaginados(
+        page: number,
+        size: number,
+        buscar?: string,
+        categoria?: string | null,
+        grupoMuscular?: string | null,
+        activo?: boolean | null
+    ): Observable<PaginaResponse<EjercicioDTO>> {
+        const params: any = {
+            page,
+            size
+        };
+
+        if (buscar && buscar.trim()) {
+            params.buscar = buscar.trim();
+        }
+
+        if (categoria) {
+            params.categoria = categoria;
+        }
+
+        if (grupoMuscular) {
+            params.grupoMuscular = grupoMuscular;
+        }
+
+        if (activo !== null && activo !== undefined) {
+            params.activo = activo;
+        }
+
+        return this.http.get<PaginaResponse<EjercicioDTO>>(
+            `${this.apiUrl}/paginado`,
+            { params }
+        );
     }
 
-    // 🔹 LISTAR CATEGORÍAS
-    getCategorias(): Observable<CategoriaDTO[]> {
-        // Algunas APIs exponen categorías fuera de /ejercicios
-        return this.http.get<CategoriaDTO[]>(`${this.categoriasUrl}`);
+    crearEjercicio(ejercicio: EjercicioCrearDTO): Observable<EjercicioDTO> {
+        return this.http.post<EjercicioDTO>(this.apiUrl, ejercicio);
     }
 
-    // 🔹 LISTAR GRUPOS MUSCULARES
-    getGruposMusculares(): Observable<GrupoMuscularDTO[]> {
-        return this.http.get<GrupoMuscularDTO[]>(`${this.gruposUrl}`);
+    actualizarEjercicio(id: string, ejercicio: EjercicioCrearDTO): Observable<EjercicioDTO> {
+        return this.http.put<EjercicioDTO>(`${this.apiUrl}/${id}`, ejercicio);
+    }
+
+    eliminarEjercicio(id: string): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}/${id}/estado`, null, {
+            params: { activo: false }
+        });
     }
 }
-

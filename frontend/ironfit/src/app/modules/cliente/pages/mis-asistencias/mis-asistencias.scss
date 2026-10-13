@@ -1,203 +1,398 @@
-/* ================== MIS ASISTENCIAS (CLIENTE) ================== */
+/* ================== MIS ASISTENCIAS - CLIENTE ================== */
 
-/* Contenedor principal de la página */
-.asistencias-layout {
+    .asistencias-page {
     min-height: 100vh;
+    padding: 2.2rem 2.6rem;
     background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
     color: var(--ironfit-text);
-    padding: 1.75rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
+    font-family: inherit;
+    }
 
-/* ---------- HEADER ---------- */
+    /* ---------- HEADER ---------- */
 
-.asistencias-header {
+    .asistencias-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 1.2rem;
     padding: 1rem 1.25rem;
     border-radius: var(--ironfit-radius-lg);
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    margin-bottom: 1.6rem;
+    }
 
-.asistencias-header-left {
+    .asistencias-header-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
-}
+    gap: 1.1rem;
+    }
 
-.asistencias-header h1 {
+    .asistencias-header h1 {
     margin: 0;
     font-size: 1.35rem;
-    letter-spacing: 0.06em;
+    font-weight: 900;
+    letter-spacing: 0.42em;
     text-transform: uppercase;
-}
+    color: var(--ironfit-text);
+    }
 
-/* ---------- BOTÓN VOLVER ---------- */
+    /* ---------- BOTONES ---------- */
 
-.btn-volver {
-    border: none;
+    .btn-volver,
+    .btn-actualizar {
     border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.75);
+    padding: 0.65rem 1.35rem;
+    background: rgba(0, 0, 0, 0.78);
     color: var(--ironfit-text);
     border: 1px solid var(--ironfit-border);
     cursor: pointer;
-    transition: all 0.15s ease;
-}
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    transition: all 0.18s ease;
+    }
 
-.btn-volver:hover {
+    .btn-volver:hover,
+    .btn-actualizar:hover {
     background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 138, 31, 0.5);
+    border-color: rgba(255, 170, 0, 0.55);
     transform: translateY(-1px);
-}
+    }
 
-/* ---------- ESTADÍSTICAS ---------- */
+    .btn-actualizar:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
+    /* ---------- ESTADOS ---------- */
 
-.stat-card {
-    padding: 1.2rem;
+    .estado-panel {
     border-radius: var(--ironfit-radius-lg);
-    background: linear-gradient(145deg, var(--ironfit-surface), #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-    text-align: center;
-}
-
-.stat-card h3 {
-    margin: 0 0 0.5rem;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--ironfit-text-muted);
-}
-
-.stat-card .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--ironfit-primary);
-    margin: 0;
-}
-
-/* ---------- TABLA DE ASISTENCIAS ---------- */
-
-.asistencias-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.3rem;
-    border-radius: var(--ironfit-radius-lg);
-    overflow: hidden;
-    background: var(--ironfit-surface);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-.asistencias-tabla thead {
-    background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
-
-.asistencias-tabla th,
-.asistencias-tabla td {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.88rem;
-    border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
-
-.asistencias-tabla th {
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.78rem;
-    color: var(--ironfit-text-muted);
-}
-
-.asistencias-tabla tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.35);
-}
-
-.asistencias-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
-
-/* Badge de estado de asistencia */
-.asistencia-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.asistencia-badge.presente {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border: 1px solid rgba(34, 197, 94, 0.35);
-}
-
-.asistencia-badge.ausente {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-.asistencia-badge.justificado {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.35);
-}
-
-/* Mensaje cuando no hay asistencias o cargando */
-section p {
-    font-size: 0.9rem;
-    color: var(--ironfit-text-muted);
-    padding: 1.5rem;
-    text-align: center;
+    padding: 1rem 1.2rem;
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
-    border-radius: var(--ironfit-radius-lg);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    text-align: center;
+    color: var(--ironfit-text-muted);
+    }
 
-/* ---------- RESPONSIVE GENERAL ---------- */
+    .estado-panel p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    }
 
-@media (max-width: 768px) {
-    .asistencias-layout {
-        padding: 1.25rem 1.1rem;
+    .error-panel {
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #fca5a5;
+    }
+
+    /* ---------- CONTENIDO ---------- */
+
+    .asistencias-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    }
+
+    /* ---------- TARJETAS SUPERIORES ---------- */
+
+    .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+    }
+
+    .stat-card {
+    min-height: 5.1rem;
+    border-radius: var(--ironfit-radius-md);
+    background: linear-gradient(145deg, var(--ironfit-surface), #070707);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    line-height: 1.05;
+    }
+
+    .stat-card strong {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--ironfit-text);
+    letter-spacing: 0.05em;
+    }
+
+    .stat-card span {
+    margin-top: 0.25rem;
+    color: var(--ironfit-text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    }
+
+    .stat-card small {
+    margin-top: 0.35rem;
+    color: #9ed36a;
+    font-size: 0.72rem;
+    font-weight: 900;
+    }
+
+    /* ---------- SEMANA ---------- */
+
+    .semana-section,
+    .historial-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    }
+
+    .semana-section h2,
+    .historial-section h2 {
+    margin: 0;
+    color: var(--ironfit-text-muted);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    }
+
+    .semana-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.7rem;
+    }
+
+    .dia-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    }
+
+    .dia-label {
+    color: var(--ironfit-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    }
+
+    .dia-circulo {
+    width: 1.55rem;
+    height: 1.55rem;
+    border-radius: 999px;
+    background: #151515;
+    border: 1px solid var(--ironfit-border);
+    color: var(--ironfit-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    }
+
+    .dia-item.entrenado .dia-circulo {
+    background: #c5ee91;
+    border-color: #c5ee91;
+    color: #111111;
+    }
+
+    .dia-item.hoy .dia-circulo {
+    border-color: rgba(255, 170, 0, 0.65);
+    color: var(--ironfit-text);
+    }
+
+    .dia-item.futuro .dia-circulo {
+    border-style: dashed;
+    color: #777;
+    }
+
+    /* ---------- HISTORIAL ---------- */
+
+    .historial-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    }
+
+    .historial-card {
+    min-height: 3.4rem;
+    border-radius: var(--ironfit-radius-md);
+    background: linear-gradient(145deg, var(--ironfit-surface), #070707);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    padding: 0.65rem 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    }
+
+    .historial-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    }
+
+    .estado-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: #75a843;
+    flex: 0 0 auto;
+    }
+
+    .historial-card.pendiente .estado-dot {
+    background: #f59e0b;
+    }
+
+    .historial-card h3 {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ironfit-text);
+    font-weight: 900;
+    line-height: 1.1;
+    }
+
+    .historial-card p {
+    margin: 0.13rem 0 0;
+    color: var(--ironfit-text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    }
+
+    .historial-tiempo {
+    color: var(--ironfit-text-muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    }
+
+    /* ---------- PAGINACIÓN HISTORIAL CLIENTE ---------- */
+
+    .historial-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .historial-header h2 {
+        margin: 0;
+    }
+
+    .historial-header small {
+        display: block;
+        margin-top: 0.35rem;
+        color: var(--ironfit-text-muted);
+        font-size: 0.76rem;
+        font-weight: 800;
+    }
+
+    .paginacion-controles {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-paginacion {
+        border-radius: 999px;
+        padding: 0.52rem 0.95rem;
+        font-size: 0.74rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+        color: #111111;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .btn-paginacion:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+
+    .btn-paginacion:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.4);
+    }
+
+    .select-paginacion {
+        height: 36px;
+        border-radius: 999px;
+        padding: 0 0.75rem;
+        background: #171717;
+        border: 1px solid rgba(255, 138, 31, 0.35);
+        color: var(--ironfit-text);
+        outline: none;
+        font-weight: 800;
+    }
+
+    .select-paginacion:focus {
+        border-color: #ff8a1f;
+    }
+
+    @media (max-width: 800px) {
+        .historial-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .paginacion-controles {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .btn-paginacion,
+        .select-paginacion {
+            flex: 1;
+        }
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 800px) {
+    .asistencias-page {
+        padding: 1.25rem 1rem;
     }
 
     .asistencias-header {
-        flex-direction: column;
         align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .asistencias-header h1 {
+        font-size: 1.05rem;
+        letter-spacing: 0.28em;
     }
 
     .stats-grid {
         grid-template-columns: 1fr;
     }
 
-    .asistencias-tabla {
-        font-size: 0.82rem;
+    .semana-grid {
+        gap: 0.35rem;
     }
 
-    .asistencias-tabla th,
-    .asistencias-tabla td {
-        padding: 0.5rem 0.65rem;
+    .historial-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .historial-tiempo {
+        align-self: flex-end;
     }
 }

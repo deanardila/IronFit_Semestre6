@@ -1,201 +1,644 @@
-/* ================== MIS RUTINAS (CLIENTE) ================== */
-
-/* Contenedor principal de la página */
-.rutinas-layout {
+.rutinas-page {
     min-height: 100vh;
-    background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
-    color: var(--ironfit-text);
-    padding: 1.75rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 32px 38px;
+    background:
+        radial-gradient(circle at top left, rgba(245, 158, 11, 0.08), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.05), transparent 28%),
+        #050505;
+    color: #ffffff;
+    }
+
+    /* HEADER */
+    .rutinas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 26px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 20px;
+    background: rgba(10, 10, 10, 0.96);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .rutinas-header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    }
+
+    .rutinas-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f8fafc;
+    }
+
+    /* BOTONES GENERALES */
+    .btn-volver,
+    .btn-actualizar {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.65);
+    color: #f8fafc;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .btn-volver:hover,
+    .btn-actualizar:hover {
+    border-color: rgba(245, 158, 11, 0.65);
+    color: #fbbf24;
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.14);
+    }
+
+    .btn-actualizar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    }
+
+    /* ESTADOS */
+    .estado-panel {
+    margin-top: 20px;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(12, 12, 12, 0.96);
+    text-align: center;
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .estado-panel p {
+    margin: 0;
+    color: #d4d4d4;
+    }
+
+    .error-panel {
+    border-color: rgba(248, 113, 113, 0.45);
+    background: rgba(127, 29, 29, 0.18);
+    }
+
+    .error-panel p {
+    color: #fca5a5;
+    }
+
+    .exito-panel {
+    border-color: rgba(34, 197, 94, 0.45);
+    background: rgba(22, 163, 74, 0.14);
+    }
+
+    .exito-panel p {
+    color: #86efac;
+    }
+
+    /* CONTENIDO */
+    .rutinas-content {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-}
+    gap: 18px;
+    }
 
-/* ---------- HEADER ---------- */
-
-.rutinas-header {
+    /* RESUMEN DEL PLAN */
+    .plan-resumen {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: var(--ironfit-radius-lg);
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-}
+    align-items: center;
+    gap: 18px;
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(245, 158, 11, 0.26);
+    background:
+        linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(10, 10, 10, 0.98) 58%),
+        rgba(12, 12, 12, 0.96);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.32);
+    }
 
-.rutinas-header-left {
+    .label {
+    display: block;
+    margin-bottom: 8px;
+    color: #a3a3a3;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    }
+
+    .plan-resumen h2 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 900;
+    }
+
+    .plan-resumen p {
+    margin: 0;
+    color: #d4d4d4;
+    font-weight: 600;
+    }
+
+    .estado-badge {
+    width: fit-content;
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.50);
+    background: rgba(22, 163, 74, 0.16);
+    }
+
+    /* TABS DE DÍAS */
+    .dias-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    }
+
+    .dia-tab {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(18, 18, 18, 0.95);
+    color: #f8fafc;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .dia-tab:hover,
+    .dia-tab.activo {
+    border-color: rgba(245, 158, 11, 0.65);
+    color: #111111;
+    background: #f59e0b;
+    }
+
+    /* LISTA DE RUTINAS */
+    .rutinas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    }
+
+    .rutina-card {
+    border-radius: 16px;
+    border: 1px solid rgba(245, 158, 11, 0.18);
+    background:
+        linear-gradient(180deg, rgba(18, 18, 18, 0.98), rgba(8, 8, 8, 0.98));
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    }
+
+    .rutina-card.abierta {
+    border-color: rgba(245, 158, 11, 0.48);
+    }
+
+    .rutina-main {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 48px 1fr 82px 28px;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: left;
+    }
+
+    .rutina-icono,
+    .ejercicio-icono {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .rutina-info h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 900;
+    }
+
+    .rutina-info p {
+    margin: 0;
+    color: #a3a3a3;
+    font-size: 13px;
+    font-weight: 600;
+    }
+
+    .rutina-meta {
+    justify-self: end;
+    min-width: 70px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.04);
+    }
+
+    .rutina-meta span {
+    display: block;
+    font-size: 15px;
+    font-weight: 900;
+    }
+
+    .rutina-meta small {
+    color: #a3a3a3;
+    font-size: 10px;
+    text-transform: uppercase;
+    }
+
+    .rutina-flecha {
+    font-size: 24px;
+    color: #fbbf24;
+    }
+
+    /* EJERCICIOS DENTRO DE RUTINA */
+    .ejercicios-panel {
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    }
+
+    .mini-estado {
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #d4d4d4;
+    font-size: 13px;
+    text-align: center;
+    }
+
+    .ejercicio-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ejercicio-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
-}
+    gap: 12px;
+    }
 
-.rutinas-header h1 {
-    margin: 0;
-    font-size: 1.35rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
+    .ejercicio-left h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 900;
+    }
 
-/* ---------- BOTÓN VOLVER ---------- */
-
-.btn-volver {
-    border: none;
-    border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
+    .ejercicio-left p {
+    margin: 0 0 4px;
+    color: #a3a3a3;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.75);
-    color: var(--ironfit-text);
-    border: 1px solid var(--ironfit-border);
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
+    }
 
-.btn-volver:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 138, 31, 0.5);
-    transform: translateY(-1px);
-}
+    .ejercicio-left small {
+    color: #d4d4d4;
+    font-size: 12px;
+    line-height: 1.4;
+    }
 
-/* ---------- TABLA DE RUTINAS ---------- */
+    .ejercicio-stats {
+    display: flex;
+    gap: 8px;
+    }
 
-.rutinas-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.3rem;
-    border-radius: var(--ironfit-radius-lg);
-    overflow: hidden;
-    background: var(--ironfit-surface);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-.rutinas-tabla thead {
-    background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
-
-.rutinas-tabla th,
-.rutinas-tabla td {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.88rem;
-    border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
-
-.rutinas-tabla th {
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.78rem;
-    color: var(--ironfit-text-muted);
-}
-
-.rutinas-tabla tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.35);
-}
-
-.rutinas-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
-
-/* Badge de estado */
-.estado-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.estado-badge.completado {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border: 1px solid rgba(34, 197, 94, 0.35);
-}
-
-.estado-badge.en-progreso {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.35);
-}
-
-.estado-badge.pendiente {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-/* Botones de acción */
-.btn-accion {
-    border: none;
-    border-radius: 6px;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.btn-iniciar {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border: 1px solid rgba(34, 197, 94, 0.35);
-}
-
-.btn-iniciar:hover {
-    background: rgba(34, 197, 94, 0.25);
-    transform: translateY(-1px);
-}
-
-.btn-ver {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-.btn-ver:hover {
-    background: rgba(59, 130, 246, 0.25);
-    transform: translateY(-1px);
-}
-
-/* Mensaje cuando no hay rutinas o cargando */
-section p {
-    font-size: 0.9rem;
-    color: var(--ironfit-text-muted);
-    padding: 1.5rem;
+    .stat-box {
+    min-width: 56px;
+    padding: 7px 8px;
+    border-radius: 10px;
     text-align: center;
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    border-radius: var(--ironfit-radius-lg);
-    box-shadow: var(--ironfit-shadow-soft);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(0, 0, 0, 0.25);
+    }
+
+    .stat-box strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 900;
+    }
+
+    .stat-box span {
+    color: #a3a3a3;
+    font-size: 10px;
+    text-transform: uppercase;
+    }
+
+    /* BOTÓN INICIAR SESIÓN */
+    .btn-iniciar-sesion {
+    margin-top: 4px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.12);
+    color: #f8fafc;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .btn-iniciar-sesion:hover {
+    background: #f59e0b;
+    color: #111111;
+    }
+
+    .btn-iniciar-sesion:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.04);
+    color: #a3a3a3;
+    border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    /* QUITAMOS EL MENSAJE DE "ABRE UNA RUTINA..." */
+    .ayuda-sesion {
+    display: none;
+    }
+
+   /* PANEL SESIÓN DE HOY */
+    .sesion-panel {
+    margin-top: 14px;
+    padding: 24px;
+    border-radius: 20px;
+    border: 1px solid rgba(245, 158, 11, 0.38);
+    background:
+        radial-gradient(circle at top left, rgba(245, 158, 11, 0.14), transparent 28%),
+        linear-gradient(180deg, rgba(14, 14, 14, 0.98), rgba(5, 5, 5, 0.98));
+    box-shadow:
+        0 22px 45px rgba(0, 0, 0, 0.42),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    .sesion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 22px;
+    }
+
+    .sesion-header .label {
+    display: block;
+    margin-bottom: 10px;
+    color: #a3a3a3;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    }
+
+    .sesion-header h3 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    }
+
+    .sesion-header p {
+    margin: 0;
+    color: #d4d4d4;
+    font-size: 14px;
+    font-weight: 600;
+    }
+
+    .btn-cancelar-sesion {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.55);
+    color: #f8fafc;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .btn-cancelar-sesion:hover {
+    border-color: rgba(248, 113, 113, 0.55);
+    color: #fca5a5;
+    box-shadow: 0 0 16px rgba(248, 113, 113, 0.12);
+    }
+
+    /* LISTA DE EJERCICIOS DE LA SESIÓN */
+    .sesion-ejercicios {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    }
+
+    .sesion-ejercicio {
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background:
+        linear-gradient(180deg, rgba(19, 19, 19, 0.98), rgba(9, 9, 9, 0.98));
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
+    }
+
+    .sesion-ejercicio-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+    }
+
+    .sesion-ejercicio-top > div {
+    flex: 1;
+    min-width: 0;
+    }
+
+    .sesion-ejercicio h4 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    }
+
+    .sesion-ejercicio p {
+    margin: 0;
+    color: #a3a3a3;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    }
+
+    /* CHECK REALIZADO */
+    .check-realizado {
+    min-width: 136px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(248, 113, 113, 0.50);
+    background: rgba(127, 29, 29, 0.22);
+    color: #fca5a5;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .check-realizado.completado {
+    border-color: rgba(34, 197, 94, 0.45);
+    background: rgba(22, 163, 74, 0.16);
+    color: #86efac;
+    }
+
+    .check-realizado input {
+    width: 17px;
+    height: 17px;
+    accent-color: #22c55e;
+    cursor: pointer;
+    }
+
+    /* INPUTS DE SESIÓN */
+    .sesion-inputs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    }
+
+    .sesion-inputs label,
+    .observacion-box label {
+    display: flex;
+    flex-direction: column;
+    color: #a3a3a3;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    }
+
+    .sesion-inputs input,
+    .observacion-box textarea {
+    margin-top: 8px;
+    padding: 13px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+    }
+
+    .sesion-inputs input:focus,
+    .observacion-box textarea:focus {
+    border-color: rgba(245, 158, 11, 0.70);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.10);
+    }
+
+    .sesion-inputs input::-webkit-outer-spin-button,
+    .sesion-inputs input::-webkit-inner-spin-button {
+    margin: 0;
+    }
+
+    /* OBSERVACIÓN */
+    .observacion-box {
+    margin-top: 18px;
+    }
+
+    .observacion-box textarea {
+    width: 97%;
+    resize: vertical;
+    min-height: 108px;
+    line-height: 1.5;
+    color: #f8fafc;
+    }
+
+    .observacion-box textarea::placeholder {
+    color: #737373;
+    font-weight: 600;
+    }
+
+    /* BOTÓN FINALIZAR */
+    .btn-finalizar-entrenamiento {
+    margin-top: 18px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 15px;
+    border: 1px solid rgba(34, 197, 94, 0.52);
+    background:
+        linear-gradient(135deg, rgba(22, 163, 74, 0.26), rgba(5, 5, 5, 0.92));
+    color: #86efac;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .btn-finalizar-entrenamiento:hover {
+    background: rgba(22, 163, 74, 0.35);
+    box-shadow: 0 0 22px rgba(34, 197, 94, 0.14);
+    transform: translateY(-1px);
+    }
+
+    .btn-finalizar-entrenamiento:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
 }
 
-/* ---------- RESPONSIVE GENERAL ---------- */
-
-@media (max-width: 768px) {
-    .rutinas-layout {
-        padding: 1.25rem 1.1rem;
+    /* RESPONSIVE */
+    @media (max-width: 760px) {
+    .rutinas-page {
+        padding: 16px;
     }
 
-    .rutinas-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .sesion-header {
+    flex-direction: column;
     }
 
-    .rutinas-tabla {
-        font-size: 0.82rem;
+    .sesion-ejercicio-top {
+    flex-direction: column;
+    align-items: flex-start;
     }
 
-    .rutinas-tabla th,
-    .rutinas-tabla td {
-        padding: 0.5rem 0.65rem;
+    .sesion-inputs {
+    grid-template-columns: 1fr;
+    }
+
+    .check-realizado {
+    min-width: auto;
     }
 }

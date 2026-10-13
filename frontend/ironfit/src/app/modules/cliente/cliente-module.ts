@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { BaseChartDirective } from 'ng2-charts';
 import { DashboardCliente } from './pages/dashboard-cliente/dashboard-cliente';
-import { MiPerfil } from './pages/mi-perfil/mi-perfil';
 import { MiPlan } from './pages/mi-plan/mi-plan';
 import { MisRutinas } from './pages/mis-rutinas/mis-rutinas';
 import { MisAsistencias } from './pages/mis-asistencias/mis-asistencias';
 import { MisEvaluaciones } from './pages/mis-evaluaciones/mis-evaluaciones';
+import { MiPerfil } from './pages/mi-perfil/mi-perfil';
+import { SharedModule } from '../../shared/shared-module';
 
 const routes: Routes = [
   { path: '', component: DashboardCliente },
@@ -16,14 +17,12 @@ const routes: Routes = [
   { path: 'plan', component: MiPlan },
   { path: 'MisRutinas', component: MisRutinas },
   { path: 'asistencias', component: MisAsistencias },
-  { path: 'evaluaciones', component: MisEvaluaciones},
+  { path: 'evaluaciones', component: MisEvaluaciones },
 ];
-
 
 @NgModule({
   declarations: [
     DashboardCliente,
-    MiPerfil,
     MiPlan,
     MisRutinas,
     MisAsistencias,
@@ -31,8 +30,9 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    HttpClientModule,
     FormsModule,
+    SharedModule,
+    BaseChartDirective,
     RouterModule.forChild(routes),
   ]
 })

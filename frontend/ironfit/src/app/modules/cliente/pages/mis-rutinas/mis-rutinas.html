@@ -1,1 +1,265 @@
-<p>mis-rutinas works!</p>
+<div class="rutinas-page">
+
+    <header class="rutinas-header">
+        <div class="rutinas-header-left">
+        <button class="btn-volver" type="button" (click)="volver()">← Volver</button>
+        <h1>Mis rutinas</h1>
+        </div>
+
+        <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando">
+        {{ cargando ? 'Cargando...' : 'Actualizar' }}
+        </button>
+    </header>
+
+    <section *ngIf="cargando" class="estado-panel">
+        <p>⏳ Cargando tus rutinas...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="estado-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && !planActivo" class="estado-panel">
+        <p>📋 Todavía no tienes un plan activo asignado.</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && planActivo" class="rutinas-content">
+
+        <div class="plan-resumen">
+        <div>
+            <span class="label">Plan activo</span>
+            <h2>{{ planActivo.nombre }}</h2>
+            <p>{{ planActivo.objetivo }}</p>
+        </div>
+
+        <span class="estado-badge">Activo</span>
+        </div>
+
+        <div class="dias-tabs">
+        <button
+            *ngFor="let dia of dias"
+            type="button"
+            class="dia-tab"
+            [class.activo]="diaSeleccionado === dia.valor"
+            (click)="seleccionarDia(dia.valor)">
+            {{ dia.etiqueta }}
+        </button>
+        </div>
+
+        <div *ngIf="rutinasFiltradas.length === 0" class="estado-panel">
+        <p>📋 No hay rutinas asignadas para este día.</p>
+        </div>
+
+        <div class="rutinas-lista" *ngIf="rutinasFiltradas.length > 0">
+
+        <article
+            class="rutina-card"
+            *ngFor="let rutina of rutinasFiltradas"
+            [class.abierta]="rutinaAbiertaId === rutina.id">
+
+            <button class="rutina-main" type="button" (click)="toggleRutina(rutina)">
+
+            <div class="rutina-icono">
+                🏋️
+            </div>
+
+            <div class="rutina-info">
+                <h3>{{ rutina.nombre }}</h3>
+                <p>
+                {{ rutina.diaSemana || 'Sin día' }}
+                <span *ngIf="rutina.descripcion"> · {{ rutina.descripcion }}</span>
+                </p>
+            </div>
+
+            <div class="rutina-meta">
+                <span>{{ obtenerEjercicios(rutina.id).length || '-' }}</span>
+                <small>ejercicios</small>
+            </div>
+
+            <span class="rutina-flecha">
+                {{ rutinaAbiertaId === rutina.id ? '⌃' : '›' }}
+            </span>
+
+            </button>
+
+            <div class="ejercicios-panel" *ngIf="rutinaAbiertaId === rutina.id">
+
+            <div *ngIf="cargandoEjerciciosId === rutina.id" class="mini-estado">
+                Cargando ejercicios...
+            </div>
+
+            <div
+                *ngIf="cargandoEjerciciosId !== rutina.id && obtenerEjercicios(rutina.id).length === 0"
+                class="mini-estado">
+                Esta rutina todavía no tiene ejercicios asignados.
+            </div>
+
+            <div
+                class="ejercicio-card"
+                *ngFor="let ejercicio of obtenerEjercicios(rutina.id)">
+
+                <div class="ejercicio-left">
+                <div class="ejercicio-icono">💪</div>
+
+                <div>
+                    <h4>{{ ejercicio.ejercicioNombre }}</h4>
+                    <p>
+                    {{ ejercicio.grupoMuscular || 'Sin grupo muscular' }}
+                    <span *ngIf="ejercicio.descansoSegundos">
+                        · Descanso {{ ejercicio.descansoSegundos }}s
+                    </span>
+                    </p>
+                    <small *ngIf="ejercicio.ejercicioDescripcion">
+                    {{ ejercicio.ejercicioDescripcion }}
+                    </small>
+                </div>
+                </div>
+
+                <div class="ejercicio-stats">
+                <div class="stat-box">
+                    <strong>{{ ejercicio.series || '-' }}</strong>
+                    <span>series</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>{{ ejercicio.repeticiones || '-' }}</strong>
+                    <span>reps</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>{{ ejercicio.pesoSugerido || 0 }}</strong>
+                    <span>kg</span>
+                </div>
+                </div>
+
+            </div>
+
+            </div>
+
+        </article>
+
+        </div>
+
+        <div *ngIf="mensajeExito" class="estado-panel exito-panel">
+    <p>✅ {{ mensajeExito }}</p>
+    </div>
+
+    <button
+        class="btn-iniciar-sesion"
+        type="button"
+        (click)="iniciarSesionHoy()"
+        [disabled]="!rutinaAbiertaId || !!cargandoEjerciciosId || modoSesionActiva">
+
+        <span *ngIf="!rutinaAbiertaId">
+            Primero abre una rutina
+        </span>
+
+        <span *ngIf="rutinaAbiertaId && cargandoEjerciciosId">
+            Cargando ejercicios...
+        </span>
+
+        <span *ngIf="rutinaAbiertaId && !cargandoEjerciciosId && !modoSesionActiva">
+            ▷ Iniciar sesión de hoy
+        </span>
+
+        <span *ngIf="modoSesionActiva">
+            Sesión en curso
+        </span>
+    </button>
+
+    <section *ngIf="modoSesionActiva && rutinaSesion" class="sesion-panel">
+
+    <div class="sesion-header">
+        <div>
+        <span class="label">Sesión de hoy</span>
+        <h3>{{ rutinaSesion.nombre }}</h3>
+        <p>Marca lo que realizaste y ajusta los valores si fue necesario.</p>
+        </div>
+
+        <button
+        type="button"
+        class="btn-cancelar-sesion"
+        (click)="cancelarSesion()"
+        [disabled]="guardandoEntrenamiento">
+        Cancelar
+        </button>
+    </div>
+
+    <div class="sesion-ejercicios">
+
+        <article class="sesion-ejercicio" *ngFor="let ejercicio of ejerciciosSesion">
+
+        <div class="sesion-ejercicio-top">
+            <label class="check-realizado" [class.completado]="datosSesion[ejercicio.ejercicioId].completado">
+            <input
+                type="checkbox"
+                [(ngModel)]="datosSesion[ejercicio.ejercicioId].completado"
+                (ngModelChange)="cambiarCompletado(ejercicio.ejercicioId, $event)"
+            />
+            <span>Realizado</span>
+            </label>
+
+            <div>
+            <h4>{{ ejercicio.ejercicioNombre }}</h4>
+            <p>{{ ejercicio.grupoMuscular || 'Sin grupo muscular' }}</p>
+            </div>
+        </div>
+
+        <div class="sesion-inputs">
+            <label>
+            Series
+            <input
+                type="number"
+                min="0"
+                [(ngModel)]="datosSesion[ejercicio.ejercicioId].seriesRealizadas"
+            />
+            </label>
+
+            <label>
+            Reps
+            <input
+                type="number"
+                min="0"
+                [(ngModel)]="datosSesion[ejercicio.ejercicioId].repeticionesRealizadas"
+            />
+            </label>
+
+            <label>
+            Peso usado
+            <input
+                type="number"
+                min="0"
+                step="0.5"
+                [(ngModel)]="datosSesion[ejercicio.ejercicioId].pesoUsado"
+            />
+            </label>
+        </div>
+
+        </article>
+
+    </div>
+
+    <div class="observacion-box">
+        <label>Observación del entrenamiento</label>
+        <textarea
+        rows="3"
+        maxlength="500"
+        placeholder="Ej: Me sentí bien, subí el peso, tuve molestias, etc."
+        [(ngModel)]="observacionCliente">
+        </textarea>
+    </div>
+
+    <button
+        class="btn-finalizar-entrenamiento"
+        type="button"
+        (click)="finalizarEntrenamiento()"
+        [disabled]="guardandoEntrenamiento">
+
+        {{ guardandoEntrenamiento ? 'Guardando entrenamiento...' : 'Finalizar entrenamiento' }}
+    </button>
+
+    </section>
+
+    </section>
+
+</div>

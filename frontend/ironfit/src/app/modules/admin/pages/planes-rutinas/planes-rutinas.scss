@@ -1,21 +1,16 @@
-/* ================== PLANES Y RUTINAS (ADMIN) ================== */
-
-/* Contenedor principal de la página */
 .planes-layout {
     min-height: 100vh;
     background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
     color: var(--ironfit-text);
     padding: 1.75rem 2rem;
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-}
+    }
 
-/* ---------- HEADER ---------- */
-
-.planes-header {
+    .planes-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,173 +20,509 @@
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
     box-shadow: var(--ironfit-shadow-soft);
-    overflow: hidden; /* evita que el focus ring salga del recuadro */
-}
+    }
 
-.planes-header h1 {
+    .planes-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    }
+
+    .planes-header h1 {
     margin: 0;
     font-size: 1.35rem;
-    letter-spacing: 0.06em;
+    font-weight: 900;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-}
-
-/* Campo de búsqueda */
-.busqueda-container {
-    flex: 0 1 auto;
-    max-width: 320px;
-    margin-left: auto;
-    /* separa del borde derecho como el botón volver del lado izquierdo */
-    margin-right: 2rem;
-}
-
-.input-busqueda {
-    width: 100%;
-    padding: 0.5rem 0.85rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 138, 31, 0.3);
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-
-    &::placeholder {
-        color: rgba(255, 255, 255, 0.4);
+    color: var(--ironfit-text);
     }
 
-    &:focus {
-        outline: none;
-        border-color: #ff8a1f;
-        background: rgba(255, 255, 255, 0.08);
-        /* usa anillo interno para que no se desborde fuera del header */
-        box-shadow: inset 0 0 0 2px rgba(255, 138, 31, 0.25);
+    .planes-header p {
+    margin: 0.25rem 0 0;
+    color: var(--ironfit-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
     }
-}
 
-/* Botón volver (estilo compartido con gestión de usuarios) */
-.btn-volver {
-    border: none;
+    .planes-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex: 1;
+    }
+
+    .btn-volver,
+    .btn-actualizar {
     border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.78rem;
+    font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     background: rgba(0, 0, 0, 0.75);
     color: var(--ironfit-text);
     border: 1px solid var(--ironfit-border);
     cursor: pointer;
-    transition: all 0.15s ease;
-}
+    transition: 0.15s ease;
+    white-space: nowrap;
+    }
 
-.btn-volver:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 138, 31, 0.5);
+    .btn-volver:hover,
+    .btn-actualizar:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 138, 31, 0.55);
     transform: translateY(-1px);
-}
+    }
 
-/* ---------- TABLA DE PLANES ---------- */
+    .btn-actualizar:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    }
 
-.planes-tabla {
+    .busqueda-container {
+    width: 330px;
+    max-width: 100%;
+    }
+
+    .input-busqueda,
+    .select-estado {
+    width: 93%;
+    padding: 0.58rem 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 138, 31, 0.32);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.85rem;
+    transition: 0.2s ease;
+    }
+
+    .select-estado {
+    width: 100px;
+    cursor: pointer;
+    }
+
+    .input-busqueda::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+    }
+
+    .input-busqueda:focus,
+    .select-estado:focus {
+    outline: none;
+    border-color: #ff8a1f;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 2px rgba(255, 138, 31, 0.22);
+    }
+
+    .metricas-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    }
+
+    .metrica-card {
+    padding: 1rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .metrica-card span {
+    display: block;
+    color: var(--ironfit-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    }
+
+    .metrica-card strong {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 1.6rem;
+    font-weight: 900;
+    }
+
+    .metrica-card small {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--ironfit-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    }
+
+    .metrica-card.main {
+    border-color: rgba(255, 138, 31, 0.42);
+    }
+
+    .metrica-card.main strong {
+    color: #ff8a1f;
+    }
+
+    .metrica-card.danger strong {
+    color: #ff6b6b;
+    }
+
+    .graficos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    }
+
+    .panel-resumen {
+    padding: 1rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .panel-resumen h2,
+    .tabla-header h2 {
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    }
+
+    .barra-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+    }
+
+    .barra-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    }
+
+    .barra-info span {
+    color: var(--ironfit-text);
+    }
+
+    .barra-info strong {
+    color: #ffb347;
+    }
+
+    .barra-track {
+    height: 0.28rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.12);
+    }
+
+    .barra-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ff8a1f, #ffb347);
+    }
+
+    .barra-fill.objetivo {
+    background: linear-gradient(90deg, #32d27a, #86efac);
+    }
+
+    .tabla-header {
+    padding: 0.9rem 1rem;
+    border-radius: var(--ironfit-radius-lg) var(--ironfit-radius-lg) 0 0;
+    background: linear-gradient(145deg, #111111, #050505);
+    border: 1px solid var(--ironfit-border);
+    border-bottom: none;
+    }
+
+    .tabla-header h2 {
+    margin: 0;
+    }
+
+    .planes-tabla {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.3rem;
     border-radius: var(--ironfit-radius-lg);
     overflow: hidden;
     background: var(--ironfit-surface);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    }
 
-.planes-tabla thead {
+    .tabla-header + .planes-tabla {
+    border-radius: 0 0 var(--ironfit-radius-lg) var(--ironfit-radius-lg);
+    }
+
+    .planes-tabla thead {
     background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
+    }
 
-.planes-tabla th,
-.planes-tabla td {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.88rem;
+    .planes-tabla th,
+    .planes-tabla td {
+    padding: 0.72rem 0.95rem;
+    font-size: 0.86rem;
     border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
+    }
 
-.planes-tabla th {
+    .planes-tabla th {
     text-align: left;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: var(--ironfit-text-muted);
-}
+    }
 
-.planes-tabla tbody tr:nth-child(even) {
+    .planes-tabla tbody tr:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.35);
-}
+    }
 
-.planes-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
+    .planes-tabla tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.025);
+    }
 
-/* Botones de acción */
-.btn-accion {
+    .btn-accion {
     border: none;
-    border-radius: var(--ironfit-radius-md);
-    padding: 0.35rem 0.8rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, #ffb347, #ff8a1f);
-    color: #111111;
-    cursor: pointer;
-    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-}
-
-.btn-accion:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8);
-}
-
-.btn-accion:active {
-    transform: translateY(0);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-}
-
-/* Badge de estado */
-.estado-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
     border-radius: 999px;
+    padding: 0.45rem 0.85rem;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    background: rgba(255, 138, 31, 0.12);
+    color: #ffb347;
+    border: 1px solid rgba(255, 138, 31, 0.35);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+    }
+
+    .btn-accion:hover {
+    background: rgba(255, 138, 31, 0.22);
+    border-color: rgba(255, 138, 31, 0.65);
+    transform: translateY(-1px);
+    }
+
+    .estado-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 82px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: rgba(239, 68, 68, 0.15);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.35);
-}
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    }
 
-.estado-badge.activo {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border-color: rgba(34, 197, 94, 0.35);
-}
+    .estado-badge.activo {
+    background-color: rgba(0, 170, 85, 0.15);
+    color: #32d27a;
+    border-color: rgba(50, 210, 122, 0.35);
+    }
 
-/* Mensaje cuando no hay planes o cargando */
-section p {
+    .plan-detalle-card {
+    padding: 1.2rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(135deg, rgba(255, 138, 31, 0.10), rgba(0, 0, 0, 0.7));
+    border: 1px solid rgba(255, 138, 31, 0.32);
+    box-shadow: var(--ironfit-shadow-soft);
+    margin-bottom: 1rem;
+    }
+
+    .plan-detalle-card span {
+    display: block;
+    color: var(--ironfit-text-muted);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    }
+
+    .plan-detalle-card h2 {
+    margin: 0.4rem 0 0.3rem;
+    font-size: 1.25rem;
+    font-weight: 900;
+    }
+
+    .plan-detalle-card p {
+    margin: 0;
+    color: var(--ironfit-text-muted);
+    font-weight: 700;
+    }
+
+    .estado-panel {
     font-size: 0.9rem;
     color: var(--ironfit-text-muted);
-    padding: 1.5rem;
+    padding: 1.2rem;
     text-align: center;
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
     border-radius: var(--ironfit-radius-lg);
     box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .estado-panel p {
+    margin: 0;
+    }
+
+    .error-panel {
+    border-color: rgba(248, 113, 113, 0.45);
+    color: #fca5a5;
+    }
+
+    /* ---------- BUSCADOR PAGINADO PLANES ---------- */
+
+.busqueda-container {
+    flex: 0 1 500px;
+    min-width: 320px;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
 }
 
-/* ---------- RESPONSIVE GENERAL ---------- */
+.input-busqueda {
+    flex: 1;
+    width: auto;
+}
 
-@media (max-width: 768px) {
+.btn-buscar-planes {
+    border-radius: 999px;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s ease;
+}
+
+.btn-buscar-planes:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 138, 31, 0.5);
+    transform: translateY(-1px);
+}
+
+/* ---------- PAGINACIÓN PLANES ---------- */
+
+    .paginacion-planes {
+        margin-top: 1rem;
+        padding: 1rem 1.25rem;
+        border-radius: var(--ironfit-radius-lg);
+        background: linear-gradient(145deg, #111111, #050505);
+        border: 1px solid var(--ironfit-border);
+        box-shadow: var(--ironfit-shadow-soft);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .paginacion-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .paginacion-info span {
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ironfit-text);
+    }
+
+    .paginacion-info small {
+        color: var(--ironfit-text-muted);
+        font-size: 0.78rem;
+    }
+
+    .paginacion-controles {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .btn-paginacion {
+        border-radius: 999px;
+        padding: 0.55rem 1.1rem;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+        color: #111111;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .btn-paginacion:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+
+    .btn-paginacion:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.4);
+    }
+
+    .select-paginacion {
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        background: #171717;
+        border: 1px solid rgba(255, 138, 31, 0.35);
+        color: var(--ironfit-text);
+        outline: none;
+        font-weight: 700;
+    }
+
+    .select-paginacion:focus {
+        border-color: #ff8a1f;
+    }
+
+    @media (max-width: 1050px) {
+        .busqueda-container {
+            min-width: 100%;
+            max-width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .input-busqueda,
+        .btn-buscar-planes {
+            width: 100%;
+        }
+
+        .paginacion-planes {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .paginacion-controles {
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .btn-paginacion,
+        .select-paginacion {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 1050px) {
     .planes-layout {
-        padding: 1.25rem 1.1rem;
+        padding: 1.25rem 1rem;
     }
 
     .planes-header {
@@ -199,12 +530,32 @@ section p {
         align-items: flex-start;
     }
 
-    .planes-tabla {
-        font-size: 0.82rem;
+    .planes-header-right {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .planes-tabla th,
-    .planes-tabla td {
-        padding: 0.5rem 0.65rem;
+    .busqueda-container,
+    .select-estado {
+        width: 100%;
+    }
+
+    .metricas-grid,
+    .graficos-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .planes-tabla {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    }
+
+    @media (max-width: 650px) {
+    .metricas-grid,
+    .graficos-grid {
+        grid-template-columns: 1fr;
     }
 }

@@ -1,232 +1,271 @@
-/* ================== MI PLAN (CLIENTE) ================== */
-
-/* Contenedor principal de la página */
-.plan-layout {
+.mi-plan-page {
     min-height: 100vh;
-    background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
-    color: var(--ironfit-text);
-    padding: 1.75rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-/* ---------- HEADER ---------- */
-
-.plan-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: var(--ironfit-radius-lg);
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-.plan-header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.plan-header h1 {
-    margin: 0;
-    font-size: 1.35rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.plan-header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* ---------- BOTÓN VOLVER ---------- */
-
-.btn-volver {
-    border: none;
-    border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.75);
-    color: var(--ironfit-text);
-    border: 1px solid var(--ironfit-border);
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.btn-volver:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 138, 31, 0.5);
-    transform: translateY(-1px);
-}
-
-/* ---------- CONTENIDO DEL PLAN ---------- */
-
-.plan-content {
-    padding: 1.5rem;
-    border-radius: var(--ironfit-radius-lg);
-    background: linear-gradient(145deg, var(--ironfit-surface), #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-.plan-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.2rem;
-    margin-bottom: 1.5rem;
-}
-
-.info-card {
-    padding: 1rem;
-    border-radius: var(--ironfit-radius-md);
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 138, 31, 0.2);
-}
-
-.info-card h3 {
-    margin: 0 0 0.5rem;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--ironfit-text-muted);
-}
-
-.info-card p {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--ironfit-text);
-}
-
-/* Progreso visual */
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-top: 0.5rem;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #ff8a1f, #ffb347);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-}
-
-/* ---------- TABLA DE RUTINAS ---------- */
-
-.rutinas-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    border-radius: var(--ironfit-radius-lg);
-    overflow: hidden;
-    background: var(--ironfit-surface);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-.rutinas-tabla thead {
-    background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
-
-.rutinas-tabla th,
-.rutinas-tabla td {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.88rem;
-    border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
-
-.rutinas-tabla th {
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.78rem;
-    color: var(--ironfit-text-muted);
-}
-
-.rutinas-tabla tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.35);
-}
-
-.rutinas-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
-
-/* Badge de estado */
-.estado-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.estado-badge.completado {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border: 1px solid rgba(34, 197, 94, 0.35);
-}
-
-.estado-badge.en-progreso {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.35);
-}
-
-.estado-badge.pendiente {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.35);
-}
-
-/* Mensaje cuando no hay plan o cargando */
-section p {
-    font-size: 0.9rem;
-    color: var(--ironfit-text-muted);
-    padding: 1.5rem;
-    text-align: center;
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    border-radius: var(--ironfit-radius-lg);
-    box-shadow: var(--ironfit-shadow-soft);
-}
-
-/* ---------- RESPONSIVE GENERAL ---------- */
-
-@media (max-width: 768px) {
-    .plan-layout {
-        padding: 1.25rem 1.1rem;
+    padding: 32px 38px;
+    background:
+        radial-gradient(circle at top left, rgba(245, 158, 11, 0.08), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.05), transparent 28%),
+        #050505;
+    color: #ffffff;
     }
 
-    .plan-header {
+    /* HEADER IGUAL AL ESTILO ANTERIOR */
+    .mi-plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 26px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 20px;
+    background: rgba(10, 10, 10, 0.96);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .mi-plan-header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    }
+
+    .mi-plan-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f8fafc;
+    }
+
+    /* BOTONES */
+    .btn-volver,
+    .btn-actualizar,
+    .btn-ver-rutinas {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.65);
+    color: #f8fafc;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    .btn-volver:hover,
+    .btn-actualizar:hover {
+    border-color: rgba(245, 158, 11, 0.65);
+    color: #fbbf24;
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.14);
+    }
+
+    .btn-actualizar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    }
+
+    /* ESTADOS */
+    .estado-panel {
+    margin-top: 20px;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(12, 12, 12, 0.96);
+    text-align: center;
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .estado-panel p {
+    margin: 0;
+    color: #d4d4d4;
+    }
+
+    .error-panel {
+    border-color: rgba(248, 113, 113, 0.45);
+    background: rgba(127, 29, 29, 0.18);
+    }
+
+    .error-panel p {
+    color: #fca5a5;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .plan-card-principal {
+    padding: 26px;
+    border-radius: 20px;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    background: rgba(8, 8, 8, 0.96);
+    box-shadow:
+        0 22px 50px rgba(0, 0, 0, 0.42),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    /* NUEVA UBICACIÓN DE TARJETAS, PERO CON ESTILO ANTERIOR */
+    .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+    }
+
+    .info-item {
+    min-height: 96px;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(245, 158, 11, 0.20);
+    background:
+        linear-gradient(180deg, rgba(20, 20, 20, 0.98), rgba(10, 10, 10, 0.98));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .info-item:hover,
+    .descripcion-box:hover,
+    .rutinas-resumen-box:hover {
+    border-color: rgba(245, 158, 11, 0.42);
+    }
+
+    /* LETRAS COMO EL DISEÑO ANTERIOR */
+    .info-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #a3a3a3;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    }
+
+    .info-item p {
+    margin: 0;
+    color: #f9fafb;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1.35;
+    }
+
+    /* ESTADO */
+    .estado-badge {
+    width: fit-content;
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    }
+
+    .estado-badge.activo {
+    color: #86efac;
+    border: 1px solid rgba(34, 197, 94, 0.50);
+    background: rgba(22, 163, 74, 0.16);
+    }
+
+    /* DESCRIPCIÓN */
+    .descripcion-box {
+    margin-top: 8px;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(245, 158, 11, 0.20);
+    background:
+        linear-gradient(180deg, rgba(18, 18, 18, 0.98), rgba(8, 8, 8, 0.98));
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .descripcion-box p {
+    margin: 0;
+    color: #f3f4f6;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.65;
+    }
+
+    /* BLOQUE DE RUTINAS COMO ACCESO DIRECTO */
+    .rutinas-resumen-box {
+    margin-top: 22px;
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid rgba(245, 158, 11, 0.30);
+    background:
+        linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(10, 10, 10, 0.98) 58%),
+        rgba(12, 12, 12, 0.96);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 22px;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.32);
+    }
+
+    .rutinas-resumen-box h3 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    }
+
+    .rutinas-resumen-box p {
+    margin: 0;
+    color: #cfcfcf;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.55;
+    }
+
+    .btn-ver-rutinas {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    color: #111111;
+    box-shadow: 0 12px 24px rgba(245, 158, 11, 0.22);
+    white-space: nowrap;
+    }
+
+    .btn-ver-rutinas:hover {
+    background: #fbbf24;
+    border-color: #fbbf24;
+    color: #050505;
+    transform: translateY(-1px);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 980px) {
+    .info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rutinas-resumen-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    }
+
+    @media (max-width: 640px) {
+    .mi-plan-page {
+        padding: 16px;
+    }
+
+    .mi-plan-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .plan-info {
+    .mi-plan-header-left {
+        flex-wrap: wrap;
+    }
+
+    .mi-plan-header h1 {
+        font-size: 20px;
+    }
+
+    .info-grid {
         grid-template-columns: 1fr;
     }
 
-    .rutinas-tabla {
-        font-size: 0.82rem;
-    }
-
-    .rutinas-tabla th,
-    .rutinas-tabla td {
-        padding: 0.5rem 0.65rem;
+    .btn-ver-rutinas {
+        width: 100%;
     }
 }

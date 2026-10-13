@@ -1,1 +1,146 @@
-<p>mis-asistencias works!</p>
+<div class="asistencias-page">
+
+    <header class="asistencias-header">
+        <div class="asistencias-header-left">
+            <button class="btn-volver" type="button" (click)="volver()">
+                ← Volver
+            </button>
+
+            <h1>Mis asistencias</h1>
+        </div>
+
+        <button
+            class="btn-actualizar"
+            type="button"
+            (click)="actualizar()"
+            [disabled]="cargando">
+            {{ cargando ? 'Cargando...' : 'Actualizar' }}
+        </button>
+    </header>
+
+    <section *ngIf="cargando" class="estado-panel">
+        <p>⏳ Cargando tus asistencias...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="estado-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && !error" class="asistencias-content">
+
+        <div class="stats-grid">
+
+            <article class="stat-card">
+                <strong>{{ sesionesTotales }}</strong>
+                <span>Sesiones totales</span>
+            </article>
+
+            <article class="stat-card">
+                <strong>{{ porcentajeAsistencia }}%</strong>
+                <span>Asistencia</span>
+                <small>
+                    {{ textoResumenAsistencia }}
+                </small>
+            </article>
+
+            <article class="stat-card">
+                <strong>{{ rachaActualSemana }}</strong>
+                <span>Racha actual (sem)</span>
+            </article>
+
+        </div>
+
+        <section class="semana-section">
+            <h2>Esta semana</h2>
+
+            <div class="semana-grid">
+                <div
+                    class="dia-item"
+                    *ngFor="let dia of diasSemana"
+                    [class.entrenado]="dia.entrenado"
+                    [class.hoy]="dia.esHoy"
+                    [class.futuro]="dia.futuro">
+
+                    <span class="dia-label">{{ dia.etiqueta }}</span>
+
+                    <div class="dia-circulo">
+                        <span *ngIf="dia.entrenado">✓</span>
+                        <span *ngIf="!dia.entrenado && dia.esHoy">Hoy</span>
+                        <span *ngIf="!dia.entrenado && !dia.esHoy && dia.futuro">Desc</span>
+                        <span *ngIf="!dia.entrenado && !dia.esHoy && !dia.futuro">—</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="historial-section">
+            <div class="historial-header">
+                <div>
+                    <h2>Historial de entrenamientos</h2>
+                    <small *ngIf="totalElementos > 0">
+                        Página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }} · {{ totalElementos }} registros
+                    </small>
+                </div>
+
+                <div class="paginacion-controles" *ngIf="totalElementos > 0">
+                    <button
+                        type="button"
+                        class="btn-paginacion"
+                        (click)="irPaginaAnterior()"
+                        [disabled]="paginaActual === 0">
+                        ← Anterior
+                    </button>
+
+                    <select
+                        class="select-paginacion"
+                        [(ngModel)]="tamanoPagina"
+                        (change)="cambiarTamanoPagina()">
+                        <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                            {{ opcion }} por página
+                        </option>
+                    </select>
+
+                    <button
+                        type="button"
+                        class="btn-paginacion"
+                        (click)="irPaginaSiguiente()"
+                        [disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
+                        Siguiente →
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="historialReciente.length === 0" class="estado-panel">
+                <p>📋 Aún no tienes entrenamientos registrados.</p>
+            </div>
+
+            <div class="historial-lista" *ngIf="historialReciente.length > 0">
+
+                <article
+                    class="historial-card"
+                    *ngFor="let item of historialReciente"
+                    [class.completado]="item.estado === 'COMPLETADO'"
+                    [class.pendiente]="item.estado === 'PENDIENTE'">
+
+                    <div class="historial-left">
+                        <span class="estado-dot"></span>
+
+                        <div>
+                            <h3>{{ item.titulo }}</h3>
+                            <p>{{ item.fechaTexto }} · {{ item.detalle }}</p>
+                        </div>
+                    </div>
+
+                    <div class="historial-tiempo">
+                        <span *ngIf="item.duracionTexto !== '—'">◷</span>
+                        {{ item.duracionTexto }}
+                    </div>
+
+                </article>
+
+            </div>
+        </section>
+
+    </section>
+
+</div>

@@ -1,21 +1,18 @@
 /* ================== MIS EVALUACIONES (CLIENTE) ================== */
 
-/* Contenedor principal de la página */
-.evaluaciones-layout {
+    .mis-evaluaciones-layout {
     min-height: 100vh;
     background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
     color: var(--ironfit-text);
     padding: 1.75rem 2rem;
-    max-width: 1200px;
+    max-width: 1180px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-}
+    }
 
-/* ---------- HEADER ---------- */
-
-.evaluaciones-header {
+    .mis-evaluaciones-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,138 +22,322 @@
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    }
 
-.evaluaciones-header-left {
+    .header-left {
     display: flex;
     align-items: center;
     gap: 1rem;
-}
+    }
 
-.evaluaciones-header h1 {
+    .mis-evaluaciones-header h1 {
     margin: 0;
     font-size: 1.35rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-}
+    }
 
-/* ---------- BOTÓN VOLVER ---------- */
-
-.btn-volver {
-    border: none;
+    .btn-volver,
+    .btn-actualizar {
     border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(255, 255, 255, 0.06);
     color: var(--ironfit-text);
     border: 1px solid var(--ironfit-border);
     cursor: pointer;
-    transition: all 0.15s ease;
-}
+    transition: 0.15s;
+    }
 
-.btn-volver:hover {
-    background: rgba(255, 255, 255, 0.05);
+    .btn-volver:hover,
+    .btn-actualizar:hover {
+    background: rgba(255, 255, 255, 0.09);
     border-color: rgba(255, 138, 31, 0.5);
     transform: translateY(-1px);
-}
+    }
 
-/* ---------- TABLA DE EVALUACIONES ---------- */
+    button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+    }
 
-.evaluaciones-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.3rem;
-    border-radius: var(--ironfit-radius-lg);
-    overflow: hidden;
-    background: var(--ironfit-surface);
+    .resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    }
+
+    .resumen-card {
+    padding: 1rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: center;
     box-shadow: var(--ironfit-shadow-soft);
-}
+    }
 
-.evaluaciones-tabla thead {
-    background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
+    .resumen-card strong {
+    display: block;
+    font-size: 1.55rem;
+    margin-bottom: 0.15rem;
+    }
 
-.evaluaciones-tabla th,
-.evaluaciones-tabla td {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.88rem;
-    border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
-
-.evaluaciones-tabla th {
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.78rem;
+    .resumen-label {
+    display: block;
     color: var(--ironfit-text-muted);
-}
+    font-size: 0.78rem;
+    margin-bottom: 0.25rem;
+    }
 
-.evaluaciones-tabla tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 0, 0.35);
-}
+    .resumen-card small {
+    font-size: 0.72rem;
+    font-weight: 700;
+    }
 
-.evaluaciones-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
+    .resumen-card small.sube {
+    color: #86efac;
+    }
 
-/* Badge de tipo de evaluación */
-.tipo-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    .resumen-card small.baja {
+    color: #f87171;
+    }
+
+    .resumen-card small.neutral {
+    color: var(--ironfit-text-muted);
+    }
+
+    .ultima-evaluacion-card,
+    .metricas-detalladas,
+    .historial-section {
+    padding: 1.15rem;
+    border-radius: var(--ironfit-radius-lg);
+    background: linear-gradient(145deg, #111111, #070707);
+    border: 1px solid var(--ironfit-border);
+    box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .ultima-evaluacion-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    }
+
+    .ultima-evaluacion-header h2,
+    .metricas-detalladas h2,
+    .historial-section h2 {
+    margin: 0;
+    font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-}
+    }
 
-.tipo-badge.inicial {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.35);
-}
+    .ultima-evaluacion-header span {
+    color: var(--ironfit-text-muted);
+    font-size: 0.8rem;
+    }
 
-.tipo-badge.seguimiento {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.35);
-}
-
-.tipo-badge.final {
-    background: rgba(34, 197, 94, 0.15);
+    .badge-imc {
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    background: rgba(34, 197, 94, 0.12);
     color: #86efac;
     border: 1px solid rgba(34, 197, 94, 0.35);
-}
+    font-weight: 800;
+    font-size: 0.78rem;
+    }
 
-/* Botones de acción */
-.btn-accion {
-    border: none;
-    border-radius: 6px;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
+    .detalle-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+    }
+
+    .detalle-item {
+    padding: 0.85rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .detalle-item span,
+    .observaciones-box span {
+    display: block;
+    color: var(--ironfit-text-muted);
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+    }
 
-.btn-ver {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.35);
-}
+    .detalle-item strong {
+    font-size: 0.95rem;
+    }
 
-.btn-ver:hover {
-    background: rgba(59, 130, 246, 0.25);
-    transform: translateY(-1px);
-}
+    .observaciones-box {
+    padding: 0.85rem;
+    border-radius: 10px;
+    background: rgba(255, 138, 31, 0.06);
+    border: 1px solid rgba(255, 138, 31, 0.18);
+    }
 
-/* Mensaje cuando no hay evaluaciones o cargando */
-section p {
+    .observaciones-box p {
+    margin: 0;
+    color: var(--ironfit-text);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    }
+
+    .metricas-detalladas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    }
+
+    .metrica-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .metrica-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    font-weight: 800;
+    }
+
+    .metrica-icon.cintura {
+    background: #eeeeff;
+    color: #7c3aed;
+    }
+
+    .metrica-icon.pecho {
+    background: #ecfdf5;
+    color: #10b981;
+    }
+
+    .metrica-icon.brazo {
+    background: #fff7ed;
+    color: #f59e0b;
+    }
+
+    .metrica-icon.pierna {
+    background: #fff1f2;
+    color: #e11d48;
+    }
+
+    .metrica-info {
+    width: 100%;
+    }
+
+    .metrica-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.45rem;
+    }
+
+    .metrica-top strong {
+    display: block;
+    font-size: 0.9rem;
+    }
+
+    .metrica-top span {
+    color: var(--ironfit-text-muted);
+    font-size: 0.72rem;
+    }
+
+    .metrica-valor {
+    font-size: 0.95rem !important;
+    white-space: nowrap;
+    }
+
+    .barra {
+    width: 100%;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    }
+
+    .barra-progreso {
+    height: 100%;
+    border-radius: 999px;
+    }
+
+    .barra-progreso.cintura {
+    background: #8b5cf6;
+    }
+
+    .barra-progreso.pecho {
+    background: #10b981;
+    }
+
+    .barra-progreso.brazo {
+    background: #f59e0b;
+    }
+
+    .barra-progreso.pierna {
+    background: #f43f5e;
+    }
+
+    .historial-lista {
+    margin-top: 0.85rem;
+    display: grid;
+    gap: 0.7rem;
+    }
+
+    .historial-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .historial-fecha {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    }
+
+    .historial-fecha span {
+    color: var(--ironfit-text-muted);
+    font-size: 0.75rem;
+    }
+
+    .historial-datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    color: var(--ironfit-text-muted);
+    font-size: 0.8rem;
+    }
+
+    .historial-datos strong {
+    color: var(--ironfit-text);
+    }
+
+    section p {
     font-size: 0.9rem;
     color: var(--ironfit-text-muted);
     padding: 1.5rem;
@@ -165,26 +346,126 @@ section p {
     border: 1px solid var(--ironfit-border);
     border-radius: var(--ironfit-radius-lg);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    }
 
-/* ---------- RESPONSIVE GENERAL ---------- */
+    .mensaje-error p {
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.08);
+    }
 
-@media (max-width: 768px) {
-    .evaluaciones-layout {
+    /* ---------- PAGINACIÓN HISTORIAL EVALUACIONES CLIENTE ---------- */
+
+    .historial-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .historial-header h2 {
+        margin: 0;
+    }
+
+    .historial-header small {
+        display: block;
+        margin-top: 0.35rem;
+        color: var(--ironfit-text-muted);
+        font-size: 0.76rem;
+        font-weight: 800;
+    }
+
+    .paginacion-controles {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-paginacion {
+        border-radius: 999px;
+        padding: 0.52rem 0.95rem;
+        font-size: 0.74rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+        color: #111111;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .btn-paginacion:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+
+    .btn-paginacion:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.4);
+    }
+
+    .select-paginacion {
+        height: 36px;
+        border-radius: 999px;
+        padding: 0 0.75rem;
+        background: #171717;
+        border: 1px solid rgba(255, 138, 31, 0.35);
+        color: var(--ironfit-text);
+        outline: none;
+        font-weight: 800;
+    }
+
+    .select-paginacion:focus {
+        border-color: #ff8a1f;
+    }
+
+    @media (max-width: 800px) {
+        .historial-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .paginacion-controles {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .btn-paginacion,
+        .select-paginacion {
+            flex: 1;
+        }
+    }
+
+    @media (max-width: 900px) {
+    .resumen-grid,
+    .detalle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .historial-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    }
+
+    @media (max-width: 768px) {
+    .mis-evaluaciones-layout {
         padding: 1.25rem 1.1rem;
     }
 
-    .evaluaciones-header {
+    .mis-evaluaciones-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .evaluaciones-tabla {
-        font-size: 0.82rem;
+    .mis-evaluaciones-header h1 {
+        font-size: 1.1rem;
     }
 
-    .evaluaciones-tabla th,
-    .evaluaciones-tabla td {
-        padding: 0.5rem 0.65rem;
+    .metrica-card {
+        align-items: flex-start;
     }
-}
+    }

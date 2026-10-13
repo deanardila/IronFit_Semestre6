@@ -1,60 +1,76 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class Dashboard {
+export interface GraficoDatoDTO {
+    label: string;
+    valor: number;
+    }
 
-    private baseUrl = 'http://localhost:8080/api/dashboard';
+    export interface DashboardAdminDTO {
+    usuariosActivos: number;
+    clientesActivos: number;
+    entrenadoresActivos: number;
+    planesActivos: number;
+    asistenciasMes: number;
+    asistenciaGlobal: number;
+    evaluacionesRegistradas: number;
+    clientesSinPlan: number;
+
+    usuariosPorRol: GraficoDatoDTO[];
+    planesPorObjetivo: GraficoDatoDTO[];
+    planesPorEntrenador: GraficoDatoDTO[];
+    asistenciaUltimosDias: GraficoDatoDTO[];
+    }
+
+    export interface DashboardEntrenadorDTO {
+    clientesActivos: number;
+    planesActivos: number;
+    sesionesMes: number;
+    cumplimientoMes: number;
+    evaluacionesPendientes: number;
+    rutinasActivas: number;
+
+    asistenciaUltimosDias: GraficoDatoDTO[];
+    progresoPorCliente: GraficoDatoDTO[];
+    planesPorEstado: GraficoDatoDTO[];
+    evaluacionesPorCliente: GraficoDatoDTO[];
+    }
+
+    export interface DashboardClienteDTO {
+    planActual: string;
+    rutinasActivas: number;
+    sesionesMes: number;
+    rachaActual: number;
+    progresoPlan: number;
+    pesoActual: number;
+    imcActual: number;
+
+    asistenciaUltimosDias: GraficoDatoDTO[];
+    evolucionPeso: GraficoDatoDTO[];
+    metricasCorporales: GraficoDatoDTO[];
+    progresoPlanGrafico: GraficoDatoDTO[];
+    }
+
+    @Injectable({
+    providedIn: 'root'
+    })
+    export class Dashboard {
+
+    private baseUrl = `${environment.apiUrl}/api/dashboard`;
 
     constructor(private http: HttpClient) {}
 
-    // ADMIN
-    getClientesActivos(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/clientes-activos/total`);
+    getDashboardAdmin(): Observable<DashboardAdminDTO> {
+        return this.http.get<DashboardAdminDTO>(`${this.baseUrl}/admin`);
     }
 
-    getEntrenadoresActivos(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/entrenadores-activos/total`);
+    getDashboardEntrenador(): Observable<DashboardEntrenadorDTO> {
+        return this.http.get<DashboardEntrenadorDTO>(`${this.baseUrl}/entrenador`);
     }
 
-    getEjerciciosRegistrados(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/ejercicios/total`);
-    }
-
-    getAuditoriasMes(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/auditorias/mes`);
-    }
-
-    // CLIENTE
-    getPlanActual(): Observable<string> {
-        return this.http.get<string>(`${this.baseUrl}/cliente/plan-actual`);
-    }
-
-    getAsistenciasEsteMes(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/cliente/asistencias/mes`);
-    }
-
-    getRutinasActivas(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/cliente/rutinas-activas`);
-    }
-
-    getProgresoGeneral(): Observable<string> {
-        return this.http.get<string>(`${this.baseUrl}/cliente/progreso`);
-    }
-
-    // ENTRENADOR
-    getSesionesEsteMes(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/entrenador/sesiones/mes`);
-    }
-
-    getPlanesActivos(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/entrenador/planes-activos`);
-    }
-
-    getPendientesEvaluacion(): Observable<number> {
-        return this.http.get<number>(`${this.baseUrl}/entrenador/pendientes-evaluacion`);
+    getDashboardCliente(): Observable<DashboardClienteDTO> {
+        return this.http.get<DashboardClienteDTO>(`${this.baseUrl}/cliente`);
     }
 }

@@ -1,0 +1,29 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: ironfit-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    image: ironfit-backend:latest
+    container_name: ironfit-backend
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/ironfit
+
+  frontend:
+    image: ironfit-frontend:latest
+    container_name: ironfit-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

@@ -1,1 +1,285 @@
-<p>evaluaciones works!</p>
+<div class="evaluaciones-layout">
+
+    <header class="evaluaciones-header">
+        <div class="evaluaciones-header-left">
+            <button class="btn-volver" type="button" (click)="volver()">← Volver</button>
+            <h1>Evaluaciones físicas</h1>
+        </div>
+
+        <div class="evaluaciones-header-right">
+            <div class="busqueda-container">
+                <input
+                    type="text"
+                    class="input-busqueda"
+                    placeholder="🔍 Buscar por cliente u observación..."
+                    [(ngModel)]="terminoBusqueda"
+                    (keyup.enter)="aplicarFiltros()" />
+
+                <button
+                    type="button"
+                    class="btn-buscar-evaluaciones"
+                    (click)="aplicarFiltros()">
+                    Buscar
+                </button>
+            </div>
+
+            <button class="btn-nueva-evaluacion" type="button" (click)="toggleFormulario()">
+                {{ (mostrarFormulario || modoEdicion) ? 'Ocultar formulario' : '+ Nueva evaluación' }}
+            </button>
+
+            <button
+                class="btn-actualizar"
+                type="button"
+                (click)="actualizar()"
+                [disabled]="cargando || guardando || !!eliminandoId">
+                Actualizar
+            </button>
+        </div>
+    </header>
+
+    <section *ngIf="mostrarFormulario || modoEdicion" class="formulario-evaluacion">
+        <h2>{{ modoEdicion ? 'Editar evaluación física' : 'Crear evaluación física' }}</h2>
+
+        <form (ngSubmit)="guardarEvaluacion()" #evaluacionForm="ngForm">
+
+            <div class="form-grid">
+
+                <div class="form-row form-row-full">
+                    <label>Buscar cliente asignado</label>
+                    <input
+                        type="text"
+                        name="busquedaCliente"
+                        [(ngModel)]="terminoBusquedaCliente"
+                        (input)="buscarClientes()"
+                        placeholder="Buscar por nombre, documento o correo"
+                        autocomplete="off" />
+
+                    <small class="ayuda-cliente" *ngIf="!cargandoClientes && clientesAsignados.length === 0">
+                        No tienes clientes asignados. Solicita al administrador una asignación.
+                    </small>
+
+                    <ul *ngIf="clientesFiltrados.length > 0" class="lista-clientes">
+                        <li
+                            *ngFor="let cliente of clientesFiltrados"
+                            (click)="seleccionarCliente(cliente)"
+                            class="item-cliente">
+                            <strong>{{ cliente.nombreCompleto }}</strong>
+                            <span *ngIf="cliente.documento"> - {{ cliente.documento }}</span>
+                            <small *ngIf="cliente.correo"> {{ cliente.correo }}</small>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="form-row form-row-full" *ngIf="clienteSeleccionado">
+                    <label>Cliente seleccionado</label>
+                    <div class="cliente-seleccionado">
+                        <strong>{{ clienteSeleccionado.nombreCompleto }}</strong>
+                        <span *ngIf="clienteSeleccionado.documento"> - {{ clienteSeleccionado.documento }}</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Fecha</label>
+                    <input
+                        type="datetime-local"
+                        name="fecha"
+                        [(ngModel)]="formulario.fecha" />
+                </div>
+
+                <div class="form-row">
+                    <label>Peso corporal (kg)</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        name="pesoCorporal"
+                        [(ngModel)]="formulario.pesoCorporal"
+                        required />
+                </div>
+
+                <div class="form-row">
+                    <label>Talla (m)</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="talla"
+                        [(ngModel)]="formulario.talla"
+                        required />
+                </div>
+
+                <div class="form-row">
+                    <label>IMC calculado</label>
+                    <div class="imc-preview">
+                        {{ calcularImcVista() || 'Se calcula automáticamente' }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Porcentaje graso (%)</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        name="porcentajeGraso"
+                        [(ngModel)]="formulario.porcentajeGraso" />
+                </div>
+
+                <div class="form-row">
+                    <label>Pecho (cm)</label>
+                    <input type="number" step="0.1" min="0" name="pecho" [(ngModel)]="formulario.pecho" />
+                </div>
+
+                <div class="form-row">
+                    <label>Cintura (cm)</label>
+                    <input type="number" step="0.1" min="0" name="cintura" [(ngModel)]="formulario.cintura" />
+                </div>
+
+                <div class="form-row">
+                    <label>Brazo (cm)</label>
+                    <input type="number" step="0.1" min="0" name="brazo" [(ngModel)]="formulario.brazo" />
+                </div>
+
+                <div class="form-row">
+                    <label>Pierna (cm)</label>
+                    <input type="number" step="0.1" min="0" name="pierna" [(ngModel)]="formulario.pierna" />
+                </div>
+
+                <div class="form-row form-row-full">
+                    <label>Observaciones</label>
+                    <textarea
+                        name="observaciones"
+                        [(ngModel)]="formulario.observaciones"
+                        placeholder="Escribe observaciones del progreso físico del cliente...">
+                    </textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="guardando">
+                    {{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Guardar evaluación') }}
+                </button>
+
+                <button type="button" (click)="cancelarFormulario()" [disabled]="guardando">
+                    Cancelar
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <section *ngIf="mensajeExito" class="mensaje-exito">
+        <p>✅ {{ mensajeExito }}</p>
+    </section>
+
+    <section *ngIf="cargando">
+        <p>⏳ Cargando evaluaciones físicas...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="mensaje-error">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && evaluacionesFiltradas.length === 0">
+        <p>📋 No hay evaluaciones físicas registradas.</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && evaluacionesFiltradas.length > 0">
+        <table class="evaluaciones-tabla">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Peso</th>
+                    <th>Talla</th>
+                    <th>IMC</th>
+                    <th>Grasa</th>
+                    <th>Medidas</th>
+                    <th>Observaciones</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let e of evaluacionesFiltradas">
+                    <td>{{ formatearFecha(e.fecha) }}</td>
+                    <td>{{ e.clienteNombre || e.clienteId }}</td>
+                    <td>{{ e.pesoCorporal }} kg</td>
+                    <td>{{ e.talla }} m</td>
+                    <td>
+                        <span class="imc-badge">{{ e.imc }}</span>
+                    </td>
+                    <td>{{ e.porcentajeGraso != null ? e.porcentajeGraso + '%' : 'No registra' }}</td>
+                    <td>
+                        <div class="medidas-mini">
+                            <span>Pecho: {{ e.medidasCorporales?.pecho ?? '-' }}</span>
+                            <span>Cintura: {{ e.medidasCorporales?.cintura ?? '-' }}</span>
+                            <span>Brazo: {{ e.medidasCorporales?.brazo ?? '-' }}</span>
+                            <span>Pierna: {{ e.medidasCorporales?.pierna ?? '-' }}</span>
+                        </div>
+                    </td>
+                    <td>{{ e.observaciones || 'Sin observaciones' }}</td>
+                    <td>
+                        <div class="acciones-tabla">
+                            <button
+                                type="button"
+                                class="btn-editar-tabla"
+                                (click)="editarEvaluacion(e)"
+                                [disabled]="guardando || eliminandoId === e.id">
+                                Editar
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn-eliminar-tabla"
+                                (click)="eliminarEvaluacion(e)"
+                                [disabled]="guardando || eliminandoId === e.id">
+                                {{ eliminandoId === e.id ? 'Eliminando...' : 'Eliminar' }}
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="paginacion-evaluaciones" *ngIf="totalElementos > 0">
+            <div class="paginacion-info">
+                <span>
+                    Mostrando página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
+                </span>
+                <small>
+                    Total evaluaciones: {{ totalElementos }}
+                </small>
+            </div>
+
+            <div class="paginacion-controles">
+                <button
+                    type="button"
+                    class="btn-paginacion"
+                    (click)="irPaginaAnterior()"
+                    [disabled]="paginaActual === 0">
+                    ← Anterior
+                </button>
+
+                <select
+                    class="select-paginacion"
+                    [(ngModel)]="tamanoPagina"
+                    (change)="cambiarTamanoPagina()">
+                    <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                        {{ opcion }} por página
+                    </option>
+                </select>
+
+                <button
+                    type="button"
+                    class="btn-paginacion"
+                    (click)="irPaginaSiguiente()"
+                    [disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
+                    Siguiente →
+                </button>
+            </div>
+        </div>
+    </section>
+
+</div>

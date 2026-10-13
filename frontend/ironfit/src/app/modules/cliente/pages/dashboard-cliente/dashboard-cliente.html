@@ -11,12 +11,18 @@
         </div>
 
         <div class="dashboard-header-right">
-            <span class="dashboard-username">Hola, {{ nombreUsuario }}</span>
+                        <p> {{ nombreUsuario }}</p>
             <button class="dashboard-logout-btn" (click)="logout()">
                 Cerrar sesión
             </button>
         </div>
     </header>
+
+    <section class="dashboard-welcome">
+        <div>
+            <p>{{ fechaDashboard }} · Hoy toca seguir avanzando en tu proceso</p>
+        </div>
+    </section>
 
     <!-- BOTÓN MENÚ HAMBURGUESA -->
     <div class="quick-menu-container">
@@ -99,47 +105,144 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="dashboard-main">
-        <!-- Resumen rápido -->
-        <section class="dashboard-summary">
-            <!-- PLAN ACTUAL -->
-            <div class="stat-card clickable" (click)="onPlanActualClick()">
-                <div class="stat-card-header">
-                    <span class="stat-label">Plan actual</span>
-                </div>
-                <div class="stat-value">{{ (planActual$ | async) ?? 'N/A' }}</div>
-                <div class="stat-footer">Activo</div>
-            </div>
 
-            <!-- RUTINAS ACTIVAS -->
-            <div class="stat-card clickable" (click)="onRutinasClick()">
-                <div class="stat-card-header">
-                    <span class="stat-label">Mis rutinas</span>
-                </div>
-                <div class="stat-value">{{ (rutinasActivas$ | async) ?? 0 }}</div>
-                <div class="stat-footer">En tu plan</div>
-            </div>
-
-            <!-- MIS ASISTENCIAS -->
-            <div class="stat-card clickable" (click)="onAsistenciasClick()">
-                <div class="stat-card-header">
-                    <span class="stat-label">Mis asistencias</span>
-                </div>
-                <div class="stat-value">{{ (asistenciasEsteMes$ | async) ?? 0 }}</div>
-                <div class="stat-footer">este mes</div>
-            </div>
-
-            <!-- PROGRESO GENERAL -->
-            <div
-                class="stat-card stat-card--highlight clickable"
-                (click)="onProgresoClick()"
-            >
-                <div class="stat-card-header">
-                    <span class="stat-label">Tu progreso</span>
-                </div>
-                <div class="stat-value">{{ (progresoGeneral$ | async) ?? '0%' }}</div>
-                <div class="stat-footer">¡Sigue adelante!</div>
-            </div>
+        <section *ngIf="cargando" class="dashboard-panel">
+            <p>⏳ Cargando tus métricas...</p>
         </section>
+
+        <section *ngIf="!cargando && error" class="dashboard-panel error-panel">
+            <p>⚠️ {{ error }}</p>
+        </section>
+
+        <ng-container *ngIf="!cargando && !error">
+
+            <section class="dashboard-summary">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                <span class="stat-label">Plan actual</span>
+                </div>
+                <div class="stat-value stat-value-text">{{ planActual }}</div>
+                <div class="stat-footer">en seguimiento</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                <span class="stat-label">Rutinas activas</span>
+                </div>
+                <div class="stat-value">{{ rutinasActivas }}</div>
+                <div class="stat-footer">en tu plan</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                <span class="stat-label">Sesiones del mes</span>
+                </div>
+                <div class="stat-value">{{ sesionesMes }}</div>
+                <div class="stat-footer">entrenamientos cumplidos</div>
+            </div>
+
+            <div class="stat-card stat-card--highlight">
+                <div class="stat-card-header">
+                <span class="stat-label">Progreso del plan</span>
+                </div>
+                <div class="stat-value">{{ progresoPlan }}%</div>
+                <div class="stat-footer">cumplimiento general</div>
+            </div>
+            </section>
+
+            <section class="dashboard-summary dashboard-summary-secondary">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                <span class="stat-label">Racha actual</span>
+                </div>
+                <div class="stat-value">{{ rachaActual }}</div>
+                <div class="stat-footer">días seguidos</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                <span class="stat-label">Peso actual</span>
+                </div>
+                <div class="stat-value">{{ pesoActual }}</div>
+                <div class="stat-footer">kg registrados</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                <span class="stat-label">IMC actual</span>
+                </div>
+                <div class="stat-value">{{ imcActual }}</div>
+                <div class="stat-footer">última evaluación</div>
+            </div>
+            </section>
+
+            <section class="charts-grid">
+            <article class="chart-card chart-wide">
+                <div class="chart-header">
+                <h2>Asistencia últimos 14 días</h2>
+                <span>Porcentaje diario</span>
+                </div>
+
+                <div class="chart-box">
+                <canvas
+                    baseChart
+                    [data]="asistenciaData"
+                    [options]="linePercentOptions"
+                    [type]="'line'">
+                </canvas>
+                </div>
+            </article>
+
+            <article class="chart-card">
+                <div class="chart-header">
+                <h2>Progreso del plan</h2>
+                <span>Cumplido vs pendiente</span>
+                </div>
+
+                <div class="chart-box">
+                <canvas
+                    baseChart
+                    [data]="progresoPlanData"
+                    [options]="doughnutOptions"
+                    [type]="'doughnut'">
+                </canvas>
+                </div>
+            </article>
+
+            <article class="chart-card">
+                <div class="chart-header">
+                <h2>Métricas corporales</h2>
+                <span>Última evaluación</span>
+                </div>
+
+                <div class="chart-box">
+                <canvas
+                    baseChart
+                    [data]="metricasData"
+                    [options]="radarOptions"
+                    [type]="'radar'">
+                </canvas>
+                </div>
+            </article>
+
+            <article class="chart-card chart-wide">
+                <div class="chart-header">
+                <h2>Evolución de peso</h2>
+                <span>Historial de evaluaciones</span>
+                </div>
+
+                <div class="chart-box">
+                <canvas
+                    baseChart
+                    [data]="pesoData"
+                    [options]="lineOptions"
+                    [type]="'line'">
+                </canvas>
+                </div>
+            </article>
+            </section>
+
+        </ng-container>
 
     </main>
 </div>

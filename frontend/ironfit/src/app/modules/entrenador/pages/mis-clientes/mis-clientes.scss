@@ -1,21 +1,20 @@
-/* ================== MIS CLIENTES (ENTRENADOR) ================== */
+/* ================== MIS CLIENTES - ENTRENADOR ================== */
 
-/* Contenedor principal de la página */
-.clientes-layout {
+    .clientes-layout {
     min-height: 100vh;
     background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
     color: var(--ironfit-text);
     padding: 1.75rem 2rem;
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-}
+    }
 
-/* ---------- HEADER ---------- */
+    /* ---------- HEADER ---------- */
 
-.clientes-header {
+    .clientes-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,189 +24,363 @@
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    }
 
-.clientes-header-left {
+    .clientes-header-left {
     display: flex;
     align-items: center;
     gap: 1rem;
-}
+    flex-shrink: 0;
+    }
 
-.clientes-header h1 {
+    .clientes-header h1 {
     margin: 0;
     font-size: 1.35rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-.clientes-header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.busqueda-container {
-    flex: 0 1 auto;
-    min-width: 230px;
-    max-width: 340px;
-}
-
-.input-busqueda {
-    width: 100%;
-    padding: 0.55rem 0.9rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,138,31,0.3);
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.85rem;
-    transition: all .25s ease;
-}
-
-.input-busqueda::placeholder { color: rgba(255,255,255,0.45); }
-
-.input-busqueda:focus {
-    outline: none;
-    border-color: #ff8a1f;
-    background: rgba(255,255,255,0.08);
-    box-shadow: inset 0 0 0 2px rgba(255,138,31,0.25);
-}
-
-.clientes-filtros {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 900;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #111;
-    padding: 0.4rem 0.9rem;
-    background: radial-gradient(circle at top left,#ffb347,#ff8a1f 55%,#f97316);
-    border-radius: 999px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.6);
-    white-space: nowrap;
-}
+    color: var(--ironfit-text);
+    }
 
-/* ---------- BOTÓN VOLVER ---------- */
+    .clientes-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex: 1;
+    }
 
-.btn-volver {
-    border: none;
+    /* ---------- BOTONES ---------- */
+
+    .btn-volver,
+    .btn-actualizar {
     border-radius: 999px;
-    padding: 0.45rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.78rem;
+    font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     background: rgba(0, 0, 0, 0.75);
     color: var(--ironfit-text);
     border: 1px solid var(--ironfit-border);
     cursor: pointer;
-    transition: all 0.15s ease;
-}
+    transition: 0.15s ease;
+    white-space: nowrap;
+    }
 
-.btn-volver:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 138, 31, 0.5);
+    .btn-volver:hover,
+    .btn-actualizar:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 138, 31, 0.55);
     transform: translateY(-1px);
-}
+    }
 
-/* ---------- TABLA DE CLIENTES ---------- */
+    .btn-actualizar:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    }
 
-.clientes-tabla {
+    /* ---------- BUSCADOR ---------- */
+
+    .busqueda-container {
+    width: 330px;
+    max-width: 100%;
+    }
+
+    .input-busqueda {
+    width: 93%;
+    padding: 0.58rem 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 138, 31, 0.32);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.85rem;
+    transition: 0.2s ease;
+    }
+
+    .input-busqueda::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+    }
+
+    .input-busqueda:focus {
+    outline: none;
+    border-color: #ff8a1f;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 2px rgba(255, 138, 31, 0.22);
+    }
+
+    /* ---------- TABLA ---------- */
+
+    .clientes-tabla {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.3rem;
     border-radius: var(--ironfit-radius-lg);
     overflow: hidden;
     background: var(--ironfit-surface);
     box-shadow: var(--ironfit-shadow-soft);
-}
+    }
 
-.clientes-tabla thead {
+    .clientes-tabla thead {
     background: linear-gradient(135deg, var(--ironfit-surface-alt), #111111);
-}
+    }
 
-.clientes-tabla th,
-.clientes-tabla td {
-    padding: 0.65rem 0.9rem;
+    .clientes-tabla th,
+    .clientes-tabla td {
+    padding: 0.7rem 0.95rem;
     font-size: 0.88rem;
     border-bottom: 1px solid rgba(38, 38, 38, 0.9);
-}
+    }
 
-.clientes-tabla th {
+    .clientes-tabla th {
     text-align: left;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-size: 0.78rem;
     color: var(--ironfit-text-muted);
-}
+    }
 
-.clientes-tabla tbody tr:nth-child(even) {
+    .clientes-tabla tbody tr:nth-child(even) {
     background-color: rgba(0, 0, 0, 0.35);
-}
+    }
 
-.clientes-tabla tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);
-}
+    .clientes-tabla tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.025);
+    }
 
-/* Badge de estado */
-.estado-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
+    .clientes-tabla td:first-child {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
+
+    /* ---------- BADGE ---------- */
+
+    .estado-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 78px;
+    padding: 6px 14px;
     border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    background: rgba(239, 68, 68, 0.15);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.35);
-}
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    }
 
-.estado-badge.activo {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border-color: rgba(34, 197, 94, 0.35);
-}
+    .estado-badge.activo {
+    background-color: rgba(0, 170, 85, 0.15);
+    color: #32d27a;
+    border-color: rgba(50, 210, 122, 0.35);
+    }
 
-/* Mensaje cuando no hay clientes o cargando */
-section p {
+    /* ---------- MENSAJES ---------- */
+
+    .estado-panel,
+    .no-resultados {
     font-size: 0.9rem;
     color: var(--ironfit-text-muted);
-    padding: 1.5rem;
+    padding: 1.2rem;
     text-align: center;
-}
-
-.no-resultados {
     background: linear-gradient(145deg, #111111, #050505);
     border: 1px solid var(--ironfit-border);
     border-radius: var(--ironfit-radius-lg);
     box-shadow: var(--ironfit-shadow-soft);
+    }
+
+    .estado-panel p,
+    .no-resultados {
+    margin: 0;
+    }
+
+    .mensaje-error {
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    border-radius: 14px;
+    background: rgba(127, 29, 29, 0.18);
+    color: #fca5a5;
+    font-weight: 600;
+    }
+
+    .mensaje-error p {
+    margin: 0;
+    }
+
+    /* ---------- BUSCADOR PAGINADO MIS CLIENTES ---------- */
+
+.busqueda-container {
+    flex: 0 1 500px;
+    min-width: 320px;
+    max-width: 560px;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
 }
 
-/* ---------- RESPONSIVE GENERAL ---------- */
+.input-busqueda {
+    flex: 1;
+    width: auto;
+}
 
-@media (max-width: 768px) {
+.btn-buscar-clientes {
+    border-radius: 999px;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ironfit-text);
+    border: 1px solid var(--ironfit-border);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s ease;
+}
+
+.btn-buscar-clientes:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 138, 31, 0.5);
+    transform: translateY(-1px);
+}
+
+/* ---------- PAGINACIÓN MIS CLIENTES ---------- */
+
+    .paginacion-clientes {
+        margin-top: 1rem;
+        padding: 1rem 1.25rem;
+        border-radius: var(--ironfit-radius-lg);
+        background: linear-gradient(145deg, #111111, #050505);
+        border: 1px solid var(--ironfit-border);
+        box-shadow: var(--ironfit-shadow-soft);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .paginacion-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .paginacion-info span {
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ironfit-text);
+    }
+
+    .paginacion-info small {
+        color: var(--ironfit-text-muted);
+        font-size: 0.78rem;
+    }
+
+    .paginacion-controles {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .btn-paginacion {
+        border-radius: 999px;
+        padding: 0.55rem 1.1rem;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
+        color: #111111;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .btn-paginacion:hover:not(:disabled) {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+
+    .btn-paginacion:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        filter: grayscale(0.4);
+    }
+
+    .select-paginacion {
+        padding: 0.55rem 0.8rem;
+        border-radius: 999px;
+        background: #171717;
+        border: 1px solid rgba(255, 138, 31, 0.35);
+        color: var(--ironfit-text);
+        outline: none;
+        font-weight: 700;
+    }
+
+    .select-paginacion:focus {
+        border-color: #ff8a1f;
+    }
+
+    @media (max-width: 1050px) {
+        .busqueda-container {
+            min-width: 100%;
+            max-width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .input-busqueda,
+        .btn-buscar-clientes {
+            width: 100%;
+        }
+
+        .paginacion-clientes {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .paginacion-controles {
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .btn-paginacion,
+        .select-paginacion {
+            flex: 1;
+        }
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+
+    @media (max-width: 850px) {
     .clientes-layout {
-        padding: 1.25rem 1.1rem;
+        padding: 1.25rem 1rem;
     }
 
     .clientes-header {
         flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .clientes-header-right {
+        width: 100%;
+        flex-direction: column;
         align-items: stretch;
     }
 
-    .clientes-header-right { width:100%; }
-
-    .busqueda-container { max-width:100%; }
-
-    .clientes-header-left {
+    .busqueda-container {
         width: 100%;
     }
 
     .clientes-tabla {
-        font-size: 0.82rem;
-    }
-
-    .clientes-tabla th,
-    .clientes-tabla td {
-        padding: 0.5rem 0.65rem;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 }

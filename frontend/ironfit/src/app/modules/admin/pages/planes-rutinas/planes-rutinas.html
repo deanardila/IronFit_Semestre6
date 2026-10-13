@@ -1,124 +1,248 @@
 <div class="planes-layout">
 
-    <!-- ENCABEZADO -->
     <header class="planes-header">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <button class="btn-volver" (click)="volverAlDashboard()">← Volver</button>
-            <h1>Planes de entrenamiento</h1>
+        <div class="planes-header-left">
+            <button class="btn-volver" type="button" (click)="showingRutinas ? volverAListaPlanes() : volverAlDashboard()">
+                ← Volver
+            </button>
+
+            <div>
+                <h1>{{ showingRutinas ? 'Rutinas del plan' : 'Planes de entrenamiento' }}</h1>
+                <p *ngIf="!showingRutinas">Vista de auditoría y consulta general</p>
+            </div>
         </div>
-        
-        <!-- CAMPO DE BÚSQUEDA (solo visible cuando NO se están viendo rutinas) -->
-        <div class="busqueda-container" *ngIf="!showingRutinas">
-            <input 
-                type="text" 
-                class="input-busqueda" 
-                placeholder="🔍 Buscar por plan, cliente o entrenador..."
-                [(ngModel)]="terminoBusqueda"
-                (input)="aplicarFiltrosPlanes()">
+
+        <div class="planes-header-right">
+            <div class="busqueda-container">
+                <input
+                    type="text"
+                    class="input-busqueda"
+                    [placeholder]="showingRutinas ? '🔍 Buscar rutina...' : '🔍 Buscar plan, cliente o entrenador...'"
+                    [(ngModel)]="terminoBusqueda"
+                    (keyup.enter)="showingRutinas ? aplicarFiltrosRutinas() : aplicarFiltrosPlanes()">
+
+                <button
+                    type="button"
+                    class="btn-buscar-planes"
+                    (click)="showingRutinas ? aplicarFiltrosRutinas() : aplicarFiltrosPlanes()">
+                    Buscar
+                </button>
+            </div>
+
+            <select
+                *ngIf="!showingRutinas"
+                class="select-estado"
+                [(ngModel)]="filtroEstado"
+                (change)="aplicarFiltrosPlanes()">
+                <option value="TODOS">Todos</option>
+                <option value="ACTIVO">Activos</option>
+                <option value="INACTIVO">Inactivos</option>
+            </select>
+
+            <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando">
+                {{ cargando ? 'Cargando...' : 'Actualizar' }}
+            </button>
         </div>
     </header>
 
-    <!-- CARGANDO -->
-    <section *ngIf="cargando">
-        <p>Cargando...</p>
+    <section *ngIf="cargando" class="estado-panel">
+        <p>⏳ Cargando información...</p>
     </section>
 
-    <section *ngIf="!cargando">
+    <section *ngIf="!cargando && error" class="estado-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
 
-        <!-- ============================= -->
-        <!--    VISTA: RUTINAS DEL PLAN    -->
-        <!-- ============================= -->
+    <ng-container *ngIf="!cargando && !error">
+
+        <section class="metricas-grid" *ngIf="!showingRutinas">
+            <article class="metrica-card">
+                <span>Planes totales</span>
+                <strong>{{ totalPlanes }}</strong>
+                <small>{{ totalActivos }} activos · {{ totalInactivos }} inactivos en esta página</small>
+            </article>
+
+            <article class="metrica-card main">
+                <span>Clientes con plan</span>
+                <strong>{{ clientesConPlan }}</strong>
+                <small>clientes asociados en esta página</small>
+            </article>
+
+            <article class="metrica-card">
+                <span>Entrenadores</span>
+                <strong>{{ entrenadoresConPlan }}</strong>
+                <small>con planes en esta página</small>
+            </article>
+
+            <article class="metrica-card danger">
+                <span>Planes inactivos</span>
+                <strong>{{ totalInactivos }}</strong>
+                <small>históricos o finalizados</small>
+            </article>
+        </section>
+
+        <section class="graficos-grid" *ngIf="!showingRutinas">
+            <article class="panel-resumen">
+                <h2>Planes por entrenador</h2>
+
+                <div class="barra-item" *ngFor="let item of resumenPorEntrenador">
+                    <div class="barra-info">
+                        <span>{{ item.etiqueta }}</span>
+                        <strong>{{ item.total }}</strong>
+                    </div>
+
+                    <div class="barra-track">
+                        <div class="barra-fill" [style.width.%]="item.porcentaje"></div>
+                    </div>
+                </div>
+
+                <p *ngIf="resumenPorEntrenador.length === 0">No hay datos para mostrar.</p>
+            </article>
+
+            <article class="panel-resumen">
+                <h2>Distribución por objetivo</h2>
+
+                <div class="barra-item" *ngFor="let item of resumenPorObjetivo">
+                    <div class="barra-info">
+                        <span>{{ item.etiqueta }}</span>
+                        <strong>{{ item.porcentaje }}%</strong>
+                    </div>
+
+                    <div class="barra-track">
+                        <div class="barra-fill objetivo" [style.width.%]="item.porcentaje"></div>
+                    </div>
+                </div>
+
+                <p *ngIf="resumenPorObjetivo.length === 0">No hay datos para mostrar.</p>
+            </article>
+        </section>
+
+        <section *ngIf="!showingRutinas">
+            <div class="tabla-header">
+                <h2>Todos los planes</h2>
+            </div>
+
+            <table class="planes-tabla" *ngIf="planesFiltrados.length > 0; else noHayPlanes">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Cliente</th>
+                        <th>Entrenador</th>
+                        <th>Objetivo</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let p of planesFiltrados">
+                        <td>{{ p.nombre }}</td>
+                        <td>{{ p.clienteNombre || '-' }}</td>
+                        <td>{{ p.entrenadorNombre || '-' }}</td>
+                        <td>{{ p.objetivo || '-' }}</td>
+                        <td>{{ p.fechaInicio }}</td>
+                        <td>{{ p.fechaFin }}</td>
+                        <td>
+                            <span class="estado-badge" [class.activo]="p.activo">
+                                {{ estadoPlan(p) }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-accion" type="button" (click)="verRutinas(p)">
+                                Ver rutinas →
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="paginacion-planes" *ngIf="totalElementos > 0">
+                <div class="paginacion-info">
+                    <span>
+                        Mostrando página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
+                    </span>
+                    <small>
+                        Total planes: {{ totalElementos }}
+                    </small>
+                </div>
+
+                <div class="paginacion-controles">
+                    <button
+                        type="button"
+                        class="btn-paginacion"
+                        (click)="irPaginaAnterior()"
+                        [disabled]="paginaActual === 0">
+                        ← Anterior
+                    </button>
+
+                    <select
+                        class="select-paginacion"
+                        [(ngModel)]="tamanoPagina"
+                        (change)="cambiarTamanoPagina()">
+                        <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
+                            {{ opcion }} por página
+                        </option>
+                    </select>
+
+                    <button
+                        type="button"
+                        class="btn-paginacion"
+                        (click)="irPaginaSiguiente()"
+                        [disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
+                        Siguiente →
+                    </button>
+                </div>
+            </div>
+
+            <ng-template #noHayPlanes>
+                <p class="estado-panel">No hay planes de entrenamiento registrados.</p>
+            </ng-template>
+        </section>
+
         <section *ngIf="showingRutinas">
-
-            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;">
-                <button class="btn-volver" (click)="volverAListaPlanes()">← Volver a planes</button>
-                <h2 style="margin:0">Rutinas del plan</h2>
-            </div>
-            
-            <!-- CAMPO DE BÚSQUEDA PARA RUTINAS -->
-            <div class="busqueda-container" style="margin-bottom: 1rem;">
-                <input 
-                    type="text" 
-                    class="input-busqueda" 
-                    placeholder="🔍 Buscar rutina..."
-                    [(ngModel)]="terminoBusqueda"
-                    (input)="aplicarFiltrosRutinas()">
+            <div class="plan-detalle-card" *ngIf="planSeleccionado">
+                <span>Plan seleccionado</span>
+                <h2>{{ planSeleccionado.nombre }}</h2>
+                <p>
+                    {{ planSeleccionado.objetivo }} · Cliente:
+                    {{ planSeleccionado.clienteNombre || '-' }} · Entrenador:
+                    {{ planSeleccionado.entrenadorNombre || '-' }}
+                </p>
             </div>
 
-            <!-- TABLA DE RUTINAS -->
             <table class="planes-tabla" *ngIf="rutinasFiltradas.length > 0; else noHayRutinas">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre de rutina</th>
+                        <th>Rutina</th>
+                        <th>Día</th>
+                        <th>Orden</th>
                         <th>Descripción</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr *ngFor="let r of rutinasFiltradas">
-                        <td>{{ r.idRutina }}</td>
                         <td>{{ r.nombre }}</td>
-                        <td>{{ r.descripcion || '—' }}</td>
+                        <td>{{ r.diaSemana || '-' }}</td>
+                        <td>{{ r.orden || '-' }}</td>
+                        <td>{{ r.descripcion || '-' }}</td>
+                        <td>
+                            <span class="estado-badge" [class.activo]="r.activo">
+                                {{ r.activo ? 'ACTIVA' : 'INACTIVA' }}
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
 
-            <!-- MENSAJE: SIN RUTINAS -->
             <ng-template #noHayRutinas>
-                <p>No hay rutinas asociadas a este plan.</p>
+                <p class="estado-panel">No hay rutinas asociadas a este plan.</p>
             </ng-template>
-
         </section>
 
-
-        <!-- ============================= -->
-        <!--   TABLA PRINCIPAL DE PLANES   -->
-        <!-- ============================= -->
-        <table class="planes-tabla" *ngIf="planesFiltrados.length > 0 && !showingRutinas; else noHayPlanes">
-
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Plan</th>
-                    <th>Cliente</th>
-                    <th>Entrenador</th>
-                    <th>Inicio</th>
-                    <th>Fin</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr *ngFor="let p of planesFiltrados">
-                    <td>{{ p.idPlan }}</td>
-                    <td>{{ p.nombrePlan }}</td>
-                    <td>{{ p.nombreCliente }}</td>
-                    <td>{{ p.nombreEntrenador }}</td>
-                    <td>{{ p.fechaInicio }}</td>
-                    <td>{{ p.fechaFin }}</td>
-                    <td>
-                        <span class="estado-badge" [class.activo]="p.estado === 'ACTIVO'">
-                            {{ p.estado }}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn-accion" (click)="verRutina(p.idPlan)">
-                            Ver rutinas
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
-
-        <!-- MENSAJE: SIN PLANES -->
-        <ng-template #noHayPlanes>
-            <p>No hay planes de entrenamiento registrados.</p>
-        </ng-template>
-
-    </section>
+    </ng-container>
 
 </div>
-

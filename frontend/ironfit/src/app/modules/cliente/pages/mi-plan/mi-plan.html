@@ -1,1 +1,91 @@
-<p>mi-plan works!</p>
+<div class="mi-plan-page">
+
+    <header class="mi-plan-header">
+        <div class="mi-plan-header-left">
+        <button class="btn-volver" type="button" (click)="volver()">
+            ← Volver
+        </button>
+
+        <h1>Mi plan</h1>
+        </div>
+
+        <button
+        class="btn-actualizar"
+        type="button"
+        (click)="actualizar()"
+        [disabled]="cargando">
+        {{ cargando ? 'Cargando...' : 'Actualizar' }}
+        </button>
+    </header>
+
+    <section *ngIf="cargando" class="estado-panel">
+        <p>⏳ Cargando tu plan de entrenamiento...</p>
+    </section>
+
+    <section *ngIf="!cargando && error" class="estado-panel error-panel">
+        <p>⚠️ {{ error }}</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && !planActivo" class="estado-panel">
+        <p>📋 Todavía no tienes un plan activo asignado.</p>
+    </section>
+
+    <section *ngIf="!cargando && !error && planActivo" class="plan-card-principal">
+
+        <div class="info-grid">
+
+        <article class="info-item">
+            <span class="info-label">Nombre</span>
+            <p>{{ planActivo.nombre }}</p>
+        </article>
+
+        <article class="info-item">
+            <span class="info-label">Objetivo</span>
+            <p>{{ planActivo.objetivo }}</p>
+        </article>
+
+        <article class="info-item">
+            <span class="info-label">Inicio</span>
+            <p>{{ planActivo.fechaInicio }}</p>
+        </article>
+
+        <article class="info-item">
+            <span class="info-label">Fin</span>
+            <p>{{ planActivo.fechaFin }}</p>
+        </article>
+
+        <article class="info-item">
+            <span class="info-label">Entrenador</span>
+            <p>{{ planActivo.entrenadorNombre || planActivo.entrenadorId }}</p>
+        </article>
+
+        <article class="info-item">
+            <span class="info-label">Estado</span>
+            <span class="estado-badge activo">Activo</span>
+        </article>
+
+        </div>
+
+        <article class="descripcion-box">
+        <span class="info-label">Descripción</span>
+        <p>{{ planActivo.descripcion }}</p>
+        </article>
+
+        <article class="rutinas-resumen-box">
+        <div>
+            <span class="info-label">Rutinas</span>
+            <h3>Rutinas asignadas a tu plan</h3>
+            <p>
+            Revisa las rutinas completas, ejercicios, series, repeticiones,
+            descansos y peso sugerido.
+            </p>
+        </div>
+
+        <button type="button" class="btn-ver-rutinas" routerLink="/cliente/MisRutinas">
+            Ver rutinas completas
+        </button>
+        </article>
+
+    </section>
+
+</div>
