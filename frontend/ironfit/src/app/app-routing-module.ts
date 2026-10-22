@@ -8,6 +8,12 @@ import { AuditoriaReportes } from './modules/admin/pages/auditoria-reportes/audi
 
 const routes: Routes = [
     {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+
+    {
     path: 'admin',
     loadChildren: () =>
       import('./modules/admin/admin-module').then(m => m.AdminModule),
