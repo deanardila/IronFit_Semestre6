@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'PENDIENTE_BACKEND_PRODUCCION'
+    apiUrl: 'https://ironfit-semestre6.onrender.com'
 };
