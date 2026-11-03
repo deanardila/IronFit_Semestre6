@@ -47,7 +47,10 @@ public class PlanNutricionalService {
             throw new RuntimeException("No tienes permisos para consultar planes nutricionales");
         }
 
-        return planes.stream().map(this::convertir).toList();
+        return planes.stream()
+                .filter(this::esRegistroNutricionalUtil)
+                .map(this::convertir)
+                .toList();
     }
 
     public PlanNutricionalResponse obtenerPorPlan(Authentication authentication, String planId) {
@@ -158,6 +161,22 @@ public class PlanNutricionalService {
 
     private boolean tieneRol(UserDocument usuario, String rol) {
         return usuario.getRoles() != null && usuario.getRoles().contains(rol);
+    }
+
+    private boolean esRegistroNutricionalUtil(PlanNutricional nutricional) {
+        if (nutricional == null) {
+            return false;
+        }
+
+        if (nutricional.getPlanId() == null || nutricional.getPlanId().isBlank()) {
+            return false;
+        }
+
+        return nutricional.getKcalObjetivo() != null
+                || nutricional.getProteinaG() != null
+                || nutricional.getCarbohidratosG() != null
+                || nutricional.getGrasaG() != null
+                || (nutricional.getDescripcion() != null && !nutricional.getDescripcion().isBlank());
     }
 
     private PlanNutricionalResponse convertir(PlanNutricional nutricional) {
