@@ -183,7 +183,15 @@ public class AsistenciaService {
                 .filter(a -> !Boolean.TRUE.equals(a.getAsistio()))
                 .count();
         long totalSinRutina = asistencias.stream()
-                .filter(a -> Boolean.TRUE.equals(a.getAsistio()) && !Boolean.TRUE.equals(a.getCumplioRutina()))
+                .filter(a -> Boolean.TRUE.equals(a.getAsistio()))
+                .filter(a -> !Boolean.TRUE.equals(a.getCumplioRutina()))
+                .filter(a -> a.getRutinaId() == null || a.getRutinaId().trim().isEmpty())
+                .count();
+
+        long totalParcial = asistencias.stream()
+                .filter(a -> Boolean.TRUE.equals(a.getAsistio()))
+                .filter(a -> !Boolean.TRUE.equals(a.getCumplioRutina()))
+                .filter(a -> a.getRutinaId() != null && !a.getRutinaId().trim().isEmpty())
                 .count();
 
         double porcentaje = totalRegistros == 0
@@ -195,6 +203,7 @@ public class AsistenciaService {
                 totalAsistio,
                 totalNoAsistio,
                 totalSinRutina,
+                totalParcial,
                 porcentaje
         );
     }
@@ -250,6 +259,15 @@ public class AsistenciaService {
             } else if ("ASISTIO_SIN_RUTINA".equals(estadoNormalizado)) {
                 criterios.add(Criteria.where("asistio").is(true));
                 criterios.add(Criteria.where("cumplioRutina").ne(true));
+                criterios.add(new Criteria().orOperator(
+                        Criteria.where("rutinaId").exists(false),
+                        Criteria.where("rutinaId").is(null),
+                        Criteria.where("rutinaId").is("")
+                ));
+            } else if ("ASISTIO_PARCIAL".equals(estadoNormalizado)) {
+                criterios.add(Criteria.where("asistio").is(true));
+                criterios.add(Criteria.where("cumplioRutina").ne(true));
+                criterios.add(Criteria.where("rutinaId").nin(null, ""));
             }
         }
 
@@ -547,7 +565,11 @@ public class AsistenciaService {
             return "ASISTIÓ";
         }
 
-        return "ASISTIÓ SIN RUTINA";
+        if (asistencia.getRutinaId() == null || asistencia.getRutinaId().trim().isEmpty()) {
+            return "ASISTIÓ SIN RUTINA";
+        }
+
+        return "ASISTIÓ PARCIAL";
     }
 
     private String normalizarEstadoFiltro(String estado) {
