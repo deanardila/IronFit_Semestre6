@@ -18,4 +18,6 @@ public interface AsistenciaRepository extends MongoRepository<Asistencia, String
     List<Asistencia> findByClienteIdOrderByFechaAsistenciaDesc(String clienteId);
 
     List<Asistencia> findByPlanIdOrderByFechaAsistenciaDesc(String planId);
+
+    List<Asistencia> findByPlanIdInOrderByFechaAsistenciaDesc(List<String> planIds);
 }
