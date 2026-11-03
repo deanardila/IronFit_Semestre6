@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { finalize, timeout } from 'rxjs';
+import { finalize, forkJoin, timeout } from 'rxjs';
 import { Router } from '@angular/router';
 
 import jsPDF from 'jspdf';
@@ -8,7 +8,8 @@ import autoTable from 'jspdf-autotable';
 import {
   AsistenciaReporteDTO,
   AsistenciaService,
-  FiltrosAsistencia
+  FiltrosAsistencia,
+  ResumenAsistenciaDTO
 } from '../../asistencia';
 
 @Component({
@@ -65,30 +66,33 @@ export class AuditoriaReportes implements OnInit {
       estado: this.filtroEstado !== 'TODOS' ? this.filtroEstado : undefined,
     };
 
-    this.asistenciaService.obtenerReporteAsistenciasPaginado(
-      this.paginaActual,
-      this.tamanoPagina,
-      filtros
-    )
+    forkJoin({
+      pagina: this.asistenciaService.obtenerReporteAsistenciasPaginado(
+        this.paginaActual,
+        this.tamanoPagina,
+        filtros
+      ),
+      resumen: this.asistenciaService.obtenerResumenAsistencias(filtros)
+    })
       .pipe(
-        timeout(15000),
+        timeout(45000),
         finalize(() => {
           this.cargando = false;
           this.cdr.detectChanges();
         })
       )
       .subscribe({
-        next: (respuesta) => {
-          this.resumenes = respuesta.contenido ?? [];
+        next: ({ pagina, resumen }) => {
+          this.resumenes = pagina.contenido ?? [];
           this.resumenesFiltrados = this.resumenes;
 
-          this.totalElementos = respuesta.totalElementos ?? 0;
-          this.totalPaginas = respuesta.totalPaginas ?? 0;
-          this.ultimaPagina = respuesta.ultima ?? true;
-          this.paginaActual = respuesta.pagina ?? 0;
-          this.tamanoPagina = respuesta.tamano ?? this.tamanoPagina;
+          this.totalElementos = pagina.totalElementos ?? 0;
+          this.totalPaginas = pagina.totalPaginas ?? 0;
+          this.ultimaPagina = pagina.ultima ?? true;
+          this.paginaActual = pagina.pagina ?? 0;
+          this.tamanoPagina = pagina.tamano ?? this.tamanoPagina;
 
-          this.calcularMetricas();
+          this.aplicarResumenGlobal(resumen);
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -102,7 +106,11 @@ export class AuditoriaReportes implements OnInit {
           this.totalPaginas = 0;
           this.ultimaPagina = true;
 
-          this.calcularMetricas();
+          this.totalRegistros = 0;
+          this.totalAsistio = 0;
+          this.totalNoAsistio = 0;
+          this.totalSinRutina = 0;
+          this.porcentajeAsistencia = 0;
           this.cdr.detectChanges();
         }
       });
@@ -136,26 +144,12 @@ export class AuditoriaReportes implements OnInit {
     this.cargarResumen();
   }
 
-  calcularMetricas(): void {
-    this.totalRegistros = this.totalElementos || this.resumenesFiltrados.length;
-
-    this.totalAsistio = this.resumenesFiltrados.filter(r =>
-      this.normalizarEstado(r.estadoAsistencia) === 'ASISTIO'
-    ).length;
-
-    this.totalNoAsistio = this.resumenesFiltrados.filter(r =>
-      this.normalizarEstado(r.estadoAsistencia) === 'NO_ASISTIO'
-    ).length;
-
-    this.totalSinRutina = this.resumenesFiltrados.filter(r =>
-      this.normalizarEstado(r.estadoAsistencia) === 'ASISTIO_SIN_RUTINA'
-    ).length;
-
-    const registrosPagina = this.resumenesFiltrados.length;
-
-    this.porcentajeAsistencia = registrosPagina > 0
-      ? Math.round((this.totalAsistio / registrosPagina) * 100)
-      : 0;
+  aplicarResumenGlobal(resumen: ResumenAsistenciaDTO): void {
+    this.totalRegistros = resumen?.totalRegistros ?? 0;
+    this.totalAsistio = resumen?.totalAsistio ?? 0;
+    this.totalNoAsistio = resumen?.totalNoAsistio ?? 0;
+    this.totalSinRutina = resumen?.totalSinRutina ?? 0;
+    this.porcentajeAsistencia = resumen?.porcentajeAsistencia ?? 0;
   }
 
   claseEstado(estado: string): string {
