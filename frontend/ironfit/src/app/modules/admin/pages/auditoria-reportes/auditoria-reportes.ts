@@ -42,6 +42,7 @@ export class AuditoriaReportes implements OnInit {
   totalAsistio = 0;
   totalNoAsistio = 0;
   totalSinRutina = 0;
+  totalParcial = 0;
   porcentajeAsistencia = 0;
 
   constructor(
@@ -110,6 +111,7 @@ export class AuditoriaReportes implements OnInit {
           this.totalAsistio = 0;
           this.totalNoAsistio = 0;
           this.totalSinRutina = 0;
+          this.totalParcial = 0;
           this.porcentajeAsistencia = 0;
           this.cdr.detectChanges();
         }
@@ -149,6 +151,7 @@ export class AuditoriaReportes implements OnInit {
     this.totalAsistio = resumen?.totalAsistio ?? 0;
     this.totalNoAsistio = resumen?.totalNoAsistio ?? 0;
     this.totalSinRutina = resumen?.totalSinRutina ?? 0;
+    this.totalParcial = resumen?.totalParcial ?? 0;
     this.porcentajeAsistencia = resumen?.porcentajeAsistencia ?? 0;
   }
 
@@ -161,6 +164,10 @@ export class AuditoriaReportes implements OnInit {
 
     if (normalizado === 'NO_ASISTIO') {
       return 'no-asistio';
+    }
+
+    if (normalizado === 'ASISTIO_PARCIAL') {
+      return 'parcial';
     }
 
     return 'sin-rutina';
