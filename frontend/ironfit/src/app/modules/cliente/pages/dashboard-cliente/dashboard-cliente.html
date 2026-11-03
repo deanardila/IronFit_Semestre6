@@ -92,6 +92,18 @@
 
         <button
             class="quick-menu-item"
+            routerLink="/cliente/nutricion"
+            (click)="closeMenu()"
+        >
+            <div class="quick-menu-textblock">
+                <span class="item-title">Mi nutrición</span>
+                <span class="item-subtitle">Calorías y macronutrientes</span>
+            </div>
+            <span class="item-pill">Ver plan</span>
+        </button>
+
+        <button
+            class="quick-menu-item"
             routerLink="/cliente/asistencias"
             (click)="closeMenu()"
         >
