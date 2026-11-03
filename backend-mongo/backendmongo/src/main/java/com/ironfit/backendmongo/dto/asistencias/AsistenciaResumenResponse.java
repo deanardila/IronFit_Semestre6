@@ -6,6 +6,7 @@ public class AsistenciaResumenResponse {
     private long totalAsistio;
     private long totalNoAsistio;
     private long totalSinRutina;
+    private long totalParcial;
     private double porcentajeAsistencia;
 
     public AsistenciaResumenResponse() {
@@ -16,12 +17,14 @@ public class AsistenciaResumenResponse {
             long totalAsistio,
             long totalNoAsistio,
             long totalSinRutina,
+            long totalParcial,
             double porcentajeAsistencia
     ) {
         this.totalRegistros = totalRegistros;
         this.totalAsistio = totalAsistio;
         this.totalNoAsistio = totalNoAsistio;
         this.totalSinRutina = totalSinRutina;
+        this.totalParcial = totalParcial;
         this.porcentajeAsistencia = porcentajeAsistencia;
     }
 
@@ -55,6 +58,14 @@ public class AsistenciaResumenResponse {
 
     public void setTotalSinRutina(long totalSinRutina) {
         this.totalSinRutina = totalSinRutina;
+    }
+
+    public long getTotalParcial() {
+        return totalParcial;
+    }
+
+    public void setTotalParcial(long totalParcial) {
+        this.totalParcial = totalParcial;
     }
 
     public double getPorcentajeAsistencia() {
