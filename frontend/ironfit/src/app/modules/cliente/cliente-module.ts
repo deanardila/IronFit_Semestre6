@@ -10,6 +10,7 @@ import { MisAsistencias } from './pages/mis-asistencias/mis-asistencias';
 import { MisEvaluaciones } from './pages/mis-evaluaciones/mis-evaluaciones';
 import { MiPerfil } from './pages/mi-perfil/mi-perfil';
 import { SharedModule } from '../../shared/shared-module';
+import { MiNutricion } from './pages/mi-nutricion/mi-nutricion';
 
 const routes: Routes = [
   { path: '', component: DashboardCliente },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'MisRutinas', component: MisRutinas },
   { path: 'asistencias', component: MisAsistencias },
   { path: 'evaluaciones', component: MisEvaluaciones },
+  { path: 'nutricion', component: MiNutricion },
 ];
 
 @NgModule({
@@ -26,7 +28,8 @@ const routes: Routes = [
     MiPlan,
     MisRutinas,
     MisAsistencias,
-    MisEvaluaciones
+    MisEvaluaciones,
+    MiNutricion
   ],
   imports: [
     CommonModule,
