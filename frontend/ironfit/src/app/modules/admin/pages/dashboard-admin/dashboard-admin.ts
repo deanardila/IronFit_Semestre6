@@ -138,7 +138,7 @@ export class DashboardAdmin implements OnInit {
 
     this.dashboard.getDashboardAdmin()
       .pipe(
-        timeout(15000),
+        timeout(45000),
         finalize(() => {
           this.cargando = false;
           this.cdr.detectChanges();
