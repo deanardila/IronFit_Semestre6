@@ -197,6 +197,14 @@
 							<button
 								type="button"
 								class="btn-editar-tabla"
+								(click)="gestionarNutricion(p)"
+								[disabled]="guardando || cambiandoEstadoId === p.id">
+								Nutrición
+							</button>
+
+							<button
+								type="button"
+								class="btn-editar-tabla"
 								(click)="verPrediccion(p)"
 								[disabled]="guardando || cambiandoEstadoId === p.id || cargandoPrediccion">
 								{{ cargandoPrediccion && planPrediccionId === p.id
