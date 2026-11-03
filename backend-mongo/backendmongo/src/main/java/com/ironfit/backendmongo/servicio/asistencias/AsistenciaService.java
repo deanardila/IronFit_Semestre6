@@ -171,7 +171,10 @@ public class AsistenciaService {
                 entrenadorId,
                 estado
         );
-        query.fields().include("asistio").include("cumplioRutina");
+        query.fields()
+                .include("asistio")
+                .include("cumplioRutina")
+                .include("rutinaId");
 
         List<Asistencia> asistencias = mongoTemplate.find(query, Asistencia.class);
 
