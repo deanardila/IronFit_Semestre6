@@ -174,14 +174,20 @@ public class PlanNutricionalService {
         response.setFechaCreacion(nutricional.getFechaCreacion());
         response.setFechaActualizacion(nutricional.getFechaActualizacion());
 
-        planRepository.findById(nutricional.getPlanId()).ifPresent(plan ->
-                response.setPlanNombre(plan.getNombre()));
+        if (nutricional.getPlanId() != null && !nutricional.getPlanId().isBlank()) {
+            planRepository.findById(nutricional.getPlanId()).ifPresent(plan ->
+                    response.setPlanNombre(plan.getNombre()));
+        }
 
-        userRepository.findById(nutricional.getClienteId()).ifPresent(cliente ->
-                response.setClienteNombre(nombreCompleto(cliente)));
+        if (nutricional.getClienteId() != null && !nutricional.getClienteId().isBlank()) {
+            userRepository.findById(nutricional.getClienteId()).ifPresent(cliente ->
+                    response.setClienteNombre(nombreCompleto(cliente)));
+        }
 
-        userRepository.findById(nutricional.getEntrenadorId()).ifPresent(entrenador ->
-                response.setEntrenadorNombre(nombreCompleto(entrenador)));
+        if (nutricional.getEntrenadorId() != null && !nutricional.getEntrenadorId().isBlank()) {
+            userRepository.findById(nutricional.getEntrenadorId()).ifPresent(entrenador ->
+                    response.setEntrenadorNombre(nombreCompleto(entrenador)));
+        }
 
         return response;
     }
