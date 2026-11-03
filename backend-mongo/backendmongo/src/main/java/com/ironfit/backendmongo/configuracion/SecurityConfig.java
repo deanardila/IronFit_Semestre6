@@ -66,6 +66,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/predicciones/**")
+                    .hasAnyRole("ADMIN", "ENTRENADOR")
                 .requestMatchers("/api/usuarios/me").authenticated()
                 .requestMatchers("/api/usuarios/clientes/buscar")
                     .hasAnyRole("ADMIN", "ENTRENADOR")

@@ -412,6 +412,54 @@ section p {
         transform: translateY(-1px);
     }
 
+    // ---------- PANEL DE PREDICCIÓN ----------
+    .panel-prediccion {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .prediccion-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+        }
+
+        .prediccion-card {
+        padding: 1.25rem;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.35);
+        }
+
+        .prediccion-label {
+        display: block;
+        opacity: 0.7;
+        margin-bottom: 0.5rem;
+        }
+
+        .prediccion-valor {
+        display: block;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        }
+
+        .probabilidades {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+        .prediccion-grid {
+            grid-template-columns: 1fr;
+        }
+        }
+
     /* ---------- PAGINACIÓN MIS PLANES ---------- */
 
     .paginacion-planes {

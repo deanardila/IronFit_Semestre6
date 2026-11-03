@@ -8,6 +8,11 @@ import {
   AsignacionEntrenadorClienteDTO,
   AsignacionesService
 } from '../../../admin/asignaciones';
+import {
+  PrediccionesService,
+  PrediccionPlanDTO
+} from '../../predicciones';
+
 
 @Component({
   selector: 'app-mis-planes',
@@ -17,11 +22,15 @@ import {
 })
 export class MisPlanes implements OnInit {
   private readonly requestTimeoutMs = 15000;
-
   minFechaPlan: string = new Date().toISOString().split('T')[0];
 
   planes: PlanEntrenamientoDTO[] = [];
   planesFiltrados: PlanEntrenamientoDTO[] = [];
+
+  prediccionSeleccionada: PrediccionPlanDTO | null = null;
+  planPrediccionId: string | null = null;
+  cargandoPrediccion = false;
+  errorPrediccion = '';
 
   cargando = false;
   guardando = false;
@@ -58,11 +67,42 @@ export class MisPlanes implements OnInit {
     private http: HttpClient,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private asignacionesService: AsignacionesService
+    private asignacionesService: AsignacionesService,
+    private prediccionesService: PrediccionesService
   ) {}
 
   ngOnInit(): void {
     this.inicializarModulo();
+  }
+
+  verPrediccion(plan: PlanEntrenamientoDTO): void {
+
+    if (!plan?.id || this.cargandoPrediccion) {
+      return;
+    }
+
+    this.cargandoPrediccion = true;
+    this.errorPrediccion = '';
+    this.prediccionSeleccionada = null;
+    this.planPrediccionId = plan.id;
+
+    this.prediccionesService
+      .predecirPlan(plan.id)
+      .pipe(timeout(this.requestTimeoutMs))
+      .subscribe({
+        next: (res) => {
+          this.prediccionSeleccionada = res;
+          this.cargandoPrediccion = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando predicción', err);
+          this.errorPrediccion =
+            'No se pudo generar la predicción del plan.';
+          this.cargandoPrediccion = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   inicializarModulo(): void {

@@ -29,6 +29,13 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+    <!-- Weka -->
+    <dependency>
+      <groupId>nz.ac.waikato.cms.weka</groupId>
+      <artifactId>weka-stable</artifactId>
+      <version>3.8.7</version>
+    </dependency>
+
     <!-- MongoDB -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -84,6 +91,7 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
+  
   </dependencies>
 
   <build>

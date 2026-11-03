@@ -193,11 +193,80 @@
 								[disabled]="guardando || cambiandoEstadoId === p.id">
 								Rutinas
 							</button>
+
+							<button
+								type="button"
+								class="btn-editar-tabla"
+								(click)="verPrediccion(p)"
+								[disabled]="guardando || cambiandoEstadoId === p.id || cargandoPrediccion">
+								{{ cargandoPrediccion && planPrediccionId === p.id
+									? 'Analizando...'
+									: 'Predicción' }}
+								</button>
 						</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
+
+		<section
+			*ngIf="prediccionSeleccionada"
+			class="panel-prediccion">
+
+			<h2>Análisis predictivo del plan</h2>
+
+			<div class="prediccion-grid">
+
+				<div class="prediccion-card">
+				<span class="prediccion-label">
+					Adherencia estimada
+				</span>
+
+				<strong class="prediccion-valor">
+					{{ prediccionSeleccionada.adherencia.prediccion }}
+				</strong>
+
+				<small>
+					Modelo: {{ prediccionSeleccionada.adherencia.modelo }}
+				</small>
+
+				<div class="probabilidades">
+					<span
+					*ngFor="let item of prediccionSeleccionada.adherencia.probabilidades | keyvalue">
+					{{ item.key }}: {{ item.value }}%
+					</span>
+				</div>
+				</div>
+
+				<div class="prediccion-card">
+				<span class="prediccion-label">
+					Rendimiento estimado
+				</span>
+
+				<strong class="prediccion-valor">
+					{{ prediccionSeleccionada.rendimiento.prediccion }}
+				</strong>
+
+				<small>
+					Modelo: {{ prediccionSeleccionada.rendimiento.modelo }}
+				</small>
+
+				<div class="probabilidades">
+					<span
+					*ngFor="let item of prediccionSeleccionada.rendimiento.probabilidades | keyvalue">
+					{{ item.key }}: {{ item.value }}%
+					</span>
+				</div>
+				</div>
+
+			</div>
+		</section>
+
+		<section
+			*ngIf="errorPrediccion"
+			class="mensaje-error">
+			{{ errorPrediccion }}
+		</section>
 
 		<div class="paginacion-planes" *ngIf="totalElementos > 0">
 			<div class="paginacion-info">
