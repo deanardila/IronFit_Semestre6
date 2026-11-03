@@ -93,6 +93,18 @@
 
         <button
             class="quick-menu-item"
+            routerLink="/admin/nutricion"
+            (click)="closeMenu()"
+        >
+            <div class="quick-menu-textblock">
+                <span class="item-title">Planes nutricionales</span>
+                <span class="item-subtitle">Consulta general de nutrición</span>
+            </div>
+            <span class="item-pill">Ver planes</span>
+        </button>
+
+        <button
+            class="quick-menu-item"
             routerLink="/admin/auditoria"
             (click)="closeMenu()"
         >
