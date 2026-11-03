@@ -433,6 +433,16 @@ export class MisPlanes implements OnInit {
     this.cdr.detectChanges();
   }
 
+  gestionarNutricion(plan: PlanEntrenamientoDTO): void {
+    if (!plan?.id) {
+      this.error = 'No se pudo identificar el plan seleccionado.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.router.navigate(['/entrenador/nutricion', plan.id]);
+  }
+
   gestionarRutinas(plan: PlanEntrenamientoDTO): void {
     if (!plan?.id) {
       this.error = 'No se pudo identificar el plan seleccionado.';
