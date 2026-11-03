@@ -60,14 +60,22 @@ public class DashboardService {
                         "Solo el administrador puede ver este dashboard"
                 );
 
-                // Cargar datos una sola vez
+                LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
+                LocalDate hoy = LocalDate.now();
+                LocalDate inicioUltimos14Dias = hoy.minusDays(13);
+                LocalDate inicioConsultaAsistencias =
+                        inicioMes.isBefore(inicioUltimos14Dias) ? inicioMes : inicioUltimos14Dias;
+
+                // Cargar únicamente los datos necesarios para el dashboard.
                 List<UserDocument> usuarios = userRepository.findAll();
                 List<PlanEntrenamiento> planes =
                         planRepository.findAllByOrderByFechaCreacionDesc();
                 List<Asistencia> asistencias =
-                        asistenciaRepository.findAllByOrderByFechaAsistenciaDesc();
-                List<EvaluacionFisica> evaluaciones =
-                        evaluacionRepository.findAllByOrderByFechaDesc();
+                        asistenciaRepository.findByFechaAsistenciaBetweenOrderByFechaAsistenciaDesc(
+                                inicioConsultaAsistencias,
+                                hoy
+                        );
+                long totalEvaluaciones = evaluacionRepository.count();
 
                 // Crear mapa ID -> nombre para evitar consultas repetitivas a MongoDB
                 Map<String, String> nombresUsuarios = usuarios.stream()
@@ -76,9 +84,6 @@ public class DashboardService {
                         this::construirNombreCompleto,
                         (nombre1, nombre2) -> nombre1
                         ));
-
-                LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
-                LocalDate hoy = LocalDate.now();
 
                 DashboardAdminResponse response = new DashboardAdminResponse();
 
@@ -119,7 +124,7 @@ public class DashboardService {
                         calcularPorcentajeAsistencia(asistenciasMes)
                 );
 
-                response.setEvaluacionesRegistradas((long) evaluaciones.size());
+                response.setEvaluacionesRegistradas(totalEvaluaciones);
 
                 response.setClientesSinPlan(
                         calcularClientesSinPlan(usuarios, planes)
@@ -171,12 +176,20 @@ public class DashboardService {
                 List<PlanEntrenamiento> planes = planRepository.findByEntrenadorIdOrderByFechaCreacionDesc(entrenador.getId());
                 List<String> planIds = planes.stream().map(PlanEntrenamiento::getId).toList();
 
-                List<Asistencia> asistencias = asistenciaRepository.findAllByOrderByFechaAsistenciaDesc()
-                        .stream()
-                        .filter(a -> planIds.contains(a.getPlanId()))
-                        .toList();
+                List<Asistencia> asistencias = planIds.isEmpty()
+                        ? List.of()
+                        : asistenciaRepository.findByPlanIdInOrderByFechaAsistenciaDesc(planIds);
 
-                List<EvaluacionFisica> evaluaciones = evaluacionRepository.findByEntrenadorIdOrderByFechaDesc(entrenador.getId());
+                List<EvaluacionFisica> evaluaciones =
+                        evaluacionRepository.findByEntrenadorIdOrderByFechaDesc(entrenador.getId());
+
+                Map<String, String> nombresClientes = userRepository.findAllById(clienteIds)
+                        .stream()
+                        .collect(Collectors.toMap(
+                                UserDocument::getId,
+                                this::construirNombreCompleto,
+                                (nombre1, nombre2) -> nombre1
+                        ));
 
                 LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
                 LocalDate hoy = LocalDate.now();
@@ -203,9 +216,13 @@ public class DashboardService {
                 );
 
                 response.setAsistenciaUltimosDias(construirAsistenciaUltimosDias(asistencias, 14));
-                response.setProgresoPorCliente(construirProgresoPorCliente(asistencias, clienteIds));
+                response.setProgresoPorCliente(
+                        construirProgresoPorCliente(asistencias, clienteIds, nombresClientes)
+                );
                 response.setPlanesPorEstado(construirPlanesPorEstado(planes));
-                response.setEvaluacionesPorCliente(construirEvaluacionesPorCliente(evaluaciones));
+                response.setEvaluacionesPorCliente(
+                        construirEvaluacionesPorCliente(evaluaciones, nombresClientes)
+                );
 
                 return response;
         }
@@ -274,9 +291,16 @@ public class DashboardService {
         }
 
         private Long contarRutinasActivas(List<PlanEntrenamiento> planes) {
-                return planes.stream()
-                        .flatMap(plan -> rutinaRepository.findByPlanIdAndActivoTrueOrderByOrdenAsc(plan.getId()).stream())
-                        .count();
+                List<String> planIds = planes.stream()
+                        .map(PlanEntrenamiento::getId)
+                        .filter(Objects::nonNull)
+                        .toList();
+
+                if (planIds.isEmpty()) {
+                        return 0L;
+                }
+
+                return rutinaRepository.countByPlanIdInAndActivoTrue(planIds);
         }
 
         private Double calcularPorcentajeAsistencia(List<Asistencia> asistencias) {
@@ -350,30 +374,41 @@ public class DashboardService {
                 );
         }
 
-        private List<GraficoDatoResponse> construirProgresoPorCliente(List<Asistencia> asistencias, List<String> clienteIds) {
-                return clienteIds.stream()
-                        .map(clienteId -> {
-                        List<Asistencia> asistenciasCliente = asistencias.stream()
-                                .filter(a -> clienteId.equals(a.getClienteId()))
-                                .toList();
+        private List<GraficoDatoResponse> construirProgresoPorCliente(
+                List<Asistencia> asistencias,
+                List<String> clienteIds,
+                Map<String, String> nombresClientes
+        ) {
+                Map<String, List<Asistencia>> asistenciasPorCliente = asistencias.stream()
+                        .filter(a -> a.getClienteId() != null)
+                        .collect(Collectors.groupingBy(Asistencia::getClienteId));
 
-                        return new GraficoDatoResponse(
-                                obtenerNombreUsuario(clienteId),
-                                calcularPorcentajeAsistencia(asistenciasCliente)
-                        );
-                        })
+                return clienteIds.stream()
+                        .map(clienteId -> new GraficoDatoResponse(
+                                nombresClientes.getOrDefault(clienteId, "No encontrado"),
+                                calcularPorcentajeAsistencia(
+                                        asistenciasPorCliente.getOrDefault(clienteId, List.of())
+                                )
+                        ))
                         .sorted((a, b) -> Double.compare(b.getValor(), a.getValor()))
                         .limit(6)
                         .toList();
         }
 
-        private List<GraficoDatoResponse> construirEvaluacionesPorCliente(List<EvaluacionFisica> evaluaciones) {
+        private List<GraficoDatoResponse> construirEvaluacionesPorCliente(
+                List<EvaluacionFisica> evaluaciones,
+                Map<String, String> nombresClientes
+        ) {
                 Map<String, Long> conteo = evaluaciones.stream()
+                        .filter(e -> e.getClienteId() != null)
                         .collect(Collectors.groupingBy(EvaluacionFisica::getClienteId, Collectors.counting()));
 
                 return conteo.entrySet()
                         .stream()
-                        .map(e -> new GraficoDatoResponse(obtenerNombreUsuario(e.getKey()), e.getValue().doubleValue()))
+                        .map(e -> new GraficoDatoResponse(
+                                nombresClientes.getOrDefault(e.getKey(), "No encontrado"),
+                                e.getValue().doubleValue()
+                        ))
                         .sorted((a, b) -> Double.compare(b.getValor(), a.getValor()))
                         .limit(6)
                         .toList();
