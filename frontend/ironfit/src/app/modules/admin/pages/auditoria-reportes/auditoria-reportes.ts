@@ -235,7 +235,7 @@ export class AuditoriaReportes implements OnInit {
     doc.text(`Página exportada: ${this.paginaActual + 1} de ${this.totalPaginas || 1}`, 14, 36);
     doc.text(`Total general: ${this.totalElementos}`, 70, 36);
     doc.text(`Registros en página: ${this.resumenesFiltrados.length}`, 120, 36);
-    doc.text(`Cumplimiento página: ${this.porcentajeAsistencia}%`, 190, 36);
+    doc.text(`Cumplimiento filtrado: ${this.porcentajeAsistencia}%`, 190, 36);
 
     const filas = this.resumenesFiltrados.map(r => [
       r.fechaAsistencia || '-',
