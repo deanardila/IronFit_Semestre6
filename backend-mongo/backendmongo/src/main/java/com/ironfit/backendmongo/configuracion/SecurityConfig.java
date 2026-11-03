@@ -93,6 +93,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/api/planes/**")
                     .hasRole("ENTRENADOR")
 
+                // Rutas de nutrición
+                .requestMatchers(HttpMethod.GET, "/api/nutricion/**")
+                    .hasAnyRole("ADMIN", "ENTRENADOR", "CLIENTE")
+                .requestMatchers(HttpMethod.POST, "/api/nutricion/**")
+                    .hasRole("ENTRENADOR")
+                .requestMatchers(HttpMethod.PUT, "/api/nutricion/**")
+                    .hasRole("ENTRENADOR")
+
                 // Rutas de rutinas
                 .requestMatchers(HttpMethod.GET, "/api/rutinas/**")
                     .hasAnyRole("ADMIN", "ENTRENADOR", "CLIENTE")
