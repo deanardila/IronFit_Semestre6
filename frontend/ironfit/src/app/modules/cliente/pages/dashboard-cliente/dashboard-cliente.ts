@@ -146,7 +146,7 @@ export class DashboardCliente implements OnInit {
 
     this.dashboard.getDashboardCliente()
       .pipe(
-        timeout(15000),
+        timeout(45000),
         finalize(() => {
           this.cargando = false;
           this.cdr.detectChanges();
