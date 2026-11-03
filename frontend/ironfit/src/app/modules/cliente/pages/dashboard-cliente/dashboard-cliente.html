@@ -112,6 +112,9 @@
 
         <section *ngIf="!cargando && error" class="dashboard-panel error-panel">
             <p>⚠️ {{ error }}</p>
+            <button type="button" class="dashboard-retry-btn" (click)="cargarDashboard()">
+                Reintentar
+            </button>
         </section>
 
         <ng-container *ngIf="!cargando && !error">
