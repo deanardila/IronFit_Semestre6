@@ -42,6 +42,7 @@ export interface ResumenAsistenciaDTO {
     totalAsistio: number;
     totalNoAsistio: number;
     totalSinRutina: number;
+    totalParcial: number;
     porcentajeAsistencia: number;
 }
 
