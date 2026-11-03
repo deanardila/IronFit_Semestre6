@@ -1,6 +1,7 @@
 package com.ironfit.backendmongo.servicio.asistencias;
 
 import com.ironfit.backendmongo.dto.asistencias.AsistenciaReporteResponse;
+import com.ironfit.backendmongo.dto.asistencias.AsistenciaResumenResponse;
 import com.ironfit.backendmongo.dto.comun.PaginaResponse;
 import com.ironfit.backendmongo.modelo.asistencias.Asistencia;
 import com.ironfit.backendmongo.modelo.planes.PlanEntrenamiento;
@@ -22,7 +23,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AsistenciaService {
@@ -107,6 +113,101 @@ public class AsistenciaService {
                 Sort.by(Sort.Direction.DESC, "fechaAsistencia")
         );
 
+        Query query = construirQueryReporte(
+                usuarioActual,
+                buscar,
+                fechaInicio,
+                fechaFin,
+                clienteId,
+                entrenadorId,
+                estado
+        );
+
+        long totalElementos = mongoTemplate.count(query, Asistencia.class);
+
+        query.with(pageable);
+
+        List<Asistencia> asistenciasPagina = mongoTemplate.find(query, Asistencia.class);
+        List<AsistenciaReporteResponse> contenido = convertirAResponses(asistenciasPagina);
+
+        int totalPaginas = totalElementos == 0
+                ? 0
+                : (int) Math.ceil((double) totalElementos / tamanoPagina);
+
+        boolean ultima = totalPaginas == 0 || paginaActual >= totalPaginas - 1;
+
+        return new PaginaResponse<>(
+                contenido,
+                paginaActual,
+                tamanoPagina,
+                totalElementos,
+                totalPaginas,
+                ultima
+        );
+    }
+
+
+    public AsistenciaResumenResponse generarResumenReporte(
+            Authentication authentication,
+            String buscar,
+            LocalDate fechaInicio,
+            LocalDate fechaFin,
+            String clienteId,
+            String entrenadorId,
+            String estado
+    ) {
+        UserDocument usuarioActual = obtenerUsuarioAutenticado(authentication);
+
+        if (fechaInicio != null && fechaFin != null && fechaFin.isBefore(fechaInicio)) {
+            throw new RuntimeException("La fecha final no puede ser anterior a la fecha inicial");
+        }
+
+        Query query = construirQueryReporte(
+                usuarioActual,
+                buscar,
+                fechaInicio,
+                fechaFin,
+                clienteId,
+                entrenadorId,
+                estado
+        );
+        query.fields().include("asistio").include("cumplioRutina");
+
+        List<Asistencia> asistencias = mongoTemplate.find(query, Asistencia.class);
+
+        long totalRegistros = asistencias.size();
+        long totalAsistio = asistencias.stream()
+                .filter(a -> Boolean.TRUE.equals(a.getAsistio()) && Boolean.TRUE.equals(a.getCumplioRutina()))
+                .count();
+        long totalNoAsistio = asistencias.stream()
+                .filter(a -> !Boolean.TRUE.equals(a.getAsistio()))
+                .count();
+        long totalSinRutina = asistencias.stream()
+                .filter(a -> Boolean.TRUE.equals(a.getAsistio()) && !Boolean.TRUE.equals(a.getCumplioRutina()))
+                .count();
+
+        double porcentaje = totalRegistros == 0
+                ? 0.0
+                : Math.round((totalAsistio * 10000.0) / totalRegistros) / 100.0;
+
+        return new AsistenciaResumenResponse(
+                totalRegistros,
+                totalAsistio,
+                totalNoAsistio,
+                totalSinRutina,
+                porcentaje
+        );
+    }
+
+    private Query construirQueryReporte(
+            UserDocument usuarioActual,
+            String buscar,
+            LocalDate fechaInicio,
+            LocalDate fechaFin,
+            String clienteId,
+            String entrenadorId,
+            String estado
+    ) {
         Query query = new Query();
         ArrayList<Criteria> criterios = new ArrayList<>();
 
@@ -124,11 +225,15 @@ public class AsistenciaService {
 
         if (tieneRol(usuarioActual, RoleName.ENTRENADOR)) {
             List<String> planesDelEntrenador = buscarIdsPlanesPorEntrenador(usuarioActual.getId());
-            criterios.add(Criteria.where("planId").in(planesDelEntrenador.isEmpty() ? List.of("__sin_resultados__") : planesDelEntrenador));
+            criterios.add(Criteria.where("planId").in(
+                    planesDelEntrenador.isEmpty() ? List.of("__sin_resultados__") : planesDelEntrenador
+            ));
         } else if (tieneRol(usuarioActual, RoleName.ADMIN)) {
             if (entrenadorId != null && !entrenadorId.trim().isEmpty()) {
                 List<String> planesDelEntrenador = buscarIdsPlanesPorEntrenador(entrenadorId.trim());
-                criterios.add(Criteria.where("planId").in(planesDelEntrenador.isEmpty() ? List.of("__sin_resultados__") : planesDelEntrenador));
+                criterios.add(Criteria.where("planId").in(
+                        planesDelEntrenador.isEmpty() ? List.of("__sin_resultados__") : planesDelEntrenador
+                ));
             }
         } else {
             throw new RuntimeException("No tienes permisos para consultar reportes de asistencia");
@@ -150,7 +255,6 @@ public class AsistenciaService {
 
         if (buscar != null && !buscar.trim().isEmpty()) {
             String texto = buscar.trim();
-
             ArrayList<Criteria> criteriosBusqueda = new ArrayList<>();
 
             criteriosBusqueda.add(Criteria.where("observaciones").regex(texto, "i"));
@@ -179,29 +283,90 @@ public class AsistenciaService {
             query.addCriteria(new Criteria().andOperator(criterios.toArray(new Criteria[0])));
         }
 
-        long totalElementos = mongoTemplate.count(query, Asistencia.class);
+        return query;
+    }
 
-        query.with(pageable);
+    private List<AsistenciaReporteResponse> convertirAResponses(List<Asistencia> asistencias) {
+        if (asistencias == null || asistencias.isEmpty()) {
+            return List.of();
+        }
 
-        List<AsistenciaReporteResponse> contenido = mongoTemplate.find(query, Asistencia.class)
-                .stream()
-                .map(this::convertirAResponse)
+        Set<String> clienteIds = asistencias.stream()
+                .map(Asistencia::getClienteId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Set<String> planIds = asistencias.stream()
+                .map(Asistencia::getPlanId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Set<String> rutinaIds = asistencias.stream()
+                .map(Asistencia::getRutinaId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Map<String, UserDocument> usuarios = new HashMap<>();
+        userRepository.findAllById(clienteIds).forEach(u -> usuarios.put(u.getId(), u));
+
+        Map<String, PlanEntrenamiento> planes = new HashMap<>();
+        planRepository.findAllById(planIds).forEach(p -> planes.put(p.getId(), p));
+
+        Set<String> entrenadorIds = planes.values().stream()
+                .map(PlanEntrenamiento::getEntrenadorId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        userRepository.findAllById(entrenadorIds).forEach(u -> usuarios.put(u.getId(), u));
+
+        Map<String, Rutina> rutinas = new HashMap<>();
+        rutinaRepository.findAllById(rutinaIds).forEach(r -> rutinas.put(r.getId(), r));
+
+        return asistencias.stream()
+                .map(asistencia -> convertirAResponse(asistencia, usuarios, planes, rutinas))
                 .toList();
+    }
 
-        int totalPaginas = totalElementos == 0
-                ? 0
-                : (int) Math.ceil((double) totalElementos / tamanoPagina);
+    private AsistenciaReporteResponse convertirAResponse(
+            Asistencia asistencia,
+            Map<String, UserDocument> usuarios,
+            Map<String, PlanEntrenamiento> planes,
+            Map<String, Rutina> rutinas
+    ) {
+        AsistenciaReporteResponse response = new AsistenciaReporteResponse();
 
-        boolean ultima = totalPaginas == 0 || paginaActual >= totalPaginas - 1;
+        response.setId(asistencia.getId());
+        response.setClienteId(asistencia.getClienteId());
+        response.setPlanId(asistencia.getPlanId());
+        response.setRutinaId(asistencia.getRutinaId());
+        response.setFechaAsistencia(asistencia.getFechaAsistencia());
+        response.setAsistio(asistencia.getAsistio());
+        response.setCumplioRutina(asistencia.getCumplioRutina());
+        response.setEstadoAsistencia(calcularEstadoAsistencia(asistencia));
+        response.setObservaciones(asistencia.getObservaciones());
 
-        return new PaginaResponse<>(
-                contenido,
-                paginaActual,
-                tamanoPagina,
-                totalElementos,
-                totalPaginas,
-                ultima
-        );
+        UserDocument cliente = usuarios.get(asistencia.getClienteId());
+        if (cliente != null) {
+            response.setClienteNombre(construirNombreCompleto(cliente));
+            response.setClienteDocumento(cliente.getNumDoc());
+        }
+
+        PlanEntrenamiento plan = planes.get(asistencia.getPlanId());
+        if (plan != null) {
+            response.setPlanNombre(plan.getNombre());
+            response.setEntrenadorId(plan.getEntrenadorId());
+
+            UserDocument entrenador = usuarios.get(plan.getEntrenadorId());
+            if (entrenador != null) {
+                response.setEntrenadorNombre(construirNombreCompleto(entrenador));
+            }
+        }
+
+        Rutina rutina = rutinas.get(asistencia.getRutinaId());
+        if (rutina != null) {
+            response.setRutinaNombre(rutina.getNombre());
+        }
+
+        return response;
     }
 
     private List<String> buscarIdsPlanesPorEntrenador(String entrenadorId) {
