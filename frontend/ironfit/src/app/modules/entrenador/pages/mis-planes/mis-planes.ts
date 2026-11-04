@@ -12,6 +12,7 @@ import {
   PrediccionesService,
   PrediccionPlanDTO
 } from '../../predicciones';
+import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 
 
 @Component({
@@ -31,6 +32,11 @@ export class MisPlanes implements OnInit {
   planPrediccionId: string | null = null;
   cargandoPrediccion = false;
   errorPrediccion = '';
+
+  ironBotRespuesta: IronBotResponse | null = null;
+  planIronBotId: string | null = null;
+  cargandoIronBot = false;
+  errorIronBot = '';
 
   cargando = false;
   guardando = false;
@@ -68,7 +74,8 @@ export class MisPlanes implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private asignacionesService: AsignacionesService,
-    private prediccionesService: PrediccionesService
+    private prediccionesService: PrediccionesService,
+    private ironBot: IronBotService
   ) {}
 
   ngOnInit(): void {
@@ -103,6 +110,41 @@ export class MisPlanes implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+
+  analizarPlanConIronBot(plan: PlanEntrenamientoDTO): void {
+    if (!plan?.id || this.cargandoIronBot) {
+      return;
+    }
+
+    this.planIronBotId = plan.id;
+    this.cargandoIronBot = true;
+    this.errorIronBot = '';
+    this.ironBotRespuesta = null;
+
+    this.ironBot.analizarPlan(plan.id)
+      .pipe(timeout(45000))
+      .subscribe({
+        next: (res) => {
+          this.ironBotRespuesta = res;
+          this.cargandoIronBot = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando IronBot del plan', err);
+          this.errorIronBot = 'No se pudo completar el análisis de IronBot.';
+          this.cargandoIronBot = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  reanalizarPlanConIronBot(): void {
+    const plan = this.planesFiltrados.find(p => p.id === this.planIronBotId);
+    if (plan) {
+      this.analizarPlanConIronBot(plan);
+    }
   }
 
   inicializarModulo(): void {
