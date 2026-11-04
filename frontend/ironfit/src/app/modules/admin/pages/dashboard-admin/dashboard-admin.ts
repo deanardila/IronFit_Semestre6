@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
 import { finalize, timeout } from 'rxjs';
 import { Dashboard, DashboardAdminDTO, GraficoDatoDTO } from '../../dashboard';
+import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 
 Chart.register(...registerables);
 
@@ -30,6 +31,10 @@ export class DashboardAdmin implements OnInit {
   asistenciaGlobal = 0;
   evaluacionesRegistradas = 0;
   clientesSinPlan = 0;
+
+  ironBotRespuesta: IronBotResponse | null = null;
+  cargandoIronBot = false;
+  errorIronBot = '';
 
   lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -111,7 +116,8 @@ export class DashboardAdmin implements OnInit {
   constructor(
     private router: Router,
     private dashboard: Dashboard,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ironBot: IronBotService
   ) {}
 
   ngOnInit(): void {
@@ -170,6 +176,36 @@ export class DashboardAdmin implements OnInit {
         }
       });
   }
+
+  analizarConIronBot(): void {
+    if (this.cargandoIronBot) {
+      return;
+    }
+
+    this.cargandoIronBot = true;
+    this.errorIronBot = '';
+
+    this.ironBot.resumenAdmin()
+      .pipe(
+        timeout(45000),
+        finalize(() => {
+          this.cargandoIronBot = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.ironBotRespuesta = res;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando IronBot admin', err);
+          this.errorIronBot = 'No se pudo completar el análisis de IronBot.';
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
   construirGraficas(res: DashboardAdminDTO): void {
     this.lineChartData = this.construirLineChart(res.asistenciaUltimosDias || [], 'Asistencia %');
     this.barEntrenadoresData = this.construirBarChart(res.planesPorEntrenador || [], 'Planes');
