@@ -666,3 +666,71 @@ section p {
     text-align: center;
     }
 }
+
+
+/* Pre-feria: acciones agrupadas de cada plan. No modifica su comportamiento. */
+.planes-tabla .acciones-tabla {
+    display: block;
+    min-width: 130px;
+}
+.plan-acciones-menu {
+    width: 100%;
+    max-width: 195px;
+}
+.plan-acciones-menu > .btn-ver-mas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 138, 31, 0.42);
+    background: rgba(255, 138, 31, 0.12);
+    color: #ffb347;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 700;
+    list-style: none;
+    user-select: none;
+}
+.plan-acciones-menu > .btn-ver-mas::-webkit-details-marker { display: none; }
+.plan-acciones-menu > .btn-ver-mas:hover,
+.plan-acciones-menu[open] > .btn-ver-mas {
+    background: rgba(255, 138, 31, 0.2);
+    border-color: #ff8a1f;
+}
+.plan-acciones-menu > .btn-ver-mas:focus-visible,
+.plan-acciones-opciones .btn-accion-menu:focus-visible {
+    outline: 2px solid #ffb347;
+    outline-offset: 2px;
+}
+.plan-acciones-menu[open] > .btn-ver-mas span { transform: rotate(180deg); }
+.plan-acciones-opciones {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.45rem;
+    margin-top: 0.4rem;
+    background: #1b1b1b;
+    border: 1px solid #383838;
+    border-radius: 12px;
+}
+.plan-acciones-opciones .btn-accion-menu {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    color: #f4f4f5;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.81rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.plan-acciones-opciones .btn-accion-menu:hover:not(:disabled) {
+    background: rgba(255, 138, 31, 0.15);
+    color: #ffb347;
+}
+.plan-acciones-opciones .btn-accion-menu:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
