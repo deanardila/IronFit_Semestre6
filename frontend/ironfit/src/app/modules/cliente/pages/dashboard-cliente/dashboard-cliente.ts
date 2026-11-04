@@ -8,6 +8,7 @@ import {
   DashboardClienteDTO,
   GraficoDatoDTO
 } from '../../../admin/dashboard';
+import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 
 Chart.register(...registerables);
 
@@ -34,6 +35,10 @@ export class DashboardCliente implements OnInit {
   progresoPlan = 0;
   pesoActual = 0;
   imcActual = 0;
+
+  ironBotRespuesta: IronBotResponse | null = null;
+  cargandoIronBot = false;
+  errorIronBot = '';
 
   asistenciaData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -124,7 +129,8 @@ export class DashboardCliente implements OnInit {
   constructor(
     private router: Router,
     private dashboard: Dashboard,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ironBot: IronBotService
   ) {}
 
   ngOnInit(): void {
@@ -174,6 +180,36 @@ export class DashboardCliente implements OnInit {
         error: (err) => {
           console.error('Error cargando dashboard cliente', err);
           this.error = 'No se pudieron cargar tus métricas.';
+        }
+      });
+  }
+
+
+  analizarConIronBot(): void {
+    if (this.cargandoIronBot) {
+      return;
+    }
+
+    this.cargandoIronBot = true;
+    this.errorIronBot = '';
+
+    this.ironBot.resumenCliente()
+      .pipe(
+        timeout(45000),
+        finalize(() => {
+          this.cargandoIronBot = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.ironBotRespuesta = res;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando IronBot cliente', err);
+          this.errorIronBot = 'No se pudo explicar tu progreso en este momento.';
+          this.cdr.detectChanges();
         }
       });
   }
