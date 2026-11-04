@@ -143,72 +143,84 @@
 	</section>
 
 	<section *ngIf="!cargando && !error && planesFiltrados.length > 0">
-		<table class="planes-tabla">
-			<thead>
-				<tr>
-					<th>Nombre</th>
-					<th>Objetivo</th>
-					<th>Inicio</th>
-					<th>Fin</th>
-					<th>Cliente</th>
-					<th>Entrenador</th>
-					<th>Estado</th>
-					<th>Acciones</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				<tr *ngFor="let p of planesFiltrados">
-					<td>{{ p.nombre }}</td>
-					<td>{{ p.objetivo }}</td>
-					<td>{{ p.fechaInicio }}</td>
-					<td>{{ p.fechaFin }}</td>
-					<td>{{ p.clienteNombre || p.clienteId }}</td>
-					<td>{{ p.entrenadorNombre || p.entrenadorId }}</td>
-					<td>
-						<button
-							type="button"
-							class="estado-badge"
-							[class.activo]="p.activo"
-							[class.inactivo]="!p.activo"
-							(click)="cambiarEstado(p)"
-							[disabled]="cambiandoEstadoId === p.id">
-							{{ cambiandoEstadoId === p.id ? 'Procesando...' : (p.activo ? 'ACTIVO' : 'INACTIVO') }}
-						</button>
-					</td>
-					<td>
-						<div class="acciones-tabla">
-							<details class="plan-acciones-menu">
-								<summary class="btn-ver-mas" aria-label="Ver opciones del plan {{ p.nombre }}">
-									Ver más <span aria-hidden="true">⌄</span>
-								</summary>
-								<div class="plan-acciones-opciones" role="group" aria-label="Acciones de {{ p.nombre }}">
-									<button type="button" class="btn-accion-menu"
-										(click)="editarPlan(p)"
-										[disabled]="guardando || cambiandoEstadoId === p.id">Editar</button>
-									<button type="button" class="btn-accion-menu"
-										(click)="gestionarRutinas(p)"
-										[disabled]="guardando || cambiandoEstadoId === p.id">Rutinas</button>
-									<button type="button" class="btn-accion-menu"
-										(click)="gestionarNutricion(p)"
-										[disabled]="guardando || cambiandoEstadoId === p.id">Nutrición</button>
-									<button type="button" class="btn-accion-menu"
-										(click)="verPrediccion(p)"
-										[disabled]="guardando || cambiandoEstadoId === p.id || cargandoPrediccion">
-										{{ cargandoPrediccion && planPrediccionId === p.id ? 'Analizando...' : 'Predicción' }}
-									</button>
-									<button type="button" class="btn-accion-menu"
-										(click)="analizarPlanConIronBot(p)"
-										[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
-										{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : 'IronBot' }}
-									</button>
-								</div>
-							</details>
+		<div class="planes-tarjetas">
+			<article class="plan-tarjeta" *ngFor="let p of planesFiltrados" [class.plan-tarjeta--abierta]="planDetalleId === p.id">
+				<div class="plan-tarjeta-cabecera">
+					<div class="plan-avatar" aria-hidden="true">◉</div>
+					<div class="plan-tarjeta-identidad">
+						<h3>{{ p.clienteNombre || p.clienteId }}</h3>
+						<p>{{ p.nombre }}</p>
+						<small>{{ p.objetivo }}</small>
+					</div>
+					<button type="button" class="estado-badge" [class.activo]="p.activo"
+						[class.inactivo]="!p.activo" (click)="cambiarEstado(p)"
+						[disabled]="cambiandoEstadoId === p.id"
+						[attr.aria-label]="'Cambiar estado del plan ' + p.nombre">
+						{{ cambiandoEstadoId === p.id ? 'Procesando...' : (p.activo ? 'ACTIVO' : 'INACTIVO') }}
+					</button>
+					<button class="btn-plan-detalle" type="button" [attr.aria-expanded]="planDetalleId === p.id"
+						(click)="alternarDetallePlan(p)">
+						{{ planDetalleId === p.id ? 'Cerrar' : 'Ver más' }}
+					</button>
+				</div>
+				<div class="plan-tarjeta-resumen" *ngIf="planDetalleId !== p.id">
+					<span><strong>Inicio:</strong> {{ p.fechaInicio }}</span>
+					<span><strong>Fin:</strong> {{ p.fechaFin }}</span>
+					<span><strong>Entrenador:</strong> {{ p.entrenadorNombre || p.entrenadorId }}</span>
+				</div>
+				<div class="plan-acciones-cerrado" *ngIf="planDetalleId !== p.id">
+					<button class="btn-ironbot-secundario" type="button"
+						(click)="analizarPlanConIronBot(p)"
+						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
+						{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : '♧ Abrir IronBot' }}
+					</button>
+				</div>
+				<div class="plan-detalle" *ngIf="planDetalleId === p.id">
+					<div class="plan-tabs" role="group" aria-label="Secciones del plan">
+						<button type="button" [class.seleccionada]="detalleTab === 'resumen'" (click)="detalleTab = 'resumen'">Resumen</button>
+						<button type="button" [class.seleccionada]="detalleTab === 'rutinas'" (click)="detalleTab = 'rutinas'">Plan y rutinas</button>
+						<button type="button" [class.seleccionada]="detalleTab === 'progreso'" (click)="detalleTab = 'progreso'">Progreso</button>
+						<button type="button" [class.seleccionada]="detalleTab === 'nutricion'" (click)="detalleTab = 'nutricion'">Nutrición</button>
+					</div>
+					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'resumen'">
+						<h4>Resumen del plan</h4>
+						<div class="plan-detalle-datos">
+							<span><strong>Cliente</strong>{{ p.clienteNombre || p.clienteId }}</span>
+							<span><strong>Objetivo</strong>{{ p.objetivo }}</span>
+							<span><strong>Inicio</strong>{{ p.fechaInicio }}</span>
+							<span><strong>Fin</strong>{{ p.fechaFin }}</span>
+							<span><strong>Entrenador</strong>{{ p.entrenadorNombre || p.entrenadorId }}</span>
 						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+						<button class="btn-detalle-accion" type="button" (click)="editarPlan(p)"
+							[disabled]="guardando || cambiandoEstadoId === p.id">Editar plan</button>
+					</div>
+					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'rutinas'">
+						<h4>Plan y rutinas</h4>
+						<p>Gestiona únicamente las rutinas de este plan.</p>
+						<button class="btn-detalle-accion" type="button" (click)="gestionarRutinas(p)"
+							[disabled]="guardando || cambiandoEstadoId === p.id">Abrir rutinas</button>
+					</div>
+					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'progreso'">
+						<h4>Predicción de adherencia y rendimiento</h4>
+						<p>Consulta las estimaciones calculadas por J48 y RandomForest para este plan.</p>
+						<button class="btn-detalle-accion" type="button" (click)="verPrediccion(p)"
+							[disabled]="guardando || cambiandoEstadoId === p.id || cargandoPrediccion">
+							{{ cargandoPrediccion && planPrediccionId === p.id ? 'Analizando...' : 'Consultar predicción' }}
+						</button>
+					</div>
+					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'nutricion'">
+						<h4>Nutrición</h4>
+						<p>Accede a la gestión nutricional del plan seleccionado.</p>
+						<button class="btn-detalle-accion" type="button" (click)="gestionarNutricion(p)"
+							[disabled]="guardando || cambiandoEstadoId === p.id">Abrir nutrición</button>
+					</div>
+					<button class="btn-ironbot-principal" type="button" (click)="analizarPlanConIronBot(p)"
+						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
+						{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando con IronBot...' : '✧ Analizar con IronBot' }}
+					</button>
+				</div>
+			</article>
+		</div>
 
 		<section
 			*ngIf="prediccionSeleccionada"
