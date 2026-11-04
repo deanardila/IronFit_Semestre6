@@ -192,7 +192,7 @@
 							<span><strong>Entrenador</strong>{{ p.entrenadorNombre || p.entrenadorId }}</span>
 						</div>
 						<button class="btn-detalle-accion" type="button" (click)="editarPlan(p)"
-							[disabled]="guardando || cambiandoEstadoId === p.id">Editar plan</button>
+							[disabled]="guardando || cambiandoEstadoId === p.id">Modificar plan de entrenamiento</button>
 					</div>
 					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'rutinas'">
 						<h4>Plan y rutinas</h4>
@@ -218,75 +218,76 @@
 						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
 						{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando con IronBot...' : '✧ Analizar con IronBot' }}
 					</button>
+
+						<section
+							*ngIf="planPrediccionId === p.id && prediccionSeleccionada"
+							class="panel-prediccion">
+
+							<h2>Análisis predictivo del plan</h2>
+
+							<div class="prediccion-grid">
+
+								<div class="prediccion-card">
+								<span class="prediccion-label">
+									Adherencia estimada
+								</span>
+
+								<strong class="prediccion-valor">
+									{{ prediccionSeleccionada.adherencia.prediccion }}
+								</strong>
+
+								<small>
+									Modelo: {{ prediccionSeleccionada.adherencia.modelo }}
+								</small>
+
+								<div class="probabilidades">
+									<span
+									*ngFor="let item of prediccionSeleccionada.adherencia.probabilidades | keyvalue">
+									{{ item.key }}: {{ item.value }}%
+									</span>
+								</div>
+								</div>
+
+								<div class="prediccion-card">
+								<span class="prediccion-label">
+									Rendimiento estimado
+								</span>
+
+								<strong class="prediccion-valor">
+									{{ prediccionSeleccionada.rendimiento.prediccion }}
+								</strong>
+
+								<small>
+									Modelo: {{ prediccionSeleccionada.rendimiento.modelo }}
+								</small>
+
+								<div class="probabilidades">
+									<span
+									*ngFor="let item of prediccionSeleccionada.rendimiento.probabilidades | keyvalue">
+									{{ item.key }}: {{ item.value }}%
+									</span>
+								</div>
+								</div>
+
+							</div>
+						</section>
+
+						<section
+							*ngIf="planPrediccionId === p.id && errorPrediccion"
+							class="mensaje-error">
+							{{ errorPrediccion }}
+						</section>
+
+						<app-ironbot-panel *ngIf="planIronBotId === p.id && (cargandoIronBot || ironBotRespuesta || errorIronBot)"
+							[respuesta]="ironBotRespuesta"
+							[cargando]="cargandoIronBot"
+							[error]="errorIronBot"
+							(reanalizar)="reanalizarPlanConIronBot()">
+						</app-ironbot-panel>
+
 				</div>
 			</article>
 		</div>
-
-		<section
-			*ngIf="prediccionSeleccionada"
-			class="panel-prediccion">
-
-			<h2>Análisis predictivo del plan</h2>
-
-			<div class="prediccion-grid">
-
-				<div class="prediccion-card">
-				<span class="prediccion-label">
-					Adherencia estimada
-				</span>
-
-				<strong class="prediccion-valor">
-					{{ prediccionSeleccionada.adherencia.prediccion }}
-				</strong>
-
-				<small>
-					Modelo: {{ prediccionSeleccionada.adherencia.modelo }}
-				</small>
-
-				<div class="probabilidades">
-					<span
-					*ngFor="let item of prediccionSeleccionada.adherencia.probabilidades | keyvalue">
-					{{ item.key }}: {{ item.value }}%
-					</span>
-				</div>
-				</div>
-
-				<div class="prediccion-card">
-				<span class="prediccion-label">
-					Rendimiento estimado
-				</span>
-
-				<strong class="prediccion-valor">
-					{{ prediccionSeleccionada.rendimiento.prediccion }}
-				</strong>
-
-				<small>
-					Modelo: {{ prediccionSeleccionada.rendimiento.modelo }}
-				</small>
-
-				<div class="probabilidades">
-					<span
-					*ngFor="let item of prediccionSeleccionada.rendimiento.probabilidades | keyvalue">
-					{{ item.key }}: {{ item.value }}%
-					</span>
-				</div>
-				</div>
-
-			</div>
-		</section>
-
-		<section
-			*ngIf="errorPrediccion"
-			class="mensaje-error">
-			{{ errorPrediccion }}
-		</section>
-
-		<app-ironbot-panel
-			[respuesta]="ironBotRespuesta"
-			[cargando]="cargandoIronBot"
-			[error]="errorIronBot"
-			(reanalizar)="reanalizarPlanConIronBot()">
-		</app-ironbot-panel>
 
 		<div class="paginacion-planes" *ngIf="totalElementos > 0">
 			<div class="paginacion-info">
