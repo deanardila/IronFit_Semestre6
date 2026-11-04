@@ -28,6 +28,10 @@ export class MisPlanes implements OnInit {
   planes: PlanEntrenamientoDTO[] = [];
   planesFiltrados: PlanEntrenamientoDTO[] = [];
 
+  // Solo controla la vista; no modifica los servicios ni la seleccion del plan en backend.
+  planDetalleId: string | null = null;
+  detalleTab: 'resumen' | 'rutinas' | 'progreso' | 'nutricion' = 'resumen';
+
   prediccionSeleccionada: PrediccionPlanDTO | null = null;
   planPrediccionId: string | null = null;
   cargandoPrediccion = false;
@@ -80,6 +84,11 @@ export class MisPlanes implements OnInit {
 
   ngOnInit(): void {
     this.inicializarModulo();
+  }
+
+  alternarDetallePlan(plan: PlanEntrenamientoDTO): void {
+    this.planDetalleId = this.planDetalleId === plan.id ? null : plan.id;
+    this.detalleTab = 'resumen';
   }
 
   verPrediccion(plan: PlanEntrenamientoDTO): void {
