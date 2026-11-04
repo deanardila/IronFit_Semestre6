@@ -12,9 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 public class IronBotService {
+    private static final Logger LOG = Logger.getLogger(IronBotService.class.getName());
     private final GeminiIronBotClient gemini;
     private final PrediccionPlanService predicciones;
     private final PlanEntrenamientoRepository planes;
@@ -48,7 +50,10 @@ public class IronBotService {
             datos.put("sesionesCompletadas", registros.stream().filter(s -> "COMPLETADO".equals(s.getEstado())).count());
             datos.put("sesionesParciales", registros.stream().filter(s -> "PARCIAL".equals(s.getEstado())).count());
             return generar("ENTRENADOR", "ANALISIS_PLAN", "Análisis del plan", datos, "IronFit + Weka");
-        } catch (Exception e) { return fallo("ANALISIS_PLAN"); }
+        } catch (Exception e) {
+            LOG.warning("IronBot ANALISIS_PLAN fallo: " + e.getClass().getSimpleName());
+            return fallo("ANALISIS_PLAN");
+        }
     }
     private String objetivoSeguro(String objetivo) {
         if (objetivo == null) return "No disponible";
@@ -74,7 +79,10 @@ public class IronBotService {
             datos.put("asistenciasMes", d.getAsistenciasMes()); datos.put("asistenciaGlobalPorcentaje", d.getAsistenciaGlobal());
             datos.put("evaluacionesRegistradas", d.getEvaluacionesRegistradas()); datos.put("clientesSinPlan", d.getClientesSinPlan());
             return generar("ADMIN", "RESUMEN_ADMIN", "Resumen operativo", datos, "IronFit");
-        } catch (Exception e) { return fallo("RESUMEN_ADMIN"); }
+        } catch (Exception e) {
+            LOG.warning("IronBot RESUMEN_ADMIN fallo: " + e.getClass().getSimpleName());
+            return fallo("RESUMEN_ADMIN");
+        }
     }
     public IronBotResponse resumenCliente(Authentication auth) {
         if (!gemini.configurado()) return noDisponible("RESUMEN_CLIENTE");
@@ -86,12 +94,22 @@ public class IronBotService {
             datos.put("rachaActual", d.getRachaActual()); datos.put("progresoPlanPorcentaje", d.getProgresoPlan());
             datos.put("significadoProgreso", "El dashboard mide el progreso como porcentaje de asistencia registrada; no representa avance temporal ni resultados físicos");
             return generar("CLIENTE", "RESUMEN_CLIENTE", "Tu progreso", datos, "IronFit");
-        } catch (Exception e) { return fallo("RESUMEN_CLIENTE"); }
+        } catch (Exception e) {
+            LOG.warning("IronBot RESUMEN_CLIENTE fallo: " + e.getClass().getSimpleName());
+            return fallo("RESUMEN_CLIENTE");
+        }
     }
     private IronBotResponse generar(String rol, String tipo, String titulo, Map<String,Object> datos, String fuente) {
         try { return new IronBotResponse(true, tipo, titulo, gemini.generar(rol, datos), gemini.modelo(), fuente); }
-        catch (InterruptedException e) { Thread.currentThread().interrupt(); return fallo(tipo); }
-        catch (Exception e) { return fallo(tipo); }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOG.warning("IronBot " + tipo + " interrumpido");
+            return fallo(tipo);
+        }
+        catch (Exception e) {
+            LOG.warning("IronBot " + tipo + " fallo generando interpretacion: " + e.getClass().getSimpleName());
+            return fallo(tipo);
+        }
     }
     private IronBotResponse noDisponible(String tipo) {
         return new IronBotResponse(false, tipo, "IronBot", "IronBot no está disponible en este entorno.", gemini.modelo(), "IronFit");
