@@ -174,7 +174,7 @@ export class NutricionEntrenador implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate(['/entrenador/MisPlanes']);
+    this.router.navigate(['/entrenador/MisPlanes'], { queryParamsHandling: 'preserve' });
   }
 
   private mensajeError(err: any, fallback: string): string {
