@@ -178,47 +178,32 @@
 					</td>
 					<td>
 						<div class="acciones-tabla">
-							<button
-								type="button"
-								class="btn-editar-tabla"
-								(click)="editarPlan(p)"
-								[disabled]="guardando || cambiandoEstadoId === p.id">
-								Editar
-							</button>
-
-							<button
-								type="button"
-								class="btn-editar-tabla"
-								(click)="gestionarRutinas(p)"
-								[disabled]="guardando || cambiandoEstadoId === p.id">
-								Rutinas
-							</button>
-
-							<button
-								type="button"
-								class="btn-editar-tabla"
-								(click)="gestionarNutricion(p)"
-								[disabled]="guardando || cambiandoEstadoId === p.id">
-								Nutrición
-							</button>
-
-							<button
-								type="button"
-								class="btn-editar-tabla"
-								(click)="verPrediccion(p)"
-								[disabled]="guardando || cambiandoEstadoId === p.id || cargandoPrediccion">
-								{{ cargandoPrediccion && planPrediccionId === p.id
-									? 'Analizando...'
-									: 'Predicción' }}
-								</button>
-
-							<button
-								type="button"
-								class="btn-editar-tabla"
-								(click)="analizarPlanConIronBot(p)"
-								[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
-								{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : 'IronBot' }}
-							</button>
+							<details class="plan-acciones-menu">
+								<summary class="btn-ver-mas" aria-label="Ver opciones del plan {{ p.nombre }}">
+									Ver más <span aria-hidden="true">⌄</span>
+								</summary>
+								<div class="plan-acciones-opciones" role="group" aria-label="Acciones de {{ p.nombre }}">
+									<button type="button" class="btn-accion-menu"
+										(click)="editarPlan(p)"
+										[disabled]="guardando || cambiandoEstadoId === p.id">Editar</button>
+									<button type="button" class="btn-accion-menu"
+										(click)="gestionarRutinas(p)"
+										[disabled]="guardando || cambiandoEstadoId === p.id">Rutinas</button>
+									<button type="button" class="btn-accion-menu"
+										(click)="gestionarNutricion(p)"
+										[disabled]="guardando || cambiandoEstadoId === p.id">Nutrición</button>
+									<button type="button" class="btn-accion-menu"
+										(click)="verPrediccion(p)"
+										[disabled]="guardando || cambiandoEstadoId === p.id || cargandoPrediccion">
+										{{ cargandoPrediccion && planPrediccionId === p.id ? 'Analizando...' : 'Predicción' }}
+									</button>
+									<button type="button" class="btn-accion-menu"
+										(click)="analizarPlanConIronBot(p)"
+										[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
+										{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : 'IronBot' }}
+									</button>
+								</div>
+							</details>
 						</div>
 					</td>
 				</tr>
