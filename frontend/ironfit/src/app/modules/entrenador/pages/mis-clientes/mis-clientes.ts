@@ -28,6 +28,9 @@ export class MisClientes implements OnInit {
   clientes: ClienteAsignadoVista[] = [];
   clientesFiltrados: ClienteAsignadoVista[] = [];
 
+  clienteDetalleId: string | null = null;
+  clienteDetalleTab: 'resumen' | 'planes' | 'progreso' = 'resumen';
+
   cargando = false;
   error = '';
 
@@ -121,6 +124,19 @@ export class MisClientes implements OnInit {
       asignacionId: asignacion.id,
       entrenadorNombre: asignacion.entrenadorNombre || '',
     };
+  }
+
+  alternarCliente(cliente: ClienteAsignadoVista): void {
+    this.clienteDetalleId = this.clienteDetalleId === cliente.id ? null : cliente.id;
+    this.clienteDetalleTab = 'resumen';
+  }
+
+  abrirPlanDeCliente(cliente: ClienteAsignadoVista): void {
+    // Reutiliza Mis planes, donde Weka e IronBot requieren un plan concreto.
+    // No se envía información personal a servicios externos desde esta pantalla.
+    this.router.navigate(['/entrenador/MisPlanes'], {
+      queryParams: { buscar: [cliente.nombres, cliente.apellidos].filter(Boolean).join(' ') }
+    });
   }
 
   aplicarFiltros(): void {
