@@ -200,6 +200,29 @@
         </div>
         </section>
 
+        <section class="dashboard-panel">
+            <div class="chart-header">
+                <div>
+                    <h2>IronBot</h2>
+                    <span>Resumen inteligente de la operación</span>
+                </div>
+                <button
+                    type="button"
+                    class="dashboard-retry-btn"
+                    (click)="analizarConIronBot()"
+                    [disabled]="cargandoIronBot">
+                    {{ cargandoIronBot ? 'Analizando...' : (ironBotRespuesta ? 'Actualizar análisis' : 'Analizar con IronBot') }}
+                </button>
+            </div>
+
+            <app-ironbot-panel
+                [respuesta]="ironBotRespuesta"
+                [cargando]="cargandoIronBot"
+                [error]="errorIronBot"
+                (reanalizar)="analizarConIronBot()">
+            </app-ironbot-panel>
+        </section>
+
         <section class="charts-grid">
         <article class="chart-card chart-wide">
             <div class="chart-header">
