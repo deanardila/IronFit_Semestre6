@@ -1,6 +1,6 @@
 import { environment } from '../../../../../environments/environment';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { timeout } from 'rxjs';
 import { PlanEntrenamientoDTO, PlanEntrenamientoCrearDTO, Planes } from '../../../admin/planes';
@@ -76,6 +76,7 @@ export class MisPlanes implements OnInit {
     private planesService: Planes,
     private http: HttpClient,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private asignacionesService: AsignacionesService,
     private prediccionesService: PrediccionesService,
@@ -83,6 +84,8 @@ export class MisPlanes implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Cuando se llega desde Mis clientes, conservar el filtro por su nombre.
+    this.terminoBusqueda = this.route.snapshot.queryParamMap.get('buscar') || '';
     this.inicializarModulo();
   }
 
