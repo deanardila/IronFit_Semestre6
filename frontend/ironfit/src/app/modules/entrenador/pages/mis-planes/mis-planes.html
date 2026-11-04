@@ -211,6 +211,14 @@
 									? 'Analizando...'
 									: 'Predicción' }}
 								</button>
+
+							<button
+								type="button"
+								class="btn-editar-tabla"
+								(click)="analizarPlanConIronBot(p)"
+								[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
+								{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : 'IronBot' }}
+							</button>
 						</div>
 					</td>
 				</tr>
@@ -275,6 +283,13 @@
 			class="mensaje-error">
 			{{ errorPrediccion }}
 		</section>
+
+		<app-ironbot-panel
+			[respuesta]="ironBotRespuesta"
+			[cargando]="cargandoIronBot"
+			[error]="errorIronBot"
+			(reanalizar)="reanalizarPlanConIronBot()">
+		</app-ironbot-panel>
 
 		<div class="paginacion-planes" *ngIf="totalElementos > 0">
 			<div class="paginacion-info">
