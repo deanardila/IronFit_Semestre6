@@ -85,7 +85,19 @@ export class MisPlanes implements OnInit {
 
   ngOnInit(): void {
     // Cuando se llega desde Mis clientes, conservar el filtro por su nombre.
-    this.terminoBusqueda = this.route.snapshot.queryParamMap.get('buscar') || '';
+    const params = this.route.snapshot.queryParamMap;
+    this.terminoBusqueda = params.get('buscar') || '';
+    this.planDetalleId = params.get('plan') || null;
+    const tab = params.get('tab');
+    if (tab === 'resumen' || tab === 'rutinas' || tab === 'progreso' || tab === 'nutricion') {
+      this.detalleTab = tab;
+    }
+    const pagina = Number(params.get('pagina'));
+    if (params.has('pagina') && Number.isInteger(pagina) && pagina >= 0) this.paginaActual = pagina;
+    const tamano = Number(params.get('tamano'));
+    if (this.opcionesTamanoPagina.includes(tamano)) this.tamanoPagina = tamano;
+    const estado = params.get('estado');
+    if (estado === 'ACTIVOS' || estado === 'INACTIVOS') this.filtroEstado = estado;
     this.inicializarModulo();
   }
 
@@ -94,12 +106,22 @@ export class MisPlanes implements OnInit {
     this.detalleTab = 'resumen';
   }
 
+  private contextoRegreso(plan: PlanEntrenamientoDTO): Record<string, string | number> {
+    return {
+      buscar: this.terminoBusqueda, pagina: this.paginaActual,
+      tamano: this.tamanoPagina, estado: this.filtroEstado,
+      plan: plan.id, tab: this.detalleTab
+    };
+  }
+
   verPrediccion(plan: PlanEntrenamientoDTO): void {
 
     if (!plan?.id || this.cargandoPrediccion) {
       return;
     }
 
+    this.planDetalleId = plan.id;
+    this.detalleTab = 'progreso';
     this.cargandoPrediccion = true;
     this.errorPrediccion = '';
     this.prediccionSeleccionada = null;
@@ -130,6 +152,7 @@ export class MisPlanes implements OnInit {
       return;
     }
 
+    this.planDetalleId = plan.id;
     this.planIronBotId = plan.id;
     this.cargandoIronBot = true;
     this.errorIronBot = '';
@@ -494,7 +517,7 @@ export class MisPlanes implements OnInit {
       return;
     }
 
-    this.router.navigate(['/entrenador/nutricion', plan.id]);
+    this.router.navigate(['/entrenador/nutricion', plan.id], { queryParams: this.contextoRegreso(plan) });
   }
 
   gestionarRutinas(plan: PlanEntrenamientoDTO): void {
@@ -504,7 +527,7 @@ export class MisPlanes implements OnInit {
       return;
     }
 
-    this.router.navigate(['/entrenador/MisRutinas', plan.id]);
+    this.router.navigate(['/entrenador/MisRutinas', plan.id], { queryParams: this.contextoRegreso(plan) });
   }
 
   cambiarEstado(plan: PlanEntrenamientoDTO): void {
