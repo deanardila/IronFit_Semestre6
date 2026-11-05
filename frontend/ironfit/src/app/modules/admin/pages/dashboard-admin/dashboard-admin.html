@@ -93,6 +93,18 @@
 
         <button
             class="quick-menu-item"
+            routerLink="/admin/nutricion"
+            (click)="closeMenu()"
+        >
+            <div class="quick-menu-textblock">
+                <span class="item-title">Planes nutricionales</span>
+                <span class="item-subtitle">Consulta general de nutrición</span>
+            </div>
+            <span class="item-pill">Ver planes</span>
+        </button>
+
+        <button
+            class="quick-menu-item"
             routerLink="/admin/auditoria"
             (click)="closeMenu()"
         >
@@ -113,6 +125,9 @@
 
     <section *ngIf="!cargando && error" class="dashboard-panel error-panel">
         <p>⚠️ {{ error }}</p>
+        <button type="button" class="dashboard-retry-btn" (click)="cargarDashboard()">
+            Reintentar
+        </button>
     </section>
 
     <ng-container *ngIf="!cargando && !error">
@@ -183,6 +198,29 @@
             <div class="stat-value">{{ clientesSinPlan }}</div>
             <div class="stat-footer">requieren seguimiento</div>
         </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <div class="chart-header">
+                <div>
+                    <h2>IronBot</h2>
+                    <span>Resumen inteligente de la operación</span>
+                </div>
+                <button
+                    type="button"
+                    class="dashboard-retry-btn"
+                    (click)="analizarConIronBot()"
+                    [disabled]="cargandoIronBot">
+                    {{ cargandoIronBot ? 'Analizando...' : (ironBotRespuesta ? 'Actualizar análisis' : 'Analizar con IronBot') }}
+                </button>
+            </div>
+
+            <app-ironbot-panel
+                [respuesta]="ironBotRespuesta"
+                [cargando]="cargandoIronBot"
+                [error]="errorIronBot"
+                (reanalizar)="analizarConIronBot()">
+            </app-ironbot-panel>
         </section>
 
         <section class="charts-grid">

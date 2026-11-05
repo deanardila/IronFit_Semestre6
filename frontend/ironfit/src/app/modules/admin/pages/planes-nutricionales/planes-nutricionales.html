@@ -1,0 +1,66 @@
+<div class="nutricion-admin-page">
+  <header class="nutricion-header">
+    <div class="header-left">
+      <button type="button" class="btn-secundario" (click)="volver()">← Volver</button>
+      <h1>Planes nutricionales</h1>
+    </div>
+
+    <div class="header-actions">
+      <div class="busqueda">
+        <input
+          type="text"
+          placeholder="Buscar cliente, entrenador o plan..."
+          [(ngModel)]="terminoBusqueda"
+          (keyup.enter)="buscar()"
+        />
+        <button type="button" class="btn-secundario" (click)="buscar()">Buscar</button>
+      </div>
+
+      <button type="button" class="btn-secundario" (click)="cargar()" [disabled]="cargando">
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  <section *ngIf="cargando" class="estado-panel">
+    ⏳ Cargando planes nutricionales...
+  </section>
+
+  <section *ngIf="!cargando && error" class="estado-panel error-panel">
+    ⚠️ {{ error }}
+  </section>
+
+  <section *ngIf="!cargando && !error && planesFiltrados.length === 0" class="estado-panel">
+    No hay planes nutricionales para mostrar.
+  </section>
+
+  <section *ngIf="!cargando && !error && planesFiltrados.length > 0" class="tabla-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Entrenador</th>
+          <th>Plan</th>
+          <th>Calorías</th>
+          <th>Proteína</th>
+          <th>Carbohidratos</th>
+          <th>Grasa</th>
+          <th>Actualizado</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let p of planesFiltrados">
+          <td>{{ p.clienteNombre || 'Cliente' }}</td>
+          <td>{{ p.entrenadorNombre || 'Entrenador' }}</td>
+          <td>{{ p.planNombre || 'Plan de entrenamiento' }}</td>
+          <td><strong>{{ p.kcalObjetivo }}</strong> kcal</td>
+          <td>{{ p.proteinaG }} g</td>
+          <td>{{ p.carbohidratosG }} g</td>
+          <td>{{ p.grasaG }} g</td>
+          <td>{{ p.fechaActualizacion | date:'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

@@ -62,6 +62,9 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/ironbot/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/ironbot/entrenador/**").hasAnyRole("ADMIN", "ENTRENADOR")
+                .requestMatchers(HttpMethod.GET, "/api/ironbot/cliente/**").hasRole("CLIENTE")
                 // Rutas públicas
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/error").permitAll()
@@ -91,6 +94,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/planes/**")
                     .hasRole("ENTRENADOR")
                 .requestMatchers(HttpMethod.PATCH, "/api/planes/**")
+                    .hasRole("ENTRENADOR")
+
+                // Rutas de nutrición
+                .requestMatchers(HttpMethod.GET, "/api/nutricion/**")
+                    .hasAnyRole("ADMIN", "ENTRENADOR", "CLIENTE")
+                .requestMatchers(HttpMethod.POST, "/api/nutricion/**")
+                    .hasRole("ENTRENADOR")
+                .requestMatchers(HttpMethod.PUT, "/api/nutricion/**")
                     .hasRole("ENTRENADOR")
 
                 // Rutas de rutinas

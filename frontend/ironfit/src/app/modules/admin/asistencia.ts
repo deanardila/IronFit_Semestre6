@@ -37,6 +37,15 @@ export interface FiltrosAsistencia {
     buscar?: string;
 }
 
+export interface ResumenAsistenciaDTO {
+    totalRegistros: number;
+    totalAsistio: number;
+    totalNoAsistio: number;
+    totalSinRutina: number;
+    totalParcial: number;
+    porcentajeAsistencia: number;
+}
+
 export interface PaginaResponse<T> {
     contenido: T[];
     pagina: number;
@@ -78,6 +87,39 @@ export class AsistenciaService {
         }
 
         return this.http.get<AsistenciaReporteDTO[]>(`${this.apiUrl}/reportes`, { params });
+    }
+
+    obtenerResumenAsistencias(filtros?: FiltrosAsistencia): Observable<ResumenAsistenciaDTO> {
+        let params = new HttpParams();
+
+        if (filtros?.buscar && filtros.buscar.trim()) {
+            params = params.set('buscar', filtros.buscar.trim());
+        }
+
+        if (filtros?.fechaInicio) {
+            params = params.set('fechaInicio', filtros.fechaInicio);
+        }
+
+        if (filtros?.fechaFin) {
+            params = params.set('fechaFin', filtros.fechaFin);
+        }
+
+        if (filtros?.clienteId) {
+            params = params.set('clienteId', filtros.clienteId);
+        }
+
+        if (filtros?.entrenadorId) {
+            params = params.set('entrenadorId', filtros.entrenadorId);
+        }
+
+        if (filtros?.estado && filtros.estado !== 'TODOS') {
+            params = params.set('estado', filtros.estado);
+        }
+
+        return this.http.get<ResumenAsistenciaDTO>(
+            `${this.apiUrl}/reportes/resumen`,
+            { params }
+        );
     }
 
     obtenerReporteAsistenciasPaginado(

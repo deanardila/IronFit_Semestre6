@@ -1,6 +1,6 @@
 import { environment } from '../../../../../environments/environment';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { timeout } from 'rxjs';
 import { PlanEntrenamientoDTO, PlanEntrenamientoCrearDTO, Planes } from '../../../admin/planes';
@@ -12,6 +12,7 @@ import {
   PrediccionesService,
   PrediccionPlanDTO
 } from '../../predicciones';
+import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 
 
 @Component({
@@ -27,10 +28,19 @@ export class MisPlanes implements OnInit {
   planes: PlanEntrenamientoDTO[] = [];
   planesFiltrados: PlanEntrenamientoDTO[] = [];
 
+  // Solo controla la vista; no modifica los servicios ni la seleccion del plan en backend.
+  planDetalleId: string | null = null;
+  detalleTab: 'resumen' | 'rutinas' | 'progreso' | 'nutricion' = 'resumen';
+
   prediccionSeleccionada: PrediccionPlanDTO | null = null;
   planPrediccionId: string | null = null;
   cargandoPrediccion = false;
   errorPrediccion = '';
+
+  ironBotRespuesta: IronBotResponse | null = null;
+  planIronBotId: string | null = null;
+  cargandoIronBot = false;
+  errorIronBot = '';
 
   cargando = false;
   guardando = false;
@@ -66,13 +76,42 @@ export class MisPlanes implements OnInit {
     private planesService: Planes,
     private http: HttpClient,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private asignacionesService: AsignacionesService,
-    private prediccionesService: PrediccionesService
+    private prediccionesService: PrediccionesService,
+    private ironBot: IronBotService
   ) {}
 
   ngOnInit(): void {
+    // Cuando se llega desde Mis clientes, conservar el filtro por su nombre.
+    const params = this.route.snapshot.queryParamMap;
+    this.terminoBusqueda = params.get('buscar') || '';
+    this.planDetalleId = params.get('plan') || null;
+    const tab = params.get('tab');
+    if (tab === 'resumen' || tab === 'rutinas' || tab === 'progreso' || tab === 'nutricion') {
+      this.detalleTab = tab;
+    }
+    const pagina = Number(params.get('pagina'));
+    if (params.has('pagina') && Number.isInteger(pagina) && pagina >= 0) this.paginaActual = pagina;
+    const tamano = Number(params.get('tamano'));
+    if (this.opcionesTamanoPagina.includes(tamano)) this.tamanoPagina = tamano;
+    const estado = params.get('estado');
+    if (estado === 'ACTIVOS' || estado === 'INACTIVOS') this.filtroEstado = estado;
     this.inicializarModulo();
+  }
+
+  alternarDetallePlan(plan: PlanEntrenamientoDTO): void {
+    this.planDetalleId = this.planDetalleId === plan.id ? null : plan.id;
+    this.detalleTab = 'resumen';
+  }
+
+  private contextoRegreso(plan: PlanEntrenamientoDTO): Record<string, string | number> {
+    return {
+      buscar: this.terminoBusqueda, pagina: this.paginaActual,
+      tamano: this.tamanoPagina, estado: this.filtroEstado,
+      plan: plan.id, tab: this.detalleTab
+    };
   }
 
   verPrediccion(plan: PlanEntrenamientoDTO): void {
@@ -81,6 +120,8 @@ export class MisPlanes implements OnInit {
       return;
     }
 
+    this.planDetalleId = plan.id;
+    this.detalleTab = 'progreso';
     this.cargandoPrediccion = true;
     this.errorPrediccion = '';
     this.prediccionSeleccionada = null;
@@ -103,6 +144,42 @@ export class MisPlanes implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+
+  analizarPlanConIronBot(plan: PlanEntrenamientoDTO): void {
+    if (!plan?.id || this.cargandoIronBot) {
+      return;
+    }
+
+    this.planDetalleId = plan.id;
+    this.planIronBotId = plan.id;
+    this.cargandoIronBot = true;
+    this.errorIronBot = '';
+    this.ironBotRespuesta = null;
+
+    this.ironBot.analizarPlan(plan.id)
+      .pipe(timeout(45000))
+      .subscribe({
+        next: (res) => {
+          this.ironBotRespuesta = res;
+          this.cargandoIronBot = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando IronBot del plan', err);
+          this.errorIronBot = 'No se pudo completar el análisis de IronBot.';
+          this.cargandoIronBot = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  reanalizarPlanConIronBot(): void {
+    const plan = this.planesFiltrados.find(p => p.id === this.planIronBotId);
+    if (plan) {
+      this.analizarPlanConIronBot(plan);
+    }
   }
 
   inicializarModulo(): void {
@@ -433,6 +510,16 @@ export class MisPlanes implements OnInit {
     this.cdr.detectChanges();
   }
 
+  gestionarNutricion(plan: PlanEntrenamientoDTO): void {
+    if (!plan?.id) {
+      this.error = 'No se pudo identificar el plan seleccionado.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.router.navigate(['/entrenador/nutricion', plan.id], { queryParams: this.contextoRegreso(plan) });
+  }
+
   gestionarRutinas(plan: PlanEntrenamientoDTO): void {
     if (!plan?.id) {
       this.error = 'No se pudo identificar el plan seleccionado.';
@@ -440,7 +527,7 @@ export class MisPlanes implements OnInit {
       return;
     }
 
-    this.router.navigate(['/entrenador/MisRutinas', plan.id]);
+    this.router.navigate(['/entrenador/MisRutinas', plan.id], { queryParams: this.contextoRegreso(plan) });
   }
 
   cambiarEstado(plan: PlanEntrenamientoDTO): void {

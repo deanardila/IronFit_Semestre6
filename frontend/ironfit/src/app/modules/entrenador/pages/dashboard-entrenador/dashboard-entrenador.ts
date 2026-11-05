@@ -116,7 +116,7 @@ export class DashboardEntrenador implements OnInit {
 
     this.dashboard.getDashboardEntrenador()
       .pipe(
-        timeout(15000),
+        timeout(45000),
         finalize(() => {
           this.cargando = false;
           this.cdr.detectChanges();

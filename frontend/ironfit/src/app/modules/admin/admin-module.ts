@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MiPerfil } from '../cliente/pages/mi-perfil/mi-perfil';
 import { SharedModule } from '../../shared/shared-module';
 import { Asignaciones } from './pages/asignaciones/asignaciones';
+import { PlanesNutricionalesAdmin } from './pages/planes-nutricionales/planes-nutricionales';
 
 
 
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'ejercicios', component: GestionEjercicios },
   { path: 'planes-rutinas', component: PlanesRutinas },
   { path: 'auditoria', component: AuditoriaReportes },
+  { path: 'nutricion', component: PlanesNutricionalesAdmin },
 ];
 
 
@@ -33,7 +35,8 @@ const routes: Routes = [
     GestionEjercicios,
     PlanesRutinas,
     AuditoriaReportes,
-    Asignaciones
+    Asignaciones,
+    PlanesNutricionalesAdmin
   ],
   imports: [
   CommonModule,

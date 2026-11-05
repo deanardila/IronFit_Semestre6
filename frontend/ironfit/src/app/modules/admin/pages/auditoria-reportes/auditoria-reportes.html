@@ -46,7 +46,8 @@
         <option value="TODOS">Todos</option>
         <option value="ASISTIO">Asistió</option>
         <option value="NO_ASISTIO">No asistió</option>
-        <option value="ASISTIO_SIN_RUTINA">Sin rutina</option>
+        <option value="ASISTIO_SIN_RUTINA">Asistió sin rutina</option>
+        <option value="ASISTIO_PARCIAL">Asistió parcial</option>
       </select>
 
       <button
@@ -78,25 +79,31 @@
     <article class="metrica-card ok">
       <span>Asistieron</span>
       <strong>{{ totalAsistio }}</strong>
-      <small>en esta página</small>
+      <small>en resultados filtrados</small>
     </article>
 
     <article class="metrica-card danger">
       <span>No asistieron</span>
       <strong>{{ totalNoAsistio }}</strong>
-      <small>en esta página</small>
+      <small>en resultados filtrados</small>
     </article>
 
     <article class="metrica-card warning">
       <span>Sin rutina</span>
       <strong>{{ totalSinRutina }}</strong>
-      <small>en esta página</small>
+      <small>en resultados filtrados</small>
+    </article>
+
+    <article class="metrica-card partial">
+      <span>Parciales</span>
+      <strong>{{ totalParcial }}</strong>
+      <small>en resultados filtrados</small>
     </article>
 
     <article class="metrica-card main">
       <span>Cumplimiento</span>
       <strong>{{ porcentajeAsistencia }}%</strong>
-      <small>según página actual</small>
+      <small>sobre resultados filtrados</small>
     </article>
   </section>
 

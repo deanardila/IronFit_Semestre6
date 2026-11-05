@@ -92,6 +92,18 @@
 
         <button
             class="quick-menu-item"
+            routerLink="/cliente/nutricion"
+            (click)="closeMenu()"
+        >
+            <div class="quick-menu-textblock">
+                <span class="item-title">Mi nutrición</span>
+                <span class="item-subtitle">Calorías y macronutrientes</span>
+            </div>
+            <span class="item-pill">Ver plan</span>
+        </button>
+
+        <button
+            class="quick-menu-item"
             routerLink="/cliente/asistencias"
             (click)="closeMenu()"
         >
@@ -112,6 +124,9 @@
 
         <section *ngIf="!cargando && error" class="dashboard-panel error-panel">
             <p>⚠️ {{ error }}</p>
+            <button type="button" class="dashboard-retry-btn" (click)="cargarDashboard()">
+                Reintentar
+            </button>
         </section>
 
         <ng-container *ngIf="!cargando && !error">
@@ -174,6 +189,29 @@
                 <div class="stat-value">{{ imcActual }}</div>
                 <div class="stat-footer">última evaluación</div>
             </div>
+            </section>
+
+            <section class="dashboard-panel">
+                <div class="chart-header">
+                    <div>
+                        <h2>IronBot</h2>
+                        <span>Explicación breve de tu progreso</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="dashboard-retry-btn"
+                        (click)="analizarConIronBot()"
+                        [disabled]="cargandoIronBot">
+                        {{ cargandoIronBot ? 'Analizando...' : (ironBotRespuesta ? 'Actualizar explicación' : 'IronBot · Explicar mi progreso') }}
+                    </button>
+                </div>
+
+                <app-ironbot-panel
+                    [respuesta]="ironBotRespuesta"
+                    [cargando]="cargandoIronBot"
+                    [error]="errorIronBot"
+                    (reanalizar)="analizarConIronBot()">
+                </app-ironbot-panel>
             </section>
 
             <section class="charts-grid">

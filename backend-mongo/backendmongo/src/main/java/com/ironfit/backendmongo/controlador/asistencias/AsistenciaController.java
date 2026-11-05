@@ -1,6 +1,7 @@
 package com.ironfit.backendmongo.controlador.asistencias;
 
 import com.ironfit.backendmongo.dto.asistencias.AsistenciaReporteResponse;
+import com.ironfit.backendmongo.dto.asistencias.AsistenciaResumenResponse;
 import com.ironfit.backendmongo.dto.comun.PaginaResponse;
 import com.ironfit.backendmongo.servicio.asistencias.AsistenciaService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,6 +46,42 @@ public class AsistenciaController {
     ) {
         return asistenciaService.generarReporte(
                 authentication,
+                fechaInicio,
+                fechaFin,
+                clienteId,
+                entrenadorId,
+                estado
+        );
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','ENTRENADOR')")
+    @GetMapping("/reportes/resumen")
+    public AsistenciaResumenResponse generarResumenReporte(
+            Authentication authentication,
+
+            @RequestParam(required = false)
+            String buscar,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate fechaInicio,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate fechaFin,
+
+            @RequestParam(required = false)
+            String clienteId,
+
+            @RequestParam(required = false)
+            String entrenadorId,
+
+            @RequestParam(required = false)
+            String estado
+    ) {
+        return asistenciaService.generarResumenReporte(
+                authentication,
+                buscar,
                 fechaInicio,
                 fechaFin,
                 clienteId,

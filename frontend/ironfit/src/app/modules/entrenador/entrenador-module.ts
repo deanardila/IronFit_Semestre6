@@ -13,6 +13,7 @@ import { Evaluaciones } from './pages/evaluaciones/evaluaciones';
 import { MiPerfil } from '../cliente/pages/mi-perfil/mi-perfil';
 import { SharedModule } from '../../shared/shared-module';
 import { RutinaEjercicios } from './pages/rutina-ejercicios/rutina-ejercicios';
+import { NutricionEntrenador } from './pages/nutricion/nutricion';
 
 const routes: Routes = [
   { path: '', component: DashboardEntrenador },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'RutinaEjercicios/:rutinaId', component: RutinaEjercicios },
   { path: 'asistencias', component: Asistencias },
   { path: 'evaluaciones', component: Evaluaciones },
+  { path: 'nutricion/:planId', component: NutricionEntrenador },
   
 ];
 
@@ -35,7 +37,8 @@ const routes: Routes = [
     MisRutinas,
     Asistencias,
     Evaluaciones,
-    RutinaEjercicios
+    RutinaEjercicios,
+    NutricionEntrenador
   ],
   imports: [
     CommonModule,

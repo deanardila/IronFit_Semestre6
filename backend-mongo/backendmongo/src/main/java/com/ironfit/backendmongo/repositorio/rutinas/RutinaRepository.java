@@ -10,4 +10,6 @@ public interface RutinaRepository extends MongoRepository<Rutina, String> {
     List<Rutina> findByPlanIdAndActivoTrueOrderByOrdenAsc(String planId);
 
     List<Rutina> findByPlanIdOrderByOrdenAsc(String planId);
+
+    long countByPlanIdInAndActivoTrue(List<String> planIds);
 }

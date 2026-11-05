@@ -99,7 +99,6 @@
         <table class="ejercicios-tabla">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Categoría</th>
@@ -113,7 +112,6 @@
 
             <tbody>
                 <tr *ngFor="let e of ejerciciosFiltrados">
-                    <td>{{ e.id }}</td>
                     <td>{{ e.nombre }}</td>
                     <td>{{ e.descripcion }}</td>
                     <td>{{ e.categoria }}</td>

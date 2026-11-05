@@ -1,0 +1,41 @@
+<div class="nutricion-page">
+  <header class="nutricion-header">
+    <div>
+      <button type="button" class="btn-secundario" (click)="volver()">← Volver</button>
+      <h1>Mi nutrición</h1>
+      <p>Consulta las metas nutricionales definidas por tu entrenador.</p>
+    </div>
+
+    <button type="button" class="btn-secundario" (click)="cargar()" [disabled]="cargando">
+      Actualizar
+    </button>
+  </header>
+
+  <section *ngIf="cargando" class="estado-panel">⏳ Cargando tu plan nutricional...</section>
+  <section *ngIf="!cargando && error" class="estado-panel error-panel">⚠️ {{ error }}</section>
+  <section *ngIf="!cargando && !error && planes.length === 0" class="estado-panel">
+    Todavía no tienes un plan nutricional asignado.
+  </section>
+
+  <section *ngFor="let nutricion of planes" class="nutricion-card">
+    <div class="titulo-plan">
+      <div>
+        <span>Plan de entrenamiento</span>
+        <h2>{{ nutricion.planNombre || 'Plan actual' }}</h2>
+      </div>
+      <small>Entrenador: {{ nutricion.entrenadorNombre || '-' }}</small>
+    </div>
+
+    <div class="macros-grid">
+      <article><span>Calorías</span><strong>{{ nutricion.kcalObjetivo }}</strong><small>kcal / día</small></article>
+      <article><span>Proteína</span><strong>{{ nutricion.proteinaG }} g</strong></article>
+      <article><span>Carbohidratos</span><strong>{{ nutricion.carbohidratosG }} g</strong></article>
+      <article><span>Grasa</span><strong>{{ nutricion.grasaG }} g</strong></article>
+    </div>
+
+    <div class="descripcion-box">
+      <span>Indicaciones</span>
+      <p>{{ nutricion.descripcion }}</p>
+    </div>
+  </section>
+</div>

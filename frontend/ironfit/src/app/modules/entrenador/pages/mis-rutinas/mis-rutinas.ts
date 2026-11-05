@@ -510,7 +510,7 @@ export class MisRutinas implements OnInit {
 
   volver(): void {
     if (this.planIdSeleccionado) {
-      this.router.navigate(['/entrenador/MisRutinas']);
+      this.router.navigate(['/entrenador/MisPlanes'], { queryParamsHandling: 'preserve' });
       return;
     }
 
