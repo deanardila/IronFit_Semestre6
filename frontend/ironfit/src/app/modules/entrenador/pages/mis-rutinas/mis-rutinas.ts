@@ -454,7 +454,11 @@ export class MisRutinas implements OnInit {
       return;
     }
 
-    this.router.navigate(['/entrenador/RutinaEjercicios', rutina.id]);
+    // Conservar el plan y los filtros para regresar a esta misma vista.
+    this.router.navigate(['/entrenador/RutinaEjercicios', rutina.id], {
+      queryParams: this.planIdSeleccionado ? { planId: this.planIdSeleccionado } : {},
+      queryParamsHandling: 'merge'
+    });
   }
 
   cancelarFormulario(): void {
