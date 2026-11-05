@@ -350,7 +350,13 @@ export class RutinaEjercicios implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate(['/entrenador/MisRutinas']);
+    // Si se llegó desde las rutinas de un plan, regresar a ese plan.
+    // El listado general mantiene su ruta habitual para accesos directos.
+    const planId = this.route.snapshot.queryParamMap.get('planId');
+    this.router.navigate(
+      planId ? ['/entrenador/MisRutinas', planId] : ['/entrenador/MisRutinas'],
+      { queryParamsHandling: 'preserve' }
+    );
   }
 
   actualizar(): void {
