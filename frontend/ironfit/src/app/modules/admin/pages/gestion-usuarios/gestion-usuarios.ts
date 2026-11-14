@@ -105,8 +105,8 @@ export class GestionUsuarios implements OnInit {
     });
   }
 
-  cargarUsuarios(): void {
-    this.cargando = true;
+  cargarUsuarios(silencioso = false): void {
+    if (!silencioso) this.cargando = true;
     this.cdr.detectChanges();
 
     const rolFiltro = this.filtroTipo ? this.filtroTipo.toUpperCase() : null;
@@ -123,13 +123,17 @@ export class GestionUsuarios implements OnInit {
     ).pipe(
       timeout(10000),
       finalize(() => {
-        this.cargando = false;
+        if (!silencioso) this.cargando = false;
         this.cdr.detectChanges();
       })
     ).subscribe({
       next: (respuesta) => {
         this.usuarios = respuesta.contenido ?? [];
         this.usuariosFiltrados = this.usuarios;
+        if (this.usuarioPanel) {
+          const actualizado = this.usuarios.find(u => u.id === this.usuarioPanel?.id);
+          if (actualizado) this.usuarioPanel = actualizado;
+        }
 
         this.totalElementos = respuesta.totalElementos ?? 0;
         this.totalPaginas = respuesta.totalPaginas ?? 0;
@@ -284,7 +288,7 @@ export class GestionUsuarios implements OnInit {
 
     this.usuariosApi.cambiarEstado(usuario.id, nuevoEstado).subscribe({
       next: () => {
-        this.cargarUsuarios();
+        this.cargarUsuarios(true);
       },
       error: (err) => {
         console.error('Error cambiando estado del usuario', err);
@@ -359,8 +363,7 @@ export class GestionUsuarios implements OnInit {
         next: () => {
           this.guardandoAsignacion = false;
           this.cancelarAsignacion();
-          // Conservamos el panel abierto en la pestaña Cuenta tras guardar.
-          this.cargarUsuarios();
+          this.cargarUsuarios(true);
         },
         error: (err) => {
           console.error('Error creando asignación', err);
