@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
 .planes-layout {
     min-height: 100vh;
     background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
@@ -558,4 +560,83 @@
     .graficos-grid {
         grid-template-columns: 1fr;
     }
+}
+/* Identidad IronFit uniforme: se conservan las cuatro métricas y ambos gráficos. */
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.planes-layout { box-sizing:border-box; min-height:100vh; max-width:1200px; margin:0 auto; padding:1.75rem 2rem; background:#100c0c; gap:20px; }
+.planes-topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; min-height:90px; border-bottom:1px solid #303035; padding-bottom:14px; }
+.planes-logo { height:90px; max-width:min(100%,330px); width:auto; object-fit:contain; }
+.planes-header { box-sizing:border-box; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px; padding:19px 24px 21px; border:1px solid #303035; border-radius:16px; background:linear-gradient(115deg,#19191b,#111113); box-shadow:none; }
+.planes-header-left { flex:1 1 270px; min-width:0; }
+.planes-kicker { display:inline-block; border:1px solid rgba(241,29,37,.23); border-radius:6px; padding:4px 8px; background:rgba(241,29,37,.08); color:#f11d25; font-size:11px; font-weight:800; letter-spacing:.1em; }
+.planes-header h1 { margin:10px 0 4px; color:#fff; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; letter-spacing:0; text-transform:none; }
+.planes-header p { color:#a1a1aa; margin:0; font:500 13px 'DM Sans',sans-serif; }
+.planes-header-right { display:flex; flex:2 1 490px; flex-wrap:wrap; gap:9px; min-width:0; justify-content:flex-end; align-items:center; }
+.busqueda-container { display:flex; flex:1 1 260px; min-width:0; max-width:none; width:auto; gap:9px; flex-direction:row; align-items:center; }
+.input-busqueda { box-sizing:border-box; width:100%; min-width:0; flex:1; background:#212124; border:1px solid #39393e; border-radius:9px; padding:11px 14px; min-height:42px; color:#fff; font:500 13px 'DM Sans',sans-serif; }
+.input-busqueda::placeholder { color:#8d8d97; }
+.select-estado,.select-paginacion { box-sizing:border-box; width:auto; min-height:42px; background:#212124; border:1px solid #39393e; border-radius:9px; padding:10px 12px; color:#fff; font:600 13px 'DM Sans',sans-serif; }
+.input-busqueda:focus,.select-estado:focus,.select-paginacion:focus { outline:none; border-color:#f11d25; box-shadow:0 0 0 3px rgba(241,29,37,.13); }
+.btn-volver,.btn-actualizar,.btn-buscar-planes,.btn-accion,.btn-paginacion { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 15px; border:1px solid #39393e; border-radius:9px; background:#1b1b1f; color:#eee; box-shadow:none; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; white-space:nowrap; cursor:pointer; transition:background .15s,border-color .15s; }
+.btn-volver:hover,.btn-actualizar:hover,.btn-buscar-planes:hover,.btn-accion:hover,.btn-paginacion:hover:not(:disabled) { background:#29292d; border-color:#f11d25; box-shadow:none; transform:none; filter:none; }
+.btn-paginacion:disabled,.btn-actualizar:disabled { opacity:.48; background:#1b1b1f; color:#eee; filter:none; cursor:not-allowed; }
+.metricas-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:13px; }
+.metrica-card { box-sizing:border-box; min-width:0; padding:19px; border:1px solid #303035; border-radius:14px; background:#171719; box-shadow:none; }
+.metrica-card span { color:#a1a1aa; font:800 11px 'DM Sans',sans-serif; letter-spacing:.09em; }
+.metrica-card strong { display:block; color:#fff; margin-top:8px; font:800 clamp(1.65rem,2.5vw,2.1rem) 'DM Sans',sans-serif; }
+.metrica-card small { color:#a1a1aa; line-height:1.5; font:500 12px 'DM Sans',sans-serif; }
+.metrica-card.main { border-color:rgba(241,29,37,.35); background:linear-gradient(145deg,#1d1718,#171719); }
+.metrica-card.main strong { color:#f11d25; }
+.metrica-card.danger strong { color:#ff8188; }
+.graficos-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+.panel-resumen { box-sizing:border-box; min-width:0; padding:21px; border:1px solid #303035; border-radius:14px; background:#171719; box-shadow:none; }
+.panel-resumen h2,.tabla-header h2 { margin:0 0 17px; color:#fff; font:800 16px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.barra-item { gap:7px; margin-bottom:14px; }
+.barra-info { font:700 13px 'DM Sans',sans-serif; }
+.barra-info span { color:#e4e4e7; overflow-wrap:anywhere; }
+.barra-info strong { color:#ffbd60; }
+.barra-track { height:6px; background:#303035; border-radius:999px; }
+.barra-fill { background:linear-gradient(90deg,#f11d25,#ff6a70); }
+.barra-fill.objetivo { background:linear-gradient(90deg,#32c78b,#94e8b3); }
+.tabla-header { padding:15px 17px; border:1px solid #303035; border-bottom:0; border-radius:14px 14px 0 0; background:#202023; }
+.tabla-header h2 { margin:0; }
+.planes-tabla { width:100%; background:#171719; color:#e4e4e7; box-shadow:none; border-collapse:collapse; }
+.planes-tabla th { background:#202023; text-align:left; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; letter-spacing:.02em; text-transform:none; padding:15px 13px; }
+.planes-tabla td { font:500 13px 'DM Sans',sans-serif; color:#e4e4e7; padding:14px 13px; }
+.planes-tabla th,.planes-tabla td { border-bottom:1px solid #303035; }
+.planes-tabla tbody tr:hover td { background:#222225; }
+.estado-badge { padding:6px 11px; min-width:0; border:1px solid rgba(255,189,96,.28); background:rgba(255,189,96,.09); color:#ffbd60; font:800 11px 'DM Sans',sans-serif; letter-spacing:0; }
+.estado-badge.activo { border-color:rgba(34,197,94,.3); background:rgba(34,197,94,.1); color:#a6e7b9; }
+.plan-detalle-card { padding:21px; border:1px solid rgba(241,29,37,.28); background:#19191b; border-radius:14px; box-shadow:none; }
+.plan-detalle-card span { color:#f11d25; font-size:11px; }
+.plan-detalle-card h2 { color:#fff; }
+.plan-detalle-card p { color:#a1a1aa; }
+.estado-panel { background:#171719; border:1px solid #303035; border-radius:12px; box-shadow:none; color:#a1a1aa; }
+.paginacion-planes { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; margin-top:12px; padding:0; border:0; border-radius:0; background:none; box-shadow:none; }
+.paginacion-info { display:flex; flex-direction:column; gap:4px; }
+.paginacion-info span { color:#e4e4e7; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.paginacion-info small { color:#a1a1aa; font:400 12px 'DM Sans',sans-serif; }
+.paginacion-controles { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+@media(max-width:1050px) {
+  .planes-layout { padding:1.25rem 1rem; }
+  .planes-header { align-items:stretch; }
+  .planes-header-right { flex-direction:row; align-items:center; width:auto; }
+  .busqueda-container { min-width:0; max-width:none; width:auto; flex-direction:row; }
+  .input-busqueda,.btn-buscar-planes { width:auto; }
+  .select-estado { width:auto; }
+  .paginacion-planes { flex-direction:row; align-items:center; }
+  .btn-paginacion,.select-paginacion { flex:0 1 auto; }
+  .planes-tabla { display:block; overflow-x:auto; white-space:nowrap; }
+}
+@media(max-width:740px) {
+  .planes-logo { height:64px; max-width:180px; }
+  .metricas-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .graficos-grid { grid-template-columns:1fr; }
+  .planes-header-right { flex:1 1 100%; }
+  .paginacion-planes { flex-direction:column; align-items:stretch; }
+}
+@media(max-width:480px) {
+  .metricas-grid { grid-template-columns:1fr; }
+  .busqueda-container { flex-basis:100%; }
+  .planes-header { padding:18px; }
 }
