@@ -14,6 +14,8 @@ Chart.register(...registerables);
 // Paleta visual IronFit; no modifica valores ni consultas.
 const CHART_RED = '#f11d25';
 const CHART_RED_SOFT = 'rgba(241, 29, 37, 0.14)';
+const CHART_AMBER = '#ffbd60';
+const CHART_AMBER_HOVER = '#ffd08b';
 const CHART_TEXT = '#a1a1aa';
 const CHART_GRID = 'rgba(255, 255, 255, 0.07)';
 const CHART_GRAY = '#62626b';
@@ -234,7 +236,7 @@ export class DashboardEntrenador implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label, backgroundColor: CHART_RED, hoverBackgroundColor: '#ff5158', borderRadius: 5, borderSkipped: false, maxBarThickness: 24 }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, backgroundColor: label === 'Evaluaciones' ? CHART_AMBER : CHART_RED, hoverBackgroundColor: label === 'Evaluaciones' ? CHART_AMBER_HOVER : '#ff5158', borderRadius: 5, borderSkipped: false, maxBarThickness: 24 }]
     };
   }
 
