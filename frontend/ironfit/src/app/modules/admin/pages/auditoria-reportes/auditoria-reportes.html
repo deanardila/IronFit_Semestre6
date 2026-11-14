@@ -1,13 +1,16 @@
 <div class="auditoria-layout">
+  <div class="auditoria-topbar">
+    <img class="auditoria-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit">
+    <button class="btn-volver" type="button" (click)="volverAlDashboard()">← Volver al panel</button>
+  </div>
+
+  <div class="auditoria-intro">
+    <span class="auditoria-kicker">ADMINISTRACIÓN</span>
+    <h1>Reportes de asistencia</h1>
+    <p>Consulta el cumplimiento, filtra registros y descarga tus reportes.</p>
+  </div>
 
   <header class="auditoria-header">
-    <div class="auditoria-header-left">
-      <button class="btn-volver" type="button" (click)="volverAlDashboard()">
-        ← Volver
-      </button>
-
-      <h1>Reportes de asistencia</h1>
-    </div>
 
     <div class="auditoria-header-right">
 
@@ -27,17 +30,13 @@
         </button>
       </div>
 
-      <input
-        type="date"
-        class="input-fecha"
-        [(ngModel)]="fechaInicio"
-        title="Fecha inicio">
+      <label class="fecha-filtro"><span>Desde</span>
+        <input type="date" class="input-fecha" [(ngModel)]="fechaInicio" title="Fecha inicio" aria-label="Fecha inicio">
+      </label>
 
-      <input
-        type="date"
-        class="input-fecha"
-        [(ngModel)]="fechaFin"
-        title="Fecha fin">
+      <label class="fecha-filtro"><span>Hasta</span>
+        <input type="date" class="input-fecha" [(ngModel)]="fechaFin" title="Fecha fin" aria-label="Fecha fin">
+      </label>
 
       <select
         class="select-estado"
@@ -119,7 +118,9 @@
     <p>📊 No hay registros de asistencia{{ terminoBusqueda ? ' que coincidan con la búsqueda' : ' para mostrar' }}.</p>
   </section>
 
-  <section *ngIf="!cargando && !error && resumenesFiltrados.length > 0">
+  <section *ngIf="!cargando && !error && resumenesFiltrados.length > 0" class="auditoria-resultados">
+    <div class="tabla-header"><h2>Detalle de asistencias</h2><span>{{ totalElementos }} registros encontrados</span></div>
+    <div class="auditoria-tabla-scroll">
     <table class="auditoria-tabla">
       <thead>
         <tr>
@@ -151,11 +152,12 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <div class="paginacion-reportes" *ngIf="totalElementos > 0">
       <div class="paginacion-info">
         <span>
-          Mostrando página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
+          Página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
         </span>
         <small>
           Total reportes: {{ totalElementos }}
