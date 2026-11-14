@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
 /* Estilos encapsulados para el login. No alteran los dashboards. */
 :host { display: block; }
 
@@ -8,7 +10,7 @@
   min-height: 100dvh;
   color: #fff;
   background: radial-gradient(circle at 10% 10%, #1c1b1b, #090909 54%, #050505);
-  font-family: "Montserrat", system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
 }
 
 .auth-layout {
@@ -301,4 +303,29 @@
   .auth-visual-content h2 {
     font-size: clamp(2.3rem, 3.8vw, 3.75rem);
   }
+}
+
+/* Identidad tipográfica IronFit: titular deportivo + interfaz legible. */
+.auth-visual-content h2 {
+  font-family: 'BBH Bogle', Impact, sans-serif;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: .005em;
+  font-size: clamp(2.1rem, 3.4vw, 3.55rem);
+}
+.auth-title {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -.035em;
+}
+.auth-section-label,
+.auth-subtitle,
+.auth-label,
+.auth-input,
+.password-field .toggle,
+.auth-button,
+.auth-visual-content p,
+.auth-visual-footer,
+.auth-footer {
+  font-family: 'DM Sans', system-ui, sans-serif;
 }
