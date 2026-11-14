@@ -1,40 +1,10 @@
 <div class="clientes-layout">
-
-    <header class="clientes-header">
-        <div class="clientes-header-left">
-            <button class="btn-volver" type="button" (click)="volverAlDashboard()">
-                ← Volver
-            </button>
-
-            <h1>Mis clientes activos</h1>
-        </div>
-
-        <div class="clientes-header-right">
-            <div class="busqueda-container">
-                <input
-                    type="text"
-                    class="input-busqueda"
-                    placeholder="🔍 Buscar por cédula, nombre o correo..."
-                    [(ngModel)]="terminoBusqueda"
-                    (keyup.enter)="aplicarFiltros()" />
-
-                <button
-                    type="button"
-                    class="btn-buscar-clientes"
-                    (click)="aplicarFiltros()">
-                    Buscar
-                </button>
-            </div>
-
-            <button
-                type="button"
-                class="btn-actualizar"
-                (click)="actualizar()"
-                [disabled]="cargando">
-                {{ cargando ? 'Cargando...' : 'Actualizar' }}
-            </button>
-        </div>
-    </header>
+  <div class="clientes-topbar"><img class="clientes-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit"><button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver al panel</button></div>
+  <div class="clientes-intro"><span class="clientes-kicker">ENTRENADOR</span><h1>Mis clientes</h1><p>Consulta tus clientes asignados y accede a sus planes y análisis de entrenamiento.</p></div>
+  <header class="clientes-header"><div class="clientes-header-right">
+    <div class="busqueda-container"><input type="search" class="input-busqueda" aria-label="Buscar clientes" placeholder="🔍 Buscar por cédula, nombre o correo..." [(ngModel)]="terminoBusqueda" (keyup.enter)="aplicarFiltros()"><button class="btn-buscar-clientes" type="button" (click)="aplicarFiltros()">Buscar</button></div>
+    <button type="button" class="btn-actualizar" (click)="actualizar()" [disabled]="cargando">{{ cargando ? 'Cargando...' : 'Actualizar' }}</button>
+  </div></header>
 
     <section *ngIf="cargando" class="estado-panel">
         <p>⏳ Cargando clientes...</p>
@@ -44,73 +14,24 @@
         <p>⚠️ {{ error }}</p>
     </section>
 
-    <section *ngIf="!cargando && !error && clientesFiltrados.length === 0">
-        <p class="no-resultados">No tienes clientes activos asignados en este momento.</p>
-    </section>
 
-    <section *ngIf="!cargando && !error && clientesFiltrados.length > 0">
-        <div class="clientes-tarjetas">
-            <article class="cliente-ficha" *ngFor="let cliente of clientesFiltrados">
-                <header class="cliente-ficha-cabecera">
-                    <span class="cliente-ficha-avatar" aria-hidden="true">◉</span>
-                    <div class="cliente-ficha-identidad">
-                        <h3>{{ cliente.nombres }} {{ cliente.apellidos }}</h3>
-                        <p>{{ cliente.correo || 'Sin correo registrado' }}</p>
-                        <small>Documento: {{ cliente.numDoc || 'No registrado' }}</small>
-                    </div>
-                    <span class="estado-badge" [class.activo]="cliente.activo">{{ cliente.activo ? 'Activo' : 'Inactivo' }}</span>
-                    <button type="button" class="cliente-ver-mas"
-                        [attr.aria-expanded]="clienteDetalleId === cliente.id"
-                        (click)="alternarCliente(cliente)">
-                        {{ clienteDetalleId === cliente.id ? 'Cerrar' : 'Ver más' }}
-                    </button>
-                </header>
-                <div class="cliente-ficha-cerrada" *ngIf="clienteDetalleId !== cliente.id">
-                    <span>Entrenador: {{ cliente.entrenadorNombre || 'No disponible' }}</span>
-                    <button type="button" class="cliente-ironbot-secundario" (click)="abrirPlanDeCliente(cliente)">
-                        ♧ Abrir IronBot
-                    </button>
-                </div>
-                <div class="cliente-ficha-detalle" *ngIf="clienteDetalleId === cliente.id">
-                    <div class="cliente-ficha-tabs" role="group" aria-label="Secciones del cliente">
-                        <button type="button" [class.seleccionada]="clienteDetalleTab === 'resumen'"
-                            (click)="clienteDetalleTab = 'resumen'">Resumen</button>
-                        <button type="button" [class.seleccionada]="clienteDetalleTab === 'planes'"
-                            (click)="clienteDetalleTab = 'planes'">Plan y rutinas</button>
-                        <button type="button" [class.seleccionada]="clienteDetalleTab === 'progreso'"
-                            (click)="clienteDetalleTab = 'progreso'">Progreso</button>
-                    </div>
-                    <section class="cliente-ficha-seccion" *ngIf="clienteDetalleTab === 'resumen'">
-                        <h4>Resumen del cliente</h4>
-                        <div class="cliente-ficha-datos">
-                            <span><strong>Documento</strong>{{ cliente.numDoc || 'No registrado' }}</span>
-                            <span><strong>Correo</strong>{{ cliente.correo || 'No registrado' }}</span>
-                            <span><strong>Estado</strong>{{ cliente.activo ? 'Activo' : 'Inactivo' }}</span>
-                            <span><strong>Entrenador</strong>{{ cliente.entrenadorNombre || 'No disponible' }}</span>
-                        </div>
-                    </section>
-                    <section class="cliente-ficha-seccion" *ngIf="clienteDetalleTab === 'planes'">
-                        <h4>Plan y rutinas</h4>
-                        <p>Consulta los planes de este cliente y accede a sus rutinas desde Mis planes.</p>
-                        <button type="button" class="cliente-ir-planes" (click)="abrirPlanDeCliente(cliente)">
-                            Consultar planes
-                        </button>
-                    </section>
-                    <section class="cliente-ficha-seccion" *ngIf="clienteDetalleTab === 'progreso'">
-                        <h4>Progreso del cliente</h4>
-                        <p>Consulta la predicción de adherencia y rendimiento del plan elegido en Mis planes.</p>
-                        <button type="button" class="cliente-ir-planes" (click)="abrirPlanDeCliente(cliente)">
-                            Consultar predicción del plan
-                        </button>
-                    </section>
-                    <button type="button" class="cliente-ironbot-principal" (click)="abrirPlanDeCliente(cliente)">
-                        ✧ Analizar con IronBot
-                    </button>
-                    <p class="cliente-ironbot-nota">Selecciona el plan correspondiente en Mis planes para ejecutar el análisis.</p>
-                </div>
-            </article>
-        </div>
 
+    <section class="clientes-resultados">
+      <div class="tabla-titulo"><h2>Clientes asignados</h2><span>{{ totalElementos }} {{ totalElementos === 1 ? 'cliente registrado' : 'clientes registrados' }}</span></div>
+      <div class="clientes-tabla-scroll"><table class="clientes-tabla">
+        <thead><tr><th>Cliente</th><th>Documento</th><th>Correo</th><th>Entrenador</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let cliente of clientesFiltrados; trackBy: identificarCliente">
+            <td class="cliente-nombre">{{ cliente.nombres }} {{ cliente.apellidos }}</td>
+            <td>{{ cliente.numDoc || '—' }}</td><td class="cliente-correo">{{ cliente.correo || '—' }}</td>
+            <td>{{ cliente.entrenadorNombre || '—' }}</td>
+            <td><span class="estado-badge" [class.activo]="cliente.activo">{{ cliente.activo ? 'Activo' : 'Inactivo' }}</span></td>
+            <td><button type="button" class="btn-gestionar" (click)="alternarCliente(cliente)">Gestionar</button></td>
+          </tr>
+          <tr *ngIf="!cargando && !error && clientesFiltrados.length === 0"><td colspan="6" class="tabla-vacia">No hay clientes activos asignados que coincidan con la búsqueda.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="clientes-cargando" *ngIf="cargando">Cargando clientes...</p>
         <div class="paginacion-clientes" *ngIf="totalElementos > 0">
             <div class="paginacion-info">
                 <span>
@@ -150,4 +71,24 @@
         </div>
     </section>
 
+  <div class="cliente-panel-backdrop" *ngIf="clienteSeleccionado" (click)="cerrarCliente()"></div>
+  <aside class="cliente-panel" *ngIf="clienteSeleccionado as cliente" role="dialog" aria-modal="true" aria-labelledby="cliente-panel-titulo">
+    <header class="cliente-panel-header"><div><span class="clientes-kicker">CLIENTE ASIGNADO</span><h2 id="cliente-panel-titulo">{{ cliente.nombres }} {{ cliente.apellidos }}</h2><p>{{ cliente.correo || 'Sin correo registrado' }}</p></div><button type="button" class="panel-cerrar" aria-label="Cerrar detalles" (click)="cerrarCliente()">×</button></header>
+    <div class="cliente-panel-tabs" role="group" aria-label="Secciones del cliente">
+      <button type="button" [class.seleccionada]="clienteDetalleTab === 'resumen'" (click)="clienteDetalleTab = 'resumen'">Resumen</button>
+      <button type="button" [class.seleccionada]="clienteDetalleTab === 'planes'" (click)="clienteDetalleTab = 'planes'">Plan y rutinas</button>
+      <button type="button" [class.seleccionada]="clienteDetalleTab === 'progreso'" (click)="clienteDetalleTab = 'progreso'">Progreso</button>
+    </div>
+    <div class="cliente-panel-contenido">
+      <section *ngIf="clienteDetalleTab === 'resumen'"><h3>Información del cliente</h3>
+        <div class="cliente-dato"><span>Documento</span><strong>{{ cliente.numDoc || 'No registrado' }}</strong></div>
+        <div class="cliente-dato"><span>Correo</span><strong>{{ cliente.correo || 'No registrado' }}</strong></div>
+        <div class="cliente-dato"><span>Estado</span><strong>{{ cliente.activo ? 'Activo' : 'Inactivo' }}</strong></div>
+        <div class="cliente-dato"><span>Entrenador</span><strong>{{ cliente.entrenadorNombre || 'No disponible' }}</strong></div>
+      </section>
+      <section *ngIf="clienteDetalleTab === 'planes'"><h3>Plan y rutinas</h3><p>Consulta los planes de este cliente y accede a sus rutinas desde Mis planes.</p><button class="cliente-ir-planes" type="button" (click)="abrirPlanDeCliente(cliente)">Consultar planes</button></section>
+      <section *ngIf="clienteDetalleTab === 'progreso'"><h3>Progreso del cliente</h3><p>Consulta la predicción de adherencia y rendimiento del plan elegido en Mis planes.</p><button class="cliente-ir-planes" type="button" (click)="abrirPlanDeCliente(cliente)">Consultar predicción del plan</button></section>
+      <div class="cliente-ironbot"><button class="cliente-ironbot-principal" type="button" (click)="abrirPlanDeCliente(cliente)">✧ Analizar con IronBot</button><p>Selecciona el plan correspondiente en Mis planes para ejecutar el análisis.</p></div>
+    </div>
+  </aside>
 </div>
