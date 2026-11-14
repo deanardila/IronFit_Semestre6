@@ -33,6 +33,20 @@ export class DashboardEntrenador implements OnInit {
   nombreUsuario = '';
   showMenu = false;
 
+  // Preferimos el nombre del perfil y evitamos mostrar un correo como saludo.
+  get nombreBienvenida(): string {
+    try {
+      const perfil = JSON.parse(localStorage.getItem('miPerfilCache') || 'null');
+      const nombres = typeof perfil?.nombres === 'string' ? perfil.nombres.trim() : '';
+      if (nombres && !nombres.includes('@')) return nombres;
+    } catch {
+      // Si el caché no es válido, conservamos el nombre de sesión.
+    }
+    const guardado = this.nombreUsuario.trim();
+    return guardado && !guardado.includes('@') ? guardado : 'Entrenador';
+  }
+
+
   cargando = false;
   error = '';
 
