@@ -104,49 +104,6 @@
         </form>
     </section>
 
-    <section *ngIf="mostrarFormularioAsignacion" class="asignar-entrenador-form">
-        <h2>
-            {{ obtenerAsignacionActiva(clienteSeleccionadoAsignacion?.id || '') ? 'Cambiar entrenador asignado' : 'Asignar entrenador' }}
-        </h2>
-
-        <div class="cliente-asignacion-resumen" *ngIf="clienteSeleccionadoAsignacion">
-            <span>Cliente seleccionado</span>
-            <strong>
-                {{ clienteSeleccionadoAsignacion.nombres }} {{ clienteSeleccionadoAsignacion.apellidos }}
-            </strong>
-            <small>
-                {{ clienteSeleccionadoAsignacion.numDoc || 'Sin documento' }}
-            </small>
-        </div>
-
-        <form (ngSubmit)="guardarAsignacionEntrenador()">
-            <div class="form-row">
-                <label>Entrenador disponible</label>
-                <select
-                    name="entrenadorAsignadoId"
-                    [(ngModel)]="entrenadorSeleccionadoId"
-                    required>
-                    <option value="">Selecciona un entrenador</option>
-                    <option *ngFor="let entrenador of entrenadoresActivos" [value]="entrenador.id">
-                        {{ entrenador.nombres }} {{ entrenador.apellidos }} - {{ entrenador.correo || 'Sin correo' }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" [disabled]="guardandoAsignacion">
-                    {{ guardandoAsignacion ? 'Guardando...' : 'Guardar asignación' }}
-                </button>
-
-                <button type="button" (click)="cancelarAsignacion()" [disabled]="guardandoAsignacion">
-                    Cancelar
-                </button>
-            </div>
-        </form>
-    </section>
-
-
-
     <!-- LOADER -->
     <section *ngIf="cargando">
         <p>Cargando usuarios...</p>
@@ -277,7 +234,27 @@
           <div *ngIf="esCliente(usuario)"><dt>Entrenador</dt><dd>{{ textoEntrenadorAsignado(usuario) }}</dd></div>
         </dl>
         <button type="button" class="usuario-panel-accion" (click)="cambiarEstadoDesdePanel()">{{ usuario.activo ? 'Desactivar cuenta' : 'Activar cuenta' }}</button>
-        <button type="button" class="usuario-panel-accion secundario" *ngIf="esCliente(usuario)" (click)="asignarDesdePanel()">{{ textoBotonAsignacion(usuario) }} entrenador</button>
+        <button type="button" class="usuario-panel-accion secundario" *ngIf="esCliente(usuario) && !mostrarFormularioAsignacion" (click)="asignarDesdePanel()">{{ textoBotonAsignacion(usuario) }} entrenador</button>
+        <section *ngIf="esCliente(usuario) && mostrarFormularioAsignacion" class="usuario-panel-asignacion" aria-label="Asignación de entrenador">
+          <h3>{{ obtenerAsignacionActiva(usuario.id) ? 'Cambiar entrenador' : 'Asignar entrenador' }}</h3>
+          <p>Selecciona el entrenador que acompañará a {{ usuario.nombres }} {{ usuario.apellidos }}.</p>
+          <form (ngSubmit)="guardarAsignacionEntrenador()">
+            <label for="entrenadorPanel">Entrenador disponible</label>
+            <select id="entrenadorPanel" name="entrenadorAsignadoId" [(ngModel)]="entrenadorSeleccionadoId" required [disabled]="guardandoAsignacion">
+              <option value="">Selecciona un entrenador</option>
+              <option *ngFor="let entrenador of entrenadoresActivos" [value]="entrenador.id">
+                {{ entrenador.nombres }} {{ entrenador.apellidos }} - {{ entrenador.correo || 'Sin correo' }}
+              </option>
+            </select>
+            <p *ngIf="!entrenadoresActivos.length" class="usuario-panel-ayuda">No hay entrenadores activos disponibles en la lista.</p>
+            <div class="usuario-panel-asignacion-acciones">
+              <button type="button" class="usuario-panel-accion secundario" (click)="cancelarAsignacion()" [disabled]="guardandoAsignacion">Cancelar</button>
+              <button type="submit" class="usuario-panel-accion" [disabled]="guardandoAsignacion || !entrenadorSeleccionadoId">
+                {{ guardandoAsignacion ? 'Guardando...' : 'Guardar asignación' }}
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
       <div class="usuario-panel-contenido" *ngIf="pestanaUsuario === 'seguridad'">
         <h3>Restablecer contraseña</h3>
