@@ -451,11 +451,11 @@
   margin: 0;
   color: #a1a1aa;
   font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: .9rem;
+  font-size: 19px;
   font-weight: 500;
   line-height: 1.4;
 }
 .dashboard-header-right .dashboard-greeting strong { color: #f7f7f8; font-weight: 700; }
 @media (max-width: 740px) {
-  .dashboard-header-right .dashboard-greeting { font-size: .8rem; }
+  .dashboard-header-right .dashboard-greeting { font-size: 19px; }
 }
