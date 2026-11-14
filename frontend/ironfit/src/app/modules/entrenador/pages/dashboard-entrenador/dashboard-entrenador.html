@@ -20,27 +20,30 @@
 
     <section class="dashboard-welcome">
         <div>
+            <span class="welcome-kicker">PANEL ENTRENADOR</span>
+            <h1>Tu centro de entrenamiento</h1>
             <p>{{ fechaDashboard }} · Seguimiento de clientes, planes, rutinas y asistencias</p>
         </div>
     </section>
 
     <!-- BOTÓN MENÚ HAMBURGUESA -->
     <div class="quick-menu-container">
-        <button class="quick-menu-toggle" (click)="toggleMenu()">
+        <button type="button" class="quick-menu-toggle" (click)="toggleMenu()"
+            [attr.aria-expanded]="showMenu" aria-controls="entrenador-menu" aria-label="Abrir o cerrar menú">
             <span class="quick-menu-icon">
                 <span></span>
                 <span></span>
                 <span></span>
             </span>
-            <span class="quick-menu-label">Menú rápido</span>
+            <span class="quick-menu-label">Menú</span>
         </button>
     </div>
 
     <!-- MENÚ FLOTANTE -->
     <div class="quick-menu-backdrop" *ngIf="showMenu" (click)="closeMenu()"></div>
 
-    <div class="quick-menu-panel" *ngIf="showMenu">
-        <h3 class="quick-menu-title">Accesos del entrenador</h3>
+    <div id="entrenador-menu" class="quick-menu-panel" *ngIf="showMenu">
+        <h3 class="quick-menu-title">Navegación del entrenador</h3>
 
         <button
             class="quick-menu-item"
