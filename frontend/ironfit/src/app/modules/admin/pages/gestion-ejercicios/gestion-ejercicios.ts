@@ -26,6 +26,11 @@ export class GestionEjercicios implements OnInit {
   opcionesTamanoPagina = [10, 20, 50, 100];
 
   mostrarFormularioCrear = false;
+  panelAbierto = false;
+  pestanaPanel: 'datos' | 'estado' = 'datos';
+  filtroActivo = true;
+  ejercicioSeleccionado: EjercicioDTO | null = null;
+  guardando = false;
 
   modoEdicion = false;
   idEjercicioEditando: string | null = null;
@@ -72,7 +77,7 @@ export class GestionEjercicios implements OnInit {
       this.terminoBusqueda,
       null,
       null,
-      true
+      this.filtroActivo
     ).pipe(
       timeout(10000),
       finalize(() => {
@@ -82,8 +87,12 @@ export class GestionEjercicios implements OnInit {
       })
     ).subscribe({
       next: (respuesta) => {
-        this.ejercicios = respuesta.contenido ?? [];
+        this.ejercicios = (respuesta.contenido ?? []).map(e => ({ ...e, activo: this.filtroActivo }));
         this.ejerciciosFiltrados = this.ejercicios;
+        if (this.ejercicioSeleccionado) {
+          const actual = this.ejercicios.find(e => e.id === this.ejercicioSeleccionado?.id);
+          if (actual) this.ejercicioSeleccionado = actual;
+        }
 
         this.totalElementos = respuesta.totalElementos ?? 0;
         this.totalPaginas = respuesta.totalPaginas ?? 0;
@@ -156,20 +165,51 @@ export class GestionEjercicios implements OnInit {
     this.timeoutCargaId = null;
   }
 
+  identificarEjercicio(_index: number, ejercicio: EjercicioDTO): string {
+    return ejercicio.id;
+  }
+
+  cambiarFiltroEstado(): void {
+    this.paginaActual = 0;
+    this.cargarEjercicios();
+  }
+
+  gestionarEjercicio(ejercicio: EjercicioDTO): void {
+    this.editarEjercicio(ejercicio);
+    this.ejercicioSeleccionado = ejercicio;
+    this.pestanaPanel = 'datos';
+    this.panelAbierto = true;
+  }
+
+  cerrarPanel(): void {
+    if (this.guardando) return;
+    this.panelAbierto = false;
+    this.ejercicioSeleccionado = null;
+    this.cancelarCrear();
+  }
+
   guardarEjercicio(): void {
+    if (this.guardando) return;
     this.error = null;
+    this.guardando = true;
 
     if (this.modoEdicion && this.idEjercicioEditando) {
       this.ejerciciosService.actualizarEjercicio(this.idEjercicioEditando, this.formulario).subscribe({
-        next: () => {
-          this.resetFormulario();
-          this.paginaActual = 0;
-          this.cargarEjercicios();
-          this.mostrarFormularioCrear = false;
+        next: (actualizado) => {
+          const id = this.idEjercicioEditando;
+          this.ejercicios = this.ejercicios.map(e =>
+            e.id === id ? { ...actualizado, activo: e.activo } : e
+          );
+          this.ejerciciosFiltrados = this.ejercicios;
+          this.guardando = false;
+          this.cerrarPanel();
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error actualizando ejercicio', err);
           this.error = err?.error?.message || 'No se pudo actualizar el ejercicio.';
+          this.guardando = false;
+          this.cdr.detectChanges();
         }
       });
       return;
@@ -177,14 +217,17 @@ export class GestionEjercicios implements OnInit {
 
     this.ejerciciosService.crearEjercicio(this.formulario).subscribe({
       next: () => {
-        this.resetFormulario();
+        this.guardando = false;
+        this.cerrarPanel();
+        this.filtroActivo = true;
         this.paginaActual = 0;
         this.cargarEjercicios();
-        this.mostrarFormularioCrear = false;
       },
       error: (err) => {
         console.error('Error creando ejercicio', err);
         this.error = err?.error?.message || 'No se pudo crear el ejercicio.';
+        this.guardando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -193,7 +236,6 @@ export class GestionEjercicios implements OnInit {
     this.mostrarFormularioCrear = true;
     this.modoEdicion = true;
     this.idEjercicioEditando = ejercicio.id;
-
     this.formulario = {
       nombre: ejercicio.nombre,
       descripcion: ejercicio.descripcion,
@@ -205,23 +247,38 @@ export class GestionEjercicios implements OnInit {
     };
   }
 
-  eliminarEjercicio(id: string): void {
-    const confirmar = window.confirm('¿Seguro que deseas inactivar este ejercicio?');
-    if (!confirmar) return;
+  cambiarEstadoEjercicio(): void {
+    const ejercicio = this.ejercicioSeleccionado;
+    if (!ejercicio || this.guardando) return;
+    const nuevoEstado = ejercicio.activo === false;
+    if (!window.confirm(`¿Deseas ${nuevoEstado ? 'activar' : 'inactivar'} el ejercicio "${ejercicio.nombre}"?`)) return;
 
-    this.ejerciciosService.eliminarEjercicio(id).subscribe({
+    this.guardando = true;
+    this.ejerciciosService.cambiarEstado(ejercicio.id, nuevoEstado).subscribe({
       next: () => {
-        if (this.idEjercicioEditando === id) {
-          this.resetFormulario();
-        }
-
-        this.cargarEjercicios();
+        // Conservar la fila actual mientras se administra, sin saltar al inicio.
+        ejercicio.activo = nuevoEstado;
+        this.ejercicios = this.ejercicios.map(e => e.id === ejercicio.id ? { ...e, activo: nuevoEstado } : e);
+        this.ejerciciosFiltrados = this.ejercicios;
+        this.ejercicioSeleccionado = this.ejercicios.find(e => e.id === ejercicio.id) || ejercicio;
+        this.guardando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error inactivando ejercicio', err);
-        this.error = err?.error?.message || 'No se pudo inactivar el ejercicio.';
+        console.error('Error cambiando estado del ejercicio', err);
+        this.error = err?.error?.message || 'No se pudo cambiar el estado del ejercicio.';
+        this.guardando = false;
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  eliminarEjercicio(id: string): void {
+    const ejercicio = this.ejercicios.find(e => e.id === id);
+    if (ejercicio) {
+      this.ejercicioSeleccionado = ejercicio;
+      this.cambiarEstadoEjercicio();
+    }
   }
 
   resetFormulario(): void {
@@ -240,22 +297,20 @@ export class GestionEjercicios implements OnInit {
   }
 
   abrirFormularioCrear(): void {
-    this.toggleFormularioCrear(true);
+    this.resetFormulario();
+    this.mostrarFormularioCrear = true;
+    this.ejercicioSeleccionado = null;
+    this.pestanaPanel = 'datos';
+    this.panelAbierto = true;
+    this.cdr.detectChanges();
   }
 
   toggleFormularioCrear(forzarApertura = false): void {
-    const debeAbrir = forzarApertura || !(this.mostrarFormularioCrear || this.modoEdicion);
-
-    if (!debeAbrir) {
-      this.cancelarCrear();
-      return;
+    if (this.panelAbierto && !forzarApertura) {
+      this.cerrarPanel();
+    } else {
+      this.abrirFormularioCrear();
     }
-
-    this.mostrarFormularioCrear = true;
-    this.modoEdicion = false;
-    this.idEjercicioEditando = null;
-    this.resetFormulario();
-    this.cdr.detectChanges();
   }
 
   cancelarCrear(): void {
@@ -265,7 +320,6 @@ export class GestionEjercicios implements OnInit {
   }
 
   actualizar(): void {
-    this.paginaActual = 0;
     this.cargarEjercicios();
   }
 
