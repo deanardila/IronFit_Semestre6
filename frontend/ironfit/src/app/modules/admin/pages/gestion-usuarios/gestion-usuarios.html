@@ -217,7 +217,6 @@
         <button type="button" [class.seleccionada]="pestanaUsuario === 'seguridad'" (click)="pestanaUsuario = 'seguridad'">Seguridad</button>
       </nav>
       <div class="usuario-panel-contenido" *ngIf="pestanaUsuario === 'datos'">
-        <p class="usuario-panel-aviso">Datos de solo lectura. La edición administrativa requiere un endpoint seguro que todavía no existe.</p>
         <dl class="usuario-panel-campos">
           <div><dt>Nombres</dt><dd>{{ usuario.nombres || '-' }}</dd></div>
           <div><dt>Apellidos</dt><dd>{{ usuario.apellidos || '-' }}</dd></div>
@@ -260,7 +259,6 @@
         <h3>Restablecer contraseña</h3>
         <p>Esta acción cambia la contraseña de acceso. Se solicitará confirmación antes de continuar.</p>
         <button type="button" class="usuario-panel-accion" (click)="resetearPassword(usuario)">Restablecer contraseña</button>
-        <p class="usuario-panel-aviso">El sistema aún utiliza una clave general de restablecimiento. Debe sustituirse antes de desplegar en producción.</p>
       </div>
     </aside>
 </div>
