@@ -3,15 +3,14 @@
     <header class="dashboard-header">
         <div class="dashboard-header-left">
             <img
-                src="assets/ironfit/logo-horizontal.png"
+                src="assets/ironfit/IronFit_Horizontal.png"
                 alt="IronFit"
                 class="dashboard-logo"
             />
-            <span class="dashboard-role-pill">Administrador</span>
         </div>
 
         <div class="dashboard-header-right">
-                    <p> {{ nombreUsuario }}</p>
+                    <p class="dashboard-greeting">Bienvenido, <strong>{{ nombreBienvenida }}</strong></p>
             <button class="dashboard-logout-btn" (click)="logout()">
                 Cerrar sesión
             </button>
