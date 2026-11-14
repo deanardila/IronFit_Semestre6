@@ -20,28 +20,30 @@
 
     <section class="dashboard-welcome">
     <div>
-        <h1>Panel de administración</h1>
-        <span class="dashboard-username">{{ fechaDashboard }} · Control general de usuarios, planes, asistencias y reportes</span>
+        <span class="welcome-kicker">PANEL ADMINISTRADOR</span>
+        <h1>Centro de administración</h1>
+        <p class="dashboard-username">{{ fechaDashboard }} · Control general de usuarios, planes, asistencias y reportes</p>
     </div>
 </section>
 
     <!-- BOTÓN MENÚ HAMBURGUESA -->
     <div class="quick-menu-container">
-        <button class="quick-menu-toggle" (click)="toggleMenu()">
+        <button type="button" class="quick-menu-toggle" (click)="toggleMenu()"
+                [attr.aria-expanded]="showMenu" aria-controls="admin-menu" aria-label="Abrir o cerrar menú">
             <span class="quick-menu-icon">
                 <span></span>
                 <span></span>
                 <span></span>
             </span>
-            <span class="quick-menu-label">Menú rápido</span>
+            <span class="quick-menu-label">Menú</span>
         </button>
     </div>
 
     <!-- MENÚ FLOTANTE -->
     <div class="quick-menu-backdrop" *ngIf="showMenu" (click)="closeMenu()"></div>
 
-    <div class="quick-menu-panel" *ngIf="showMenu">
-        <h3 class="quick-menu-title">Accesos del administrador</h3>
+    <div id="admin-menu" class="quick-menu-panel" *ngIf="showMenu">
+        <h3 class="quick-menu-title">Navegación del administrador</h3>
 
         <button
             class="quick-menu-item"
@@ -132,7 +134,7 @@
 
     <ng-container *ngIf="!cargando && !error">
 
-        <section class="dashboard-summary">
+        <section class="dashboard-summary" aria-label="Indicadores generales del gimnasio">
         <div class="stat-card">
             <div class="stat-card-header">
             <span class="stat-label">Usuarios activos</span>
@@ -164,9 +166,6 @@
             <div class="stat-value">{{ asistenciaGlobal }}%</div>
             <div class="stat-footer">cumplimiento del mes</div>
         </div>
-        </section>
-
-        <section class="dashboard-summary dashboard-summary-secondary">
         <div class="stat-card">
             <div class="stat-card-header">
             <span class="stat-label">Entrenadores</span>
