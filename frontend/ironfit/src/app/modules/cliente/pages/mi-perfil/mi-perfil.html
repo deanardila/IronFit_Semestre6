@@ -1,105 +1,99 @@
 <div class="perfil-layout">
-    <header class="perfil-header">
-        <div class="perfil-header-top">
-            <img src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit" class="perfil-logo" />
-            <button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver al panel</button>
-        </div>
-        <div class="perfil-header-main">
-            <span class="perfil-eyebrow">TU ESPACIO PERSONAL</span>
-            <h1>Mi perfil</h1>
-            <p>Gestiona tus datos personales y la seguridad de tu cuenta.</p>
-        </div>
-    </header>
-
-    <div *ngIf="mensajeExito" class="mensaje exito" role="status">
-        {{ mensajeExito }}
+  <header class="perfil-header">
+    <div class="perfil-header-top">
+      <img src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit" class="perfil-logo" />
+      <button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver al panel</button>
     </div>
-
-    <div *ngIf="mensajeError" class="mensaje error" role="alert">
-        {{ mensajeError }}
+    <div class="perfil-header-main">
+      <span class="perfil-eyebrow">TU ESPACIO PERSONAL</span>
+      <h1>Mi perfil</h1>
+      <p>Actualiza tus datos y mantén segura tu cuenta.</p>
     </div>
+  </header>
 
-    <div class="perfil-grid">
+  <div *ngIf="mensajeExito" class="mensaje exito" role="status">{{ mensajeExito }}</div>
+  <div *ngIf="mensajeError" class="mensaje error" role="alert">{{ mensajeError }}</div>
 
-        <section class="perfil-card">
-        <div class="perfil-card-heading"><span class="perfil-card-icon" aria-hidden="true">01</span><div><h2>Datos personales</h2><p>Información de tu cuenta IronFit</p></div></div>
+  <main class="perfil-grid">
+    <aside class="perfil-resumen" aria-label="Resumen de tu cuenta">
+      <div class="perfil-resumen-head">
+        <span class="perfil-seccion-label">MI CUENTA</span>
+        <h2>{{ perfil.nombres }} {{ perfil.apellidos }}</h2>
+        <p>{{ perfil.correo }}</p>
+      </div>
+      <dl class="perfil-datos">
+        <div>
+          <dt>Rol</dt>
+          <dd>{{ obtenerRolPrincipal() }}</dd>
+        </div>
+        <div>
+          <dt>Estado</dt>
+          <dd><span class="perfil-estado" [class.inactivo]="!perfil.activo">{{ perfil.activo ? 'Activo' : 'Inactivo' }}</span></dd>
+        </div>
+        <div>
+          <dt>Tipo de documento</dt>
+          <dd>{{ perfil.tipoDoc || '-' }}</dd>
+        </div>
+        <div>
+          <dt>Número de documento</dt>
+          <dd>{{ perfil.numDoc || '-' }}</dd>
+        </div>
+      </dl>
+      <p class="perfil-nota">Los datos de identificación se muestran solo para consulta.</p>
+    </aside>
 
-        <div class="form-row">
+    <div class="perfil-formularios">
+      <section class="perfil-seccion" aria-labelledby="datos-personales-titulo">
+        <div class="perfil-seccion-heading">
+          <div>
+            <h2 id="datos-personales-titulo">Datos personales</h2>
+            <p>Información de contacto de tu cuenta IronFit.</p>
+          </div>
+        </div>
+        <div class="perfil-campos">
+          <div class="form-row">
             <label for="nombres">Nombres</label>
-            <input id="nombres" type="text" [(ngModel)]="perfil.nombres" name="nombres">
-        </div>
-
-        <div class="form-row">
+            <input id="nombres" type="text" [(ngModel)]="perfil.nombres" name="nombres" autocomplete="given-name" />
+          </div>
+          <div class="form-row">
             <label for="apellidos">Apellidos</label>
-            <input id="apellidos" type="text" [(ngModel)]="perfil.apellidos" name="apellidos">
-        </div>
-
-        <div class="form-row">
-            <label for="correo">Correo</label>
-            <input id="correo" type="email" [(ngModel)]="perfil.correo" name="correo">
-        </div>
-
-        <div class="form-row">
+            <input id="apellidos" type="text" [(ngModel)]="perfil.apellidos" name="apellidos" autocomplete="family-name" />
+          </div>
+          <div class="form-row">
+            <label for="correo">Correo electrónico</label>
+            <input id="correo" type="email" [(ngModel)]="perfil.correo" name="correo" autocomplete="email" />
+          </div>
+          <div class="form-row">
             <label for="telefono">Teléfono</label>
-            <input id="telefono" type="text" [(ngModel)]="perfil.telefono" name="telefono">
+            <input id="telefono" type="text" [(ngModel)]="perfil.telefono" name="telefono" autocomplete="tel" />
+          </div>
         </div>
-
-        <div class="form-row">
-            <label>Tipo de documento</label>
-            <input type="text" [value]="perfil.tipoDoc || '-'" disabled>
-        </div>
-
-        <div class="form-row">
-            <label>Número de documento</label>
-            <input type="text" [value]="perfil.numDoc || '-'" disabled>
-        </div>
-
-        <div class="form-row">
-            <label>Rol</label>
-            <input type="text" [value]="obtenerRolPrincipal()" disabled>
-        </div>
-
-        <div class="form-row">
-            <label>Estado</label>
-            <input type="text" [value]="perfil.activo ? 'Activo' : 'Inactivo'" disabled>
-        </div>
-
         <div class="acciones">
-            <button type="button" class="btn-principal" (click)="guardarPerfil()">
-            Guardar cambios
-            </button>
+          <button type="button" class="btn-principal" (click)="guardarPerfil()">Guardar cambios</button>
         </div>
-        </section>
+      </section>
 
-        <section class="perfil-card">
-        <div class="perfil-card-heading"><span class="perfil-card-icon" aria-hidden="true">02</span><div><h2>Seguridad</h2><p>Actualiza tu contraseña de acceso</p></div></div>
-
-        <div class="form-row">
+      <section class="perfil-seccion perfil-seccion-seguridad" aria-labelledby="seguridad-titulo">
+        <div class="perfil-seccion-heading">
+          <div>
+            <h2 id="seguridad-titulo">Seguridad</h2>
+            <p>Cambia la contraseña de acceso cuando lo necesites.</p>
+          </div>
+        </div>
+        <div class="perfil-campos">
+          <div class="form-row">
             <label for="nuevaPassword">Nueva contraseña</label>
-            <input
-            id="nuevaPassword"
-            type="password"
-            autocomplete="new-password"
-            [(ngModel)]="password.nueva"
-            name="nuevaPassword">
-        </div>
-
-        <div class="form-row">
+            <input id="nuevaPassword" type="password" [(ngModel)]="password.nueva" name="nuevaPassword" autocomplete="new-password" />
+          </div>
+          <div class="form-row">
             <label for="confirmarPassword">Confirmar contraseña</label>
-            <input
-            id="confirmarPassword"
-            type="password"
-            autocomplete="new-password"
-            [(ngModel)]="password.confirmar"
-            name="confirmarPassword">
+            <input id="confirmarPassword" type="password" [(ngModel)]="password.confirmar" name="confirmarPassword" autocomplete="new-password" />
+          </div>
         </div>
-
         <div class="acciones">
-            <button type="button" class="btn-principal" (click)="cambiarPassword()">
-            Actualizar contraseña
-            </button>
+          <button type="button" class="btn-principal" (click)="cambiarPassword()">Actualizar contraseña</button>
         </div>
-        </section>
-
+      </section>
     </div>
+  </main>
 </div>
