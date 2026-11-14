@@ -59,3 +59,40 @@ button:disabled{opacity:.48;cursor:not-allowed;}
 @media(max-width:768px){.ejercicios-layout{padding:1.25rem 1rem;}.ejercicios-logo{height:64px;max-width:180px;}.ejercicio-panel{padding:20px;}.estado-filtro{flex:1 1 auto;}.paginacion-ejercicios{flex-direction:column;align-items:stretch;}.paginacion-controles{justify-content:space-between;}}
 @media(max-width:450px){.ejercicios-header{align-items:stretch;}.busqueda-container{flex:1 1 100%;}.btn-crear-ejercicio,.btn-actualizar{flex:1;}.form-grid{grid-template-columns:1fr;}}
 @media(prefers-reduced-motion:reduce){button{transition:none!important;}}
+
+/* IronFit · patrón compartido de tablas administrativas
+   Encabezado carbón, filas alternadas y hover uniforme. */
+.ejercicios-tabla {
+  border-collapse: collapse;
+  background: #171719;
+  color: #e4e4e7;
+}
+.ejercicios-tabla thead th {
+  background-color: #202023;
+  color: #a1a1aa;
+  border-bottom: 1px solid #35353b;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+.ejercicios-tabla tbody tr:nth-child(odd),
+.ejercicios-tabla tbody tr:nth-child(odd) td {
+  background-color: #171719;
+}
+.ejercicios-tabla tbody tr:nth-child(even),
+.ejercicios-tabla tbody tr:nth-child(even) td {
+  background-color: #202023;
+}
+.ejercicios-tabla tbody tr:hover,
+.ejercicios-tabla tbody tr:hover td {
+  background-color: #29292d;
+}
+.ejercicios-tabla tbody td {
+  border-bottom: 1px solid #303035;
+  color: #e4e4e7;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 13px;
+  vertical-align: middle;
+}
