@@ -483,26 +483,3 @@
     flex: 0 1 auto;
   }
 }
-
-/* Icono permanente en el buscador: visible también cuando hay texto. */
-.campo-busqueda {
-  position: relative;
-  display: flex;
-  flex: 1 1 0;
-  min-width: 0;
-  align-items: center;
-}
-.campo-busqueda .icono-busqueda {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #a1a1aa;
-  pointer-events: none;
-  z-index: 1;
-}
-.campo-busqueda .input-busqueda {
-  padding-left: 42px;
-  flex: 1 1 auto;
-  min-width: 0;
-}
