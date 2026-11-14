@@ -1,12 +1,13 @@
 <div class="planes-layout">
+    <div class="planes-topbar">
+      <img class="planes-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit">
+      <button class="btn-volver" type="button" (click)="showingRutinas ? volverAListaPlanes() : volverAlDashboard()">← Volver al panel</button>
+    </div>
 
     <header class="planes-header">
         <div class="planes-header-left">
-            <button class="btn-volver" type="button" (click)="showingRutinas ? volverAListaPlanes() : volverAlDashboard()">
-                ← Volver
-            </button>
-
             <div>
+                <span class="planes-kicker">ADMINISTRACIÓN</span>
                 <h1>{{ showingRutinas ? 'Rutinas del plan' : 'Planes de entrenamiento' }}</h1>
                 <p *ngIf="!showingRutinas">Vista de auditoría y consulta general</p>
             </div>
