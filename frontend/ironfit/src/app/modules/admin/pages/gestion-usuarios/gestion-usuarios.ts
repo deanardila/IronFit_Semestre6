@@ -46,6 +46,8 @@ export class GestionUsuarios implements OnInit {
     this.pestanaUsuario = 'datos';
   }
   cerrarPanelUsuario(): void {
+    if (this.guardandoAsignacion) return;
+    this.cancelarAsignacion();
     this.usuarioPanel = null;
     this.pestanaUsuario = 'datos';
   }
@@ -57,10 +59,8 @@ export class GestionUsuarios implements OnInit {
     this.toggleEstado(usuario);
   }
   asignarDesdePanel(): void {
-    if (!this.usuarioPanel) return;
-    const usuario = this.usuarioPanel;
-    this.cerrarPanelUsuario();
-    this.abrirFormularioAsignacion(usuario);
+    if (!this.usuarioPanel || !this.esCliente(this.usuarioPanel)) return;
+    this.abrirFormularioAsignacion(this.usuarioPanel);
   }
 
 
@@ -359,6 +359,7 @@ export class GestionUsuarios implements OnInit {
         next: () => {
           this.guardandoAsignacion = false;
           this.cancelarAsignacion();
+          // Conservamos el panel abierto en la pestaña Cuenta tras guardar.
           this.cargarUsuarios();
         },
         error: (err) => {
