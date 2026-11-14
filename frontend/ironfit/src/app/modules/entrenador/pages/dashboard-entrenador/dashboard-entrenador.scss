@@ -136,3 +136,143 @@
     text-transform: uppercase;
     }
 }
+/* IronFit · estilo de dashboard tipo Linear. Únicamente afecta al entrenador. */
+:host {
+  display: block;
+  --trainer-accent: #f11d25;
+  --trainer-surface: #161618;
+  --trainer-border: #303035;
+  --trainer-muted: #a1a1aa;
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+.dashboard-layout {
+  min-height: 100vh;
+  background: #0f0f10;
+  color: #f7f7f8;
+}
+.dashboard-header {
+  background: #141416;
+  border-bottom: 1px solid #2e2e32;
+  box-shadow: none;
+}
+.dashboard-role-pill {
+  border: 1px solid rgba(241,29,37,.4);
+  color: #ff7378;
+  background: rgba(241,29,37,.10);
+}
+.dashboard-welcome {
+  background: linear-gradient(115deg,#19191b,#111113);
+  border: 1px solid var(--trainer-border);
+  box-shadow: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.dashboard-welcome .welcome-kicker {
+  display: inline-flex;
+  width: fit-content;
+  color: var(--trainer-accent);
+  background: rgba(241,29,37,.09);
+  border: 1px solid rgba(241,29,37,.20);
+  border-radius: 6px;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+  padding: .32rem .6rem;
+}
+.dashboard-welcome h1 {
+  color: #fff;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  letter-spacing: -.035em;
+  font-weight: 800;
+  margin: .85rem 0 .35rem;
+}
+.dashboard-welcome p {
+  margin: 0;
+  font-weight: 500;
+  font-size: .87rem;
+  color: var(--trainer-muted);
+}
+.dashboard-summary, .dashboard-summary-secondary {
+  gap: 1rem;
+}
+.stat-card, .chart-card, .dashboard-panel {
+  background: var(--trainer-surface);
+  border: 1px solid var(--trainer-border);
+  border-radius: 14px;
+  box-shadow: none;
+}
+.stat-card {
+  transition: border-color .18s ease, transform .18s ease;
+}
+.stat-card:hover { border-color: #49494f; transform: translateY(-2px); }
+.stat-card--highlight {
+  background: linear-gradient(135deg, rgba(241,29,37,.13),#161618 65%);
+  border-color: rgba(241,29,37,.42);
+}
+.stat-card--highlight .stat-value { color: #fff; }
+.stat-label { color: #b4b4bc; font-weight: 600; }
+.stat-value { color: #fff; letter-spacing: -.04em; }
+.stat-footer { color: #8d8d95; }
+.alert-card .stat-value { color: #ffbd60; }
+.charts-grid { gap: 1rem; margin-top: 1.25rem; }
+.chart-card { min-height: 330px; padding: 1.25rem; }
+.chart-header h2 {
+  color: #f8f8f9;
+  font-size: .95rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  text-transform: none;
+}
+.chart-header span { color: var(--trainer-muted); font-weight: 500; }
+.dashboard-retry-btn {
+  background: var(--trainer-accent);
+  color: #fff;
+  border-color: var(--trainer-accent);
+  border-radius: 9px;
+}
+.quick-menu-toggle {
+  background: #1b1b1e;
+  border: 1px solid #3b3b40;
+  border-radius: 10px;
+  color: #fff;
+  box-shadow: none;
+  letter-spacing: .02em;
+  font-weight: 700;
+}
+.quick-menu-toggle:hover {
+  background: #242427;
+  border-color: var(--trainer-accent);
+  box-shadow: none;
+}
+.quick-menu-icon span { background: var(--trainer-accent); }
+.quick-menu-panel {
+  background: #19191c;
+  border: 1px solid #39393e;
+  border-radius: 15px;
+  box-shadow: 0 22px 55px rgba(0,0,0,.55);
+}
+.quick-menu-title { color: #b8b8c0; }
+.quick-menu-item {
+  background: #202023;
+  border: 1px solid #343438;
+  border-radius: 10px;
+  box-shadow: none;
+}
+.quick-menu-item:hover {
+  background: #29292d;
+  border-color: rgba(241,29,37,.55);
+  box-shadow: none;
+}
+.item-pill { color: #ff777b; }
+.dashboard-logout-btn:hover { border-color: var(--trainer-accent); }
+@media (max-width: 950px) {
+  .dashboard-welcome {
+    background: linear-gradient(115deg,#19191b,#111113);
+    border-color: var(--trainer-border);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-card { transition: none; }
+  .stat-card:hover { transform: none; }
+}
