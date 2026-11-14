@@ -39,6 +39,30 @@ export class GestionUsuarios implements OnInit {
   vieneDeDashboard = false;
 
   mostrarFormularioCrear = false;
+  usuarioPanel: UsuarioResumen | null = null;
+  pestanaUsuario: 'datos' | 'cuenta' | 'seguridad' = 'datos';
+  abrirPanelUsuario(usuario: UsuarioResumen): void {
+    this.usuarioPanel = usuario;
+    this.pestanaUsuario = 'datos';
+  }
+  cerrarPanelUsuario(): void {
+    this.usuarioPanel = null;
+    this.pestanaUsuario = 'datos';
+  }
+  cambiarEstadoDesdePanel(): void {
+    if (!this.usuarioPanel) return;
+    const usuario = this.usuarioPanel;
+    if (!confirm(`¿Deseas ${usuario.activo ? 'desactivar' : 'activar'} la cuenta de ${usuario.nombres} ${usuario.apellidos}?`)) return;
+    this.cerrarPanelUsuario();
+    this.toggleEstado(usuario);
+  }
+  asignarDesdePanel(): void {
+    if (!this.usuarioPanel) return;
+    const usuario = this.usuarioPanel;
+    this.cerrarPanelUsuario();
+    this.abrirFormularioAsignacion(usuario);
+  }
+
 
   // Asignar / cambiar entrenador
   mostrarFormularioAsignacion = false;
