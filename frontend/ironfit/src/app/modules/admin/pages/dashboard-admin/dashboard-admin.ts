@@ -7,6 +7,14 @@ import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 
 Chart.register(...registerables);
 
+// Paleta de presentación del dashboard ADMIN, sin alterar los datos.
+const ADMIN_RED = '#f11d25';
+const ADMIN_AMBER = '#ffbd60';
+const ADMIN_TEXT = '#a1a1aa';
+const ADMIN_GRID = 'rgba(255,255,255,0.07)';
+const ADMIN_TOOLTIP = '#202023';
+
+
 @Component({
   selector: 'app-dashboard-admin',
   standalone: false,
@@ -81,21 +89,35 @@ export class DashboardAdmin implements OnInit {
   chartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: { duration: 350 },
     plugins: {
       legend: {
         labels: {
-          color: '#f5f5f5'
+          color: ADMIN_TEXT,
+          font: { family: 'DM Sans', size: 12 },
+          usePointStyle: true,
+          boxWidth: 9
         }
+      },
+      tooltip: {
+        backgroundColor: ADMIN_TOOLTIP,
+        titleColor: '#ffffff',
+        bodyColor: '#e4e4e7',
+        borderColor: '#404046',
+        borderWidth: 1,
+        padding: 12
       }
     },
     scales: {
       x: {
-        ticks: { color: '#9ca3af' },
-        grid: { color: 'rgba(255,255,255,0.08)' }
+        ticks: { color: ADMIN_TEXT, font: { family: 'DM Sans' } },
+        grid: { color: ADMIN_GRID },
+        border: { display: false }
       },
       y: {
-        ticks: { color: '#9ca3af' },
-        grid: { color: 'rgba(255,255,255,0.08)' }
+        ticks: { color: ADMIN_TEXT, font: { family: 'DM Sans' } },
+        grid: { color: ADMIN_GRID },
+        border: { display: false }
       }
     }
   };
@@ -103,12 +125,26 @@ export class DashboardAdmin implements OnInit {
   doughnutOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '68%',
+    animation: { duration: 350 },
     plugins: {
       legend: {
         position: 'bottom',
         labels: {
-          color: '#f5f5f5'
+          color: ADMIN_TEXT,
+          font: { family: 'DM Sans', size: 12 },
+          usePointStyle: true,
+          boxWidth: 9,
+          padding: 16
         }
+      },
+      tooltip: {
+        backgroundColor: ADMIN_TOOLTIP,
+        titleColor: '#ffffff',
+        bodyColor: '#e4e4e7',
+        borderColor: '#404046',
+        borderWidth: 1,
+        padding: 12
       }
     }
   };
@@ -222,7 +258,7 @@ export class DashboardAdmin implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 4 }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: ADMIN_RED, pointBorderColor: '#171719', pointBorderWidth: 2, borderColor: ADMIN_RED, backgroundColor: 'rgba(241,29,37,0.14)', borderWidth: 2.5 }]
     };
   }
 
@@ -235,7 +271,7 @@ export class DashboardAdmin implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, backgroundColor: datosValidos.map((_, i) => i % 2 === 0 ? ADMIN_RED : ADMIN_AMBER), hoverBackgroundColor: datosValidos.map((_, i) => i % 2 === 0 ? '#ff5158' : '#ffd08b'), borderRadius: 5, borderSkipped: false, maxBarThickness: 25 }]
     };
   }
 
@@ -248,7 +284,7 @@ export class DashboardAdmin implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor) }]
+      datasets: [{ data: datosValidos.map(d => d.valor), backgroundColor: datosValidos.map((_, i) => [ADMIN_RED, ADMIN_AMBER, '#62626b', '#9898a1'][i % 4]), borderWidth: 0, spacing: 3, hoverOffset: 5 }]
     };
   }
 
