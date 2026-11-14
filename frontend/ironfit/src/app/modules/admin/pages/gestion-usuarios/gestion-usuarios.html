@@ -126,7 +126,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let u of usuariosFiltrados">
+                <tr *ngFor="let u of usuariosFiltrados; trackBy: identificarUsuario">
                     <td>{{ u.numDoc }}</td>
                     <td>{{ u.nombres }}</td>
                     <td>{{ u.apellidos }}</td>
