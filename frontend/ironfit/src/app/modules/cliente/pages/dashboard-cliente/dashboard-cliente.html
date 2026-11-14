@@ -3,15 +3,14 @@
     <header class="dashboard-header">
         <div class="dashboard-header-left">
             <img
-                src="assets/ironfit/logo-horizontal.png"
+                src="assets/ironfit/IronFit_Horizontal.png"
                 alt="IronFit"
                 class="dashboard-logo"
             />
-            <span class="dashboard-role-pill">Cliente</span>
         </div>
 
         <div class="dashboard-header-right">
-                        <p> {{ nombreUsuario }}</p>
+                        <p class="dashboard-greeting">Bienvenido, <strong>{{ nombreBienvenida }}</strong></p>
             <button class="dashboard-logout-btn" (click)="logout()">
                 Cerrar sesión
             </button>
@@ -20,27 +19,30 @@
 
     <section class="dashboard-welcome">
         <div>
+            <span class="welcome-kicker">PANEL CLIENTE</span>
+            <h1>Tu progreso empieza aquí</h1>
             <p>{{ fechaDashboard }} · Hoy toca seguir avanzando en tu proceso</p>
         </div>
     </section>
 
     <!-- BOTÓN MENÚ HAMBURGUESA -->
     <div class="quick-menu-container">
-        <button class="quick-menu-toggle" (click)="toggleMenu()">
+        <button type="button" class="quick-menu-toggle" (click)="toggleMenu()"
+                [attr.aria-expanded]="showMenu" aria-controls="cliente-menu" aria-label="Abrir o cerrar menú">
             <span class="quick-menu-icon">
                 <span></span>
                 <span></span>
                 <span></span>
             </span>
-            <span class="quick-menu-label">Menú rápido</span>
+            <span class="quick-menu-label">Menú</span>
         </button>
     </div>
 
     <!-- MENÚ FLOTANTE -->
     <div class="quick-menu-backdrop" *ngIf="showMenu" (click)="closeMenu()"></div>
 
-    <div class="quick-menu-panel" *ngIf="showMenu">
-        <h3 class="quick-menu-title">Accesos del cliente</h3>
+    <div id="cliente-menu" class="quick-menu-panel" *ngIf="showMenu">
+        <h3 class="quick-menu-title">Navegación del cliente</h3>
 
         <button
             class="quick-menu-item"
@@ -131,7 +133,7 @@
 
         <ng-container *ngIf="!cargando && !error">
 
-            <section class="dashboard-summary">
+            <section class="dashboard-summary" aria-label="Mi resumen de progreso">
             <div class="stat-card">
                 <div class="stat-card-header">
                 <span class="stat-label">Plan actual</span>
@@ -163,9 +165,6 @@
                 <div class="stat-value">{{ progresoPlan }}%</div>
                 <div class="stat-footer">cumplimiento general</div>
             </div>
-            </section>
-
-            <section class="dashboard-summary dashboard-summary-secondary">
             <div class="stat-card">
                 <div class="stat-card-header">
                 <span class="stat-label">Racha actual</span>
