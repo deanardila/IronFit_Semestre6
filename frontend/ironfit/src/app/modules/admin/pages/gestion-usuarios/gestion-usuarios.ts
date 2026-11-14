@@ -283,12 +283,21 @@ export class GestionUsuarios implements OnInit {
     });
   }
 
+  identificarUsuario(_index: number, usuario: UsuarioResumen): string {
+    return usuario.id;
+  }
+
   toggleEstado(usuario: UsuarioResumen): void {
     const nuevoEstado = !usuario.activo;
 
     this.usuariosApi.cambiarEstado(usuario.id, nuevoEstado).subscribe({
       next: () => {
-        this.cargarUsuarios(true);
+        // Actualizar solo la fila evita desmontar la tabla o perder scroll.
+        usuario.activo = nuevoEstado;
+        if (this.usuarioPanel?.id === usuario.id) {
+          this.usuarioPanel.activo = nuevoEstado;
+        }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cambiando estado del usuario', err);
