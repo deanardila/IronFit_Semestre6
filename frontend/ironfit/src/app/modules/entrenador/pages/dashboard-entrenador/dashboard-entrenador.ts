@@ -11,6 +11,15 @@ import {
 
 Chart.register(...registerables);
 
+// Paleta visual IronFit; no modifica valores ni consultas.
+const CHART_RED = '#f11d25';
+const CHART_RED_SOFT = 'rgba(241, 29, 37, 0.14)';
+const CHART_TEXT = '#a1a1aa';
+const CHART_GRID = 'rgba(255, 255, 255, 0.07)';
+const CHART_GRAY = '#62626b';
+const CHART_TOOLTIP_BG = '#202023';
+
+
 @Component({
   selector: 'app-dashboard-entrenador',
   standalone: false,
@@ -59,12 +68,32 @@ export class DashboardEntrenador implements OnInit {
   lineOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: { duration: 350 },
     plugins: {
-      legend: { labels: { color: '#f5f5f5' } }
+      legend: { labels: { color: CHART_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9 } },
+      tooltip: {
+        backgroundColor: CHART_TOOLTIP_BG,
+        titleColor: '#ffffff',
+        bodyColor: '#e4e4e7',
+        borderColor: '#404046',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: true
+      }
     },
     scales: {
-      x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-      y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' }, min: 0, max: 100 }
+      x: {
+        ticks: { color: CHART_TEXT, font: { family: 'DM Sans' } },
+        grid: { color: CHART_GRID },
+        border: { display: false }
+      },
+      y: {
+        ticks: { color: CHART_TEXT, font: { family: 'DM Sans' } },
+        grid: { color: CHART_GRID },
+        border: { display: false },
+        min: 0,
+        max: 100
+      }
     }
   };
 
@@ -72,22 +101,50 @@ export class DashboardEntrenador implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: 'y',
+    animation: { duration: 350 },
     plugins: {
-      legend: { labels: { color: '#f5f5f5' } }
+      legend: { labels: { color: CHART_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9 } },
+      tooltip: {
+        backgroundColor: CHART_TOOLTIP_BG,
+        titleColor: '#ffffff',
+        bodyColor: '#e4e4e7',
+        borderColor: '#404046',
+        borderWidth: 1,
+        padding: 12
+      }
     },
     scales: {
-      x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' }, min: 0 },
-      y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' } }
+      x: {
+        ticks: { color: CHART_TEXT, font: { family: 'DM Sans' } },
+        grid: { color: CHART_GRID },
+        border: { display: false },
+        min: 0
+      },
+      y: {
+        ticks: { color: CHART_TEXT, font: { family: 'DM Sans' } },
+        grid: { display: false },
+        border: { display: false }
+      }
     }
   };
 
   doughnutOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '68%',
+    animation: { duration: 350 },
     plugins: {
       legend: {
         position: 'bottom',
-        labels: { color: '#f5f5f5' }
+        labels: { color: CHART_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9, padding: 16 }
+      },
+      tooltip: {
+        backgroundColor: CHART_TOOLTIP_BG,
+        titleColor: '#ffffff',
+        bodyColor: '#e4e4e7',
+        borderColor: '#404046',
+        borderWidth: 1,
+        padding: 12
       }
     }
   };
@@ -164,7 +221,7 @@ export class DashboardEntrenador implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 4 }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: CHART_RED, pointBorderColor: '#171719', pointBorderWidth: 2, borderColor: CHART_RED, backgroundColor: CHART_RED_SOFT, borderWidth: 2.5 }]
     };
   }
 
@@ -177,7 +234,7 @@ export class DashboardEntrenador implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, backgroundColor: CHART_RED, hoverBackgroundColor: '#ff5158', borderRadius: 5, borderSkipped: false, maxBarThickness: 24 }]
     };
   }
 
@@ -190,7 +247,7 @@ export class DashboardEntrenador implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor) }]
+      datasets: [{ data: datosValidos.map(d => d.valor), backgroundColor: datosValidos.map((d, i) => { const estado = d.label.toLowerCase(); return estado.includes('inactiv') ? CHART_GRAY : estado.includes('activ') ? CHART_RED : [CHART_GRAY, '#9898a1', '#404047'][i % 3]; }), hoverOffset: 5, borderWidth: 0, spacing: 3 }]
     };
   }
 
