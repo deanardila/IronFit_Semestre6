@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Ejercicios, EjercicioDTO, EjercicioCrearDTO } from '../../ejercicios';
+import { Ejercicios, EjercicioDTO, EjercicioCrearDTO, PaginaResponse } from '../../ejercicios';
 import { Router } from '@angular/router';
-import { finalize, timeout } from 'rxjs';
+import { finalize, forkJoin, map, Observable, switchMap, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-ejercicios',
@@ -28,7 +28,7 @@ export class GestionEjercicios implements OnInit {
   mostrarFormularioCrear = false;
   panelAbierto = false;
   pestanaPanel: 'datos' | 'estado' = 'datos';
-  filtroActivo = true;
+  filtroActivo: boolean | null = null;
   ejercicioSeleccionado: EjercicioDTO | null = null;
   guardando = false;
 
@@ -71,14 +71,18 @@ export class GestionEjercicios implements OnInit {
       this.cdr.detectChanges();
     }, 12000);
 
-    this.ejerciciosService.getEjerciciosPaginados(
-      this.paginaActual,
-      this.tamanoPagina,
-      this.terminoBusqueda,
-      null,
-      null,
-      this.filtroActivo
-    ).pipe(
+    const filtroActual = this.filtroActivo;
+    const consulta = filtroActual === null
+      ? this.obtenerPaginaTodos()
+      : this.ejerciciosService.getEjerciciosPaginados(
+          this.paginaActual, this.tamanoPagina, this.terminoBusqueda,
+          null, null, filtroActual
+        ).pipe(map(respuesta => ({
+          ...respuesta,
+          contenido: (respuesta.contenido ?? []).map(e => ({ ...e, activo: filtroActual }))
+        })));
+
+    consulta.pipe(
       timeout(10000),
       finalize(() => {
         this.cargando = false;
@@ -87,7 +91,7 @@ export class GestionEjercicios implements OnInit {
       })
     ).subscribe({
       next: (respuesta) => {
-        this.ejercicios = (respuesta.contenido ?? []).map(e => ({ ...e, activo: this.filtroActivo }));
+        this.ejercicios = respuesta.contenido ?? [];
         this.ejerciciosFiltrados = this.ejercicios;
         if (this.ejercicioSeleccionado) {
           const actual = this.ejercicios.find(e => e.id === this.ejercicioSeleccionado?.id);
@@ -126,6 +130,71 @@ export class GestionEjercicios implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  // El API Mongo pagina por estado; para "Todos" unimos ambos conjuntos
+  // respetando los límites de página, sin solicitar ni modificar el backend.
+  // Los activos aparecen primero y los inactivos después.
+  private obtenerPaginaTodos(): Observable<PaginaResponse<EjercicioDTO>> {
+    const size = this.tamanoPagina;
+    const page = this.paginaActual;
+    const buscar = this.terminoBusqueda;
+    const pedir = (pagina: number, estado: boolean, tamano = size) =>
+      this.ejerciciosService.getEjerciciosPaginados(
+        pagina, tamano, buscar, null, null, estado
+      );
+
+    // Consultas ligeras para conocer los totales de cada estado.
+    return forkJoin([pedir(0, true, 1), pedir(0, false, 1)]).pipe(
+      switchMap(([activos, inactivos]) => {
+        const totalActivos = activos.totalElementos ?? 0;
+        const totalInactivos = inactivos.totalElementos ?? 0;
+        const total = totalActivos + totalInactivos;
+        const inicio = page * size;
+        const fin = Math.min(inicio + size, total);
+
+        const solicitudes: Observable<EjercicioDTO[]>[] = [];
+        const tramo = (estado: boolean, inicioGlobal: number, finGlobal: number, base: number) => {
+          const desde = Math.max(0, inicioGlobal - base);
+          const hasta = Math.max(0, finGlobal - base);
+          if (hasta <= desde) return;
+          const primeraPagina = Math.floor(desde / size);
+          const ultimaPagina = Math.floor((hasta - 1) / size);
+          const paginas = Array.from(
+            { length: ultimaPagina - primeraPagina + 1 },
+            (_, i) => pedir(primeraPagina + i, estado).pipe(
+              map(r => r.contenido ?? [])
+            )
+          );
+          solicitudes.push(forkJoin(paginas).pipe(
+            map(resultados => resultados.flat()
+              .slice(desde - primeraPagina * size, hasta - primeraPagina * size)
+              .map(e => ({ ...e, activo: estado })))
+          ));
+        };
+
+        tramo(true, inicio, Math.min(fin, totalActivos), 0);
+        tramo(false, Math.max(inicio, totalActivos), fin, totalActivos);
+
+        const totalPaginas = Math.ceil(total / size);
+        const respuestaBase = {
+          pagina: page,
+          tamano: size,
+          totalElementos: total,
+          totalPaginas,
+          ultima: page >= totalPaginas - 1
+        };
+        if (solicitudes.length === 0) {
+          return new Observable<PaginaResponse<EjercicioDTO>>(subscriber => {
+            subscriber.next({ ...respuestaBase, contenido: [] });
+            subscriber.complete();
+          });
+        }
+        return forkJoin(solicitudes).pipe(
+          map(resultados => ({ ...respuestaBase, contenido: resultados.flat() }))
+        );
+      })
+    );
   }
 
   aplicarFiltros(): void {
