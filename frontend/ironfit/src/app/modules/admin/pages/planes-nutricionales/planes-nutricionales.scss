@@ -1,138 +1,51 @@
-.nutricion-admin-page {
-  min-height: 100vh;
-  padding: 32px 38px;
-  background: radial-gradient(circle at top left, rgba(225,29,46,.08), transparent 34%), #050505;
-  color: #fff;
-}
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
 
-.nutricion-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  padding:20px 24px;
-  margin-bottom:24px;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:20px;
-  background:rgba(12,12,12,.96);
-}
-
-.header-left, .header-actions, .busqueda {
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
-
-.nutricion-header h1 {
-  margin:0;
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  font-size:25px;
-}
-
-
-.btn-secundario {
-  padding:10px 18px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.15);
-  background:#0f0f0f;
-  color:#fff;
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  cursor:pointer;
-}
-
-button:disabled { opacity:.55; cursor:not-allowed; }
-
-.busqueda input {
-  min-width:300px;
-  padding:11px 14px;
-  border-radius:12px;
-  border:1px solid rgba(225,29,46,.35);
-  background:#0f0f0f;
-  color:#fff;
-  outline:none;
-}
-
-.busqueda input:focus { border-color:#e11d2e; }
-
-.estado-panel, .tabla-wrapper {
-  padding:20px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(12,12,12,.96);
-}
-
-.error-panel { color:#fca5a5; border-color:rgba(239,68,68,.4); }
-
-.tabla-wrapper { overflow:auto; padding:0; }
-
-table {
-  width:100%;
-  border-collapse:collapse;
-  min-width:1050px;
-}
-
-th, td {
-  padding:16px 18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  text-align:left;
-}
-
-th {
-  background:#161616;
-  color:#a3a3a3;
-  font-size:12px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-}
-
-td { color:#f3f4f6; }
-
-tbody tr:hover { background:rgba(225,29,46,.04); }
-
-@media (max-width: 900px) {
-  .nutricion-admin-page { padding:16px; }
-  .nutricion-header, .header-actions { flex-direction:column; align-items:stretch; }
-  .header-left { align-items:flex-start; }
-  .busqueda { flex-wrap:wrap; }
-  .busqueda input { min-width:0; flex:1 1 240px; }
-}
-
-/* IronFit · patrón compartido de tablas administrativas
-   Encabezado carbón, filas alternadas y hover uniforme. */
-.tabla-wrapper table {
-  border-collapse: collapse;
-  background: #171719;
-  color: #e4e4e7;
-}
-.tabla-wrapper table thead th {
-  background-color: #202023;
-  color: #a1a1aa;
-  border-bottom: 1px solid #35353b;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  text-transform: none;
-}
-.tabla-wrapper table tbody tr:nth-child(odd),
-.tabla-wrapper table tbody tr:nth-child(odd) td {
-  background-color: #171719;
-}
-.tabla-wrapper table tbody tr:nth-child(even),
-.tabla-wrapper table tbody tr:nth-child(even) td {
-  background-color: #202023;
-}
-.tabla-wrapper table tbody tr:hover,
-.tabla-wrapper table tbody tr:hover td {
-  background-color: #29292d;
-}
-.tabla-wrapper table tbody td {
-  border-bottom: 1px solid #303035;
-  color: #e4e4e7;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 13px;
-  vertical-align: middle;
-}
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.nutricion-admin-page { box-sizing:border-box; max-width:1200px; min-height:100vh; margin:0 auto; padding:1.75rem 2rem; background:#100c0c; display:flex; flex-direction:column; gap:20px; }
+.nutricion-topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:90px; border-bottom:1px solid #303035; padding-bottom:14px; }
+.nutricion-logo { display:block; height:90px; width:auto; max-width:min(100%,330px); object-fit:contain; }
+.nutricion-intro { border:1px solid #303035; border-radius:16px; background:linear-gradient(115deg,#19191b,#111113); padding:19px 24px 21px; }
+.nutricion-kicker { display:inline-block; border:1px solid rgba(241,29,37,.2); border-radius:6px; background:rgba(241,29,37,.09); padding:4px 8px; color:#f11d25; font-size:11px; font-weight:800; letter-spacing:.1em; }
+.nutricion-intro h1 { margin:10px 0 4px; color:#fff; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; }
+.nutricion-intro p { margin:0; color:#a1a1aa; font-size:13px; }
+.nutricion-header { display:flex; justify-content:flex-end; align-items:center; gap:10px; }
+.header-actions { display:flex; flex:1; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:10px; }
+.busqueda { display:flex; flex:1 1 350px; align-items:center; min-width:0; gap:9px; }
+.busqueda input { box-sizing:border-box; width:100%; min-width:0; flex:1; min-height:42px; padding:11px 14px; border:1px solid #39393e; border-radius:9px; background:#212124; color:#fff; font:500 13px 'DM Sans',sans-serif; }
+.busqueda input::placeholder { color:#a1a1aa; }
+.busqueda input:focus { outline:none; border-color:#f11d25; box-shadow:0 0 0 3px rgba(241,29,37,.13); }
+.btn-secundario,.btn-detalles { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 15px; border-radius:9px; border:1px solid #39393e; background:#1b1b1f; color:#eee; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; cursor:pointer; transition:background .15s,border-color .15s; white-space:nowrap; }
+.btn-secundario:hover:not(:disabled),.btn-detalles:hover { background:#29292d; border-color:#f11d25; }
+button:disabled { opacity:.48; cursor:not-allowed; }
+.estado-panel { padding:16px; background:#171719; border:1px solid #303035; color:#a1a1aa; border-radius:12px; font-size:13px; }
+.error-panel { color:#ff9aa0; border-color:rgba(241,29,37,.3); }
+.tabla-wrapper { box-sizing:border-box; width:100%; overflow-x:auto; padding:0; border:1px solid #303035; border-radius:14px; background:#171719; }
+.tabla-wrapper table { width:100%; min-width:1120px; border-collapse:collapse; background:#171719; color:#e4e4e7; }
+.tabla-wrapper table thead th { text-align:left; padding:15px 13px; background:#202023; border-bottom:1px solid #35353b; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; letter-spacing:.02em; text-transform:none; }
+.tabla-wrapper table tbody td { padding:14px 13px; border-bottom:1px solid #303035; font:500 13px 'DM Sans',sans-serif; color:#e4e4e7; vertical-align:middle; }
+.tabla-wrapper table tbody tr:nth-child(odd),.tabla-wrapper table tbody tr:nth-child(odd) td { background:#171719; }
+.tabla-wrapper table tbody tr:nth-child(even),.tabla-wrapper table tbody tr:nth-child(even) td { background:#202023; }
+.tabla-wrapper table tbody tr:hover,.tabla-wrapper table tbody tr:hover td { background:#29292d; }
+.tabla-vacia { padding:26px!important; text-align:center!important; color:#a1a1aa!important; }
+.nutricion-pie { margin:-4px 0 0; color:#a1a1aa; font-size:12px; }
+.nutricion-panel-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.68); z-index:100; }
+.nutricion-panel { box-sizing:border-box; position:fixed; top:0; right:0; height:100dvh; width:min(475px,100vw); overflow-y:auto; z-index:101; border-left:1px solid #39393e; background:#171719; padding:28px; box-shadow:-30px 0 90px rgba(0,0,0,.65); }
+.nutricion-panel-header { display:flex; justify-content:space-between; align-items:flex-start; gap:15px; padding-bottom:22px; border-bottom:1px solid #36363c; }
+.nutricion-panel-header h2 { margin:9px 0 5px; color:#fff; font-size:23px; line-height:1.25; overflow-wrap:anywhere; }
+.nutricion-panel-header p { margin:0; color:#a1a1aa; font-size:13px; }
+.panel-cerrar { flex:none; width:38px; height:38px; border-radius:9px; border:1px solid #3c3c42; background:#242427; color:#eee; font-size:23px; cursor:pointer; }
+.nutricion-panel-contenido { display:flex; flex-direction:column; gap:16px; padding-top:23px; }
+.nutricion-dato { display:flex; flex-direction:column; gap:6px; border-bottom:1px solid #313137; padding-bottom:15px; }
+.nutricion-dato span,.nutricion-macros span { color:#a1a1aa; font-size:12px; }
+.nutricion-dato strong { color:#eee; font-size:14px; font-weight:700; overflow-wrap:anywhere; }
+.nutricion-macros { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.nutricion-macros > div { display:flex; flex-direction:column; gap:8px; padding:13px; border-radius:10px; background:#202023; border:1px solid #39393e; }
+.nutricion-macros strong { color:#fff; font-size:16px; }
+.nutricion-macros .nutricion-kcal { grid-column:1/-1; background:#251c1e; border-color:rgba(241,29,37,.25); }
+.nutricion-macros .nutricion-kcal strong { color:#ffbd60; font-size:24px; }
+.nutricion-descripcion { padding:15px; border:1px solid #39393e; border-radius:11px; background:#202023; }
+.nutricion-descripcion h3 { margin:0 0 9px; color:#fff; font-size:15px; }
+.nutricion-descripcion p { color:#d1d1d5; font-size:13px; line-height:1.65; margin:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+@media(max-width:768px) { .nutricion-admin-page { padding:1.25rem 1rem; } .nutricion-logo { height:64px; max-width:180px; } .header-actions { flex-direction:column; align-items:stretch; } .busqueda { flex:1 1 auto; } .nutricion-panel { padding:20px; } }
+@media(max-width:480px) { .busqueda { flex-wrap:wrap; } .busqueda input { flex:1 1 100%; } .nutricion-macros { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(prefers-reduced-motion:reduce) { button { transition:none; } }
