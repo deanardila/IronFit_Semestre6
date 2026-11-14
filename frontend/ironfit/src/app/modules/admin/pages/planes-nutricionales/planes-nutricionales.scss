@@ -99,3 +99,40 @@ tbody tr:hover { background:rgba(225,29,46,.04); }
   .busqueda { flex-wrap:wrap; }
   .busqueda input { min-width:0; flex:1 1 240px; }
 }
+
+/* IronFit · patrón compartido de tablas administrativas
+   Encabezado carbón, filas alternadas y hover uniforme. */
+.tabla-wrapper table {
+  border-collapse: collapse;
+  background: #171719;
+  color: #e4e4e7;
+}
+.tabla-wrapper table thead th {
+  background-color: #202023;
+  color: #a1a1aa;
+  border-bottom: 1px solid #35353b;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+.tabla-wrapper table tbody tr:nth-child(odd),
+.tabla-wrapper table tbody tr:nth-child(odd) td {
+  background-color: #171719;
+}
+.tabla-wrapper table tbody tr:nth-child(even),
+.tabla-wrapper table tbody tr:nth-child(even) td {
+  background-color: #202023;
+}
+.tabla-wrapper table tbody tr:hover,
+.tabla-wrapper table tbody tr:hover td {
+  background-color: #29292d;
+}
+.tabla-wrapper table tbody td {
+  border-bottom: 1px solid #303035;
+  color: #e4e4e7;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 13px;
+  vertical-align: middle;
+}
