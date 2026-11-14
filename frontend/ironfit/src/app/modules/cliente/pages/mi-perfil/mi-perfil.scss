@@ -5,7 +5,7 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: #100c0c;
+  background: #000;
   color: #f7f7f8;
   font-family: 'DM Sans', system-ui, sans-serif;
   --perfil-red: #f11d25;
@@ -17,6 +17,7 @@
   min-height: 100vh;
   margin: 0 auto;
   padding: 1.75rem 2rem;
+  background: #100c0c;
   display: flex;
   flex-direction: column;
   gap: 22px;
