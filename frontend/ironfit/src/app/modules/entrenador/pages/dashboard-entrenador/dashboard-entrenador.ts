@@ -236,7 +236,7 @@ export class DashboardEntrenador implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label, backgroundColor: label === 'Evaluaciones' ? CHART_AMBER : CHART_RED, hoverBackgroundColor: label === 'Evaluaciones' ? CHART_AMBER_HOVER : '#ff5158', borderRadius: 5, borderSkipped: false, maxBarThickness: 24 }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, backgroundColor: datosValidos.map((_, i) => i % 2 === 0 ? CHART_RED : CHART_AMBER), hoverBackgroundColor: datosValidos.map((_, i) => i % 2 === 0 ? '#ff5158' : CHART_AMBER_HOVER), borderRadius: 5, borderSkipped: false, maxBarThickness: 24 }]
     };
   }
 
