@@ -149,11 +149,11 @@
 }
 .dashboard-layout {
   min-height: 100vh;
-  background: #0f0f10;
+  background: #100c0c;
   color: #f7f7f8;
 }
 .dashboard-header {
-  background: #141416;
+  background: #100c0c;
   border-bottom: 1px solid #2e2e32;
   box-shadow: none;
 }
@@ -177,7 +177,7 @@
   background: rgba(241,29,37,.09);
   border: 1px solid rgba(241,29,37,.20);
   border-radius: 6px;
-  font-size: .68rem;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: .13em;
   padding: .32rem .6rem;
@@ -279,6 +279,7 @@
   .stat-card:hover { transform: none; }
 }
 
+
 /* Tipografía de prueba: BBH Bogle solo para el título hero; DM Sans en la interfaz. */
 :host, .dashboard-layout {
   font-family: 'DM Sans', system-ui, sans-serif;
@@ -349,4 +350,98 @@
 @media (max-width: 540px) {
   .dashboard-summary { grid-template-columns: 1fr; }
   .dashboard-summary .stat-card { min-height: 100px; }
+}
+
+/* ===== LIMPIEZA VISUAL DEL MENÚ DEL ENTRENADOR ===== */
+
+.quick-menu-panel {
+  background: #17171a;
+  border: 1px solid #2f2f35;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.quick-menu-title {
+  color: #d8d8dd;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+}
+
+.quick-menu-item {
+  background: linear-gradient(180deg, #1d1d21 0%, #1a1a1e 100%);
+  border: 1px solid #34343a;
+  border-radius: 16px;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.quick-menu-item:hover {
+  background: #202025;
+  border-color: #44444c;
+  transform: translateY(-1px);
+}
+
+/* Tarjeta activa/seleccionada */
+.quick-menu-item.active,
+.quick-menu-item.is-active,
+.quick-menu-item--active {
+  border-color: rgba(241, 29, 37, 0.85);
+  box-shadow: 0 0 0 1px rgba(241, 29, 37, 0.12) inset;
+}
+
+/* Títulos y subtítulos dentro del menú */
+.quick-menu-item h4,
+.quick-menu-item strong,
+.quick-menu-item .item-title {
+  color: #ffffff;
+}
+
+.quick-menu-item p,
+.quick-menu-item span:not(.item-pill),
+.quick-menu-item .item-subtitle {
+  color: #a9a9b2;
+}
+
+/* Botones / pills de acción: quitar naranja */
+.quick-menu-item .item-pill,
+.quick-menu-item .quick-menu-action,
+.quick-menu-item .quick-menu-link,
+.quick-menu-item a,
+.quick-menu-item button {
+  background: rgba(241, 29, 37, 0.08);
+  border: 1px solid rgba(241, 29, 37, 0.55);
+  color: #ff6b72;
+  border-radius: 999px;
+  box-shadow: none;
+}
+
+.quick-menu-item .item-pill:hover,
+.quick-menu-item .quick-menu-action:hover,
+.quick-menu-item .quick-menu-link:hover,
+.quick-menu-item a:hover,
+.quick-menu-item button:hover {
+  background: rgba(241, 29, 37, 0.14);
+  border-color: rgba(241, 29, 37, 0.85);
+  color: #ffffff;
+}
+
+/* Por si algún estilo viejo mete naranja */
+.quick-menu-item * {
+  box-shadow: none;
+}
+
+/* Botón principal de abrir menú */
+.quick-menu-toggle {
+  background: #1b1b1f;
+  border: 1px solid #34343a;
+  color: #f3f3f4;
+}
+
+.quick-menu-toggle:hover {
+  background: #222228;
+  border-color: rgba(241, 29, 37, 0.65);
+}
+
+.quick-menu-icon span {
+  background: #f11d25;
 }
