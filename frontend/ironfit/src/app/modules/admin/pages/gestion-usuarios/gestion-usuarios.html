@@ -1,12 +1,8 @@
 <div class="usuarios-layout">
 
-    <header class="usuarios-header">
-        <div class="usuarios-header-left">
-            <button class="btn-volver" (click)="volverAlDashboard()">← Volver</button>
-            <h1>Gestión de usuarios</h1>
-        </div>
-
-        <div class="usuarios-header-right">
+    <div class="usuarios-topbar"><img class="usuarios-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit"/><button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver al panel</button></div>
+    <div class="usuarios-intro"><span class="usuarios-kicker">ADMINISTRACIÓN</span><h1>Gestión de usuarios</h1><p>Consulta cuentas, gestiona accesos y asigna entrenadores.</p></div>
+    <header class="usuarios-header"><div class="usuarios-header-right">
             <!-- CAMPO DE BÚSQUEDA -->
             <div class="busqueda-container">
                 <input 
@@ -157,7 +153,7 @@
     </section>
 
     <!-- TABLA -->
-    <section *ngIf="!cargando">
+    <section *ngIf="!cargando" class="usuarios-resultados"><div class="tabla-scroll">
         <table class="usuarios-tabla" *ngIf="usuariosFiltrados.length > 0; else noHayUsuarios">
             <thead>
                 <tr>
@@ -201,26 +197,12 @@
 
                     <td>
                         <div class="acciones-usuario">
-                            <button
-                                type="button"
-                                class="btn-crear-usuario btn-reset-password"
-                                (click)="resetearPassword(u)">
-                                🔒 Reset
-                            </button>
-
-                            <button
-                                *ngIf="esCliente(u)"
-                                type="button"
-                                class="btn-asignar-entrenador"
-                                (click)="abrirFormularioAsignacion(u)">
-                                {{ textoBotonAsignacion(u) }}
-                            </button>
+                            <button type="button" class="btn-abrir-detalle" (click)="abrirPanelUsuario(u)">Gestionar</button>
                         </div>
                     </td>
                 </tr>
             </tbody>
-        </table>
-
+        </table></div>
         <div class="paginacion-usuarios" *ngIf="totalElementos > 0">
             <div class="paginacion-info">
                 <span>
@@ -263,4 +245,45 @@
         </ng-template>
     </section>
 
+
+    <div class="usuario-panel-backdrop" *ngIf="usuarioPanel" (click)="cerrarPanelUsuario()"></div>
+    <aside class="usuario-panel" *ngIf="usuarioPanel as usuario" role="dialog" aria-modal="true" aria-labelledby="usuario-panel-titulo">
+      <header class="usuario-panel-header">
+        <div><span class="usuario-panel-kicker">CUENTA IRONFIT</span>
+          <h2 id="usuario-panel-titulo">{{ usuario.nombres }} {{ usuario.apellidos }}</h2>
+          <p>{{ usuario.correo || 'Sin correo registrado' }}</p></div>
+        <button type="button" class="usuario-panel-cerrar" (click)="cerrarPanelUsuario()" aria-label="Cerrar panel">×</button>
+      </header>
+      <nav class="usuario-panel-tabs" aria-label="Secciones del usuario">
+        <button type="button" [class.seleccionada]="pestanaUsuario === 'datos'" (click)="pestanaUsuario = 'datos'">Datos personales</button>
+        <button type="button" [class.seleccionada]="pestanaUsuario === 'cuenta'" (click)="pestanaUsuario = 'cuenta'">Cuenta</button>
+        <button type="button" [class.seleccionada]="pestanaUsuario === 'seguridad'" (click)="pestanaUsuario = 'seguridad'">Seguridad</button>
+      </nav>
+      <div class="usuario-panel-contenido" *ngIf="pestanaUsuario === 'datos'">
+        <p class="usuario-panel-aviso">Datos de solo lectura. La edición administrativa requiere un endpoint seguro que todavía no existe.</p>
+        <dl class="usuario-panel-campos">
+          <div><dt>Nombres</dt><dd>{{ usuario.nombres || '-' }}</dd></div>
+          <div><dt>Apellidos</dt><dd>{{ usuario.apellidos || '-' }}</dd></div>
+          <div><dt>Correo</dt><dd>{{ usuario.correo || '-' }}</dd></div>
+          <div><dt>Teléfono</dt><dd>{{ usuario.telefono || '-' }}</dd></div>
+          <div><dt>Tipo de documento</dt><dd>{{ usuario.tipoDoc || '-' }}</dd></div>
+          <div><dt>Documento</dt><dd>{{ usuario.numDoc || '-' }}</dd></div>
+        </dl>
+      </div>
+      <div class="usuario-panel-contenido" *ngIf="pestanaUsuario === 'cuenta'">
+        <dl class="usuario-panel-campos">
+          <div><dt>Roles</dt><dd>{{ usuario.roles && usuario.roles.length ? usuario.roles.join(', ') : '-' }}</dd></div>
+          <div><dt>Estado</dt><dd>{{ usuario.activo ? 'Activo' : 'Inactivo' }}</dd></div>
+          <div *ngIf="esCliente(usuario)"><dt>Entrenador</dt><dd>{{ textoEntrenadorAsignado(usuario) }}</dd></div>
+        </dl>
+        <button type="button" class="usuario-panel-accion" (click)="cambiarEstadoDesdePanel()">{{ usuario.activo ? 'Desactivar cuenta' : 'Activar cuenta' }}</button>
+        <button type="button" class="usuario-panel-accion secundario" *ngIf="esCliente(usuario)" (click)="asignarDesdePanel()">{{ textoBotonAsignacion(usuario) }} entrenador</button>
+      </div>
+      <div class="usuario-panel-contenido" *ngIf="pestanaUsuario === 'seguridad'">
+        <h3>Restablecer contraseña</h3>
+        <p>Esta acción cambia la contraseña de acceso. Se solicitará confirmación antes de continuar.</p>
+        <button type="button" class="usuario-panel-accion" (click)="resetearPassword(usuario)">Restablecer contraseña</button>
+        <p class="usuario-panel-aviso">El sistema aún utiliza una clave general de restablecimiento. Debe sustituirse antes de desplegar en producción.</p>
+      </div>
+    </aside>
 </div>
