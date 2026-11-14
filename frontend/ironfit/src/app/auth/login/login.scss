@@ -264,10 +264,10 @@
 /* Foto atlética en el panel visual: imagen decorativa, sin afectar el formulario. */
 @media (min-width: 741px) {
   .auth-visual {
-    background-color: #080808;
+    background-color: #08080800;
     background-image:
-      linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.52) 58%, rgba(0,0,0,.36) 100%),
-      linear-gradient(180deg, rgba(0,0,0,.75) 0%, rgba(0,0,0,.12) 42%, rgba(0,0,0,.90) 100%),
+      linear-gradient(90deg, rgb(0 0 0 / 56%) 0%, rgba(0, 0, 0, 0.52) 58%, rgba(0, 0, 0, 0.36) 100%),
+      linear-gradient(57deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.12) 42%, rgb(0 0 0 / 24%) 100%),
       url('/assets/ironfit/ironfit-login-atleta.jpg');
     background-size: cover;
     background-repeat: no-repeat;
