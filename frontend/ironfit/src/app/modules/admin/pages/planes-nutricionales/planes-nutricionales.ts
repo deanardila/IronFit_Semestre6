@@ -15,6 +15,20 @@ export class PlanesNutricionalesAdmin implements OnInit {
   planes: PlanNutricionalDTO[] = [];
   planesFiltrados: PlanNutricionalDTO[] = [];
   terminoBusqueda = '';
+  planSeleccionado: PlanNutricionalDTO | null = null;
+
+  identificarPlan(_index: number, plan: PlanNutricionalDTO): string {
+    return plan.id;
+  }
+
+  verDetalles(plan: PlanNutricionalDTO): void {
+    this.planSeleccionado = plan;
+  }
+
+  cerrarDetalles(): void {
+    this.planSeleccionado = null;
+  }
+
   cargando = true;
   error = '';
 
