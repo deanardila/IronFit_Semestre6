@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
 .dashboard-summary-secondary {
     margin-top: 1rem;
     }
@@ -135,4 +137,209 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     }
+}
+/* IronFit ADMIN: identidad aprobada en el dashboard del entrenador. */
+:host {
+  display: block;
+  --admin-red: #f11d25;
+  --admin-amber: #ffbd60;
+  --admin-surface: #161618;
+  --admin-border: #303035;
+  --admin-muted: #a1a1aa;
+}
+.dashboard-layout {
+  min-height: 100vh;
+  color: #f7f7f8;
+  background: #100c0c;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.dashboard-header {
+  background: #100c0c;
+  border-bottom: 1px solid #2e2e32;
+  box-shadow: none;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.dashboard-logo {
+  height: 90px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+.dashboard-role-pill {
+  color: #ff7378;
+  background: rgba(241,29,37,.10);
+  border: 1px solid rgba(241,29,37,.40);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.dashboard-welcome {
+  margin: 1.1rem 0 1.2rem;
+  padding: 1.5rem;
+  background: linear-gradient(115deg, #19191b, #111113);
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  box-shadow: none;
+}
+.dashboard-welcome .welcome-kicker {
+  display: inline-flex;
+  width: fit-content;
+  color: var(--admin-red);
+  background: rgba(241,29,37,.09);
+  border: 1px solid rgba(241,29,37,.20);
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  padding: .32rem .6rem;
+}
+.dashboard-welcome h1 {
+  font-family: 'BBH Bogle', Impact, sans-serif;
+  font-size: clamp(1.55rem, 2.8vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: .005em;
+  color: #fff;
+  margin: .85rem 0 .35rem;
+}
+.dashboard-welcome .dashboard-username {
+  display: block;
+  margin: 0;
+  color: var(--admin-muted);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .87rem;
+  font-weight: 500;
+}
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+.dashboard-summary .stat-card {
+  min-width: 0;
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.stat-card, .chart-card, .dashboard-panel {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 14px;
+  box-shadow: none;
+}
+.stat-card {
+  transition: border-color .18s ease, transform .18s ease;
+}
+.stat-card:hover { border-color: #49494f; transform: translateY(-2px); }
+.stat-card--highlight {
+  background: linear-gradient(135deg, rgba(241,29,37,.13), #161618 65%);
+  border-color: rgba(241,29,37,.42);
+}
+.stat-card--highlight .stat-value { color: #fff; }
+.stat-label {
+  color: #b4b4bc;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .055em;
+  text-transform: none;
+}
+.stat-value {
+  color: #fff;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(1.6rem, 2.3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+.stat-footer {
+  color: #8d8d95;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .8rem;
+}
+.alert-card .stat-value { color: var(--admin-amber); }
+.charts-grid { gap: 1rem; margin-top: 1.25rem; }
+.chart-card { min-height: 330px; padding: 1.25rem; }
+.chart-header h2 {
+  margin: 0;
+  color: #f8f8f9;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .95rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  text-transform: none;
+}
+.chart-header span {
+  color: var(--admin-muted);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .78rem;
+  font-weight: 500;
+}
+.dashboard-retry-btn {
+  background: var(--admin-red);
+  border: 1px solid var(--admin-red);
+  border-radius: 9px;
+  color: #fff;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.dashboard-retry-btn:disabled { opacity: .6; cursor: not-allowed; }
+.quick-menu-toggle {
+  background: #1b1b1f;
+  border: 1px solid #34343a;
+  border-radius: 10px;
+  color: #f3f3f4;
+  box-shadow: none;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.quick-menu-toggle:hover {
+  background: #222228;
+  border-color: rgba(241,29,37,.65);
+  box-shadow: none;
+}
+.quick-menu-icon span { background: var(--admin-red); }
+.quick-menu-panel {
+  background: #17171a;
+  border: 1px solid #2f2f35;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.quick-menu-title {
+  color: #d8d8dd;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+.quick-menu-item {
+  background: linear-gradient(180deg, #1d1d21, #1a1a1e);
+  border: 1px solid #34343a;
+  border-radius: 16px;
+  box-shadow: none;
+  transition: border-color .2s ease, background .2s ease;
+}
+.quick-menu-item:hover { background: #202025; border-color: #44444c; box-shadow: none; }
+.quick-menu-item .item-title { color: #fff; }
+.quick-menu-item .item-subtitle { color: #a9a9b2; }
+.quick-menu-item .item-pill {
+  background: rgba(241,29,37,.08);
+  border: 1px solid rgba(241,29,37,.55);
+  color: #ff6b72;
+  border-radius: 999px;
+  box-shadow: none;
+}
+.dashboard-logout-btn:hover { border-color: var(--admin-red); }
+@media (max-width: 950px) {
+  .dashboard-summary { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .dashboard-welcome {
+    background: linear-gradient(115deg, #19191b, #111113);
+    border-color: var(--admin-border);
+  }
+}
+@media (max-width: 540px) {
+  .dashboard-summary { grid-template-columns: 1fr; }
+  .dashboard-summary .stat-card { min-height: 100px; }
+  .dashboard-logo { height: auto; max-height: 74px; max-width: 220px; }
+  .dashboard-welcome { padding: 1.15rem 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-card, .quick-menu-item { transition: none; }
+  .stat-card:hover { transform: none; }
 }
