@@ -150,8 +150,12 @@ export class MisClientes implements OnInit {
   abrirPlanDeCliente(cliente: ClienteAsignadoVista): void {
     // Reutiliza Mis planes, donde Weka e IronBot requieren un plan concreto.
     // No se envía información personal a servicios externos desde esta pantalla.
+    // El buscador de planes consulta nombres y apellidos en campos separados.
+    // El documento permite encontrar con precisión los planes del cliente.
+    const documento = (cliente.numDoc || '').trim();
+    const nombre = (cliente.nombres || cliente.apellidos || '').trim().split(/\s+/)[0];
     this.router.navigate(['/entrenador/MisPlanes'], {
-      queryParams: { buscar: [cliente.nombres, cliente.apellidos].filter(Boolean).join(' ') }
+      queryParams: { buscar: documento || nombre }
     });
   }
 
