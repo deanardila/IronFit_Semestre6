@@ -263,7 +263,7 @@ export class DashboardEntrenador implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), backgroundColor: datosValidos.map((d, i) => { const estado = d.label.toLowerCase(); return estado.includes('inactiv') ? CHART_GRAY : estado.includes('activ') ? CHART_RED : [CHART_GRAY, '#9898a1', '#404047'][i % 3]; }), hoverOffset: 5, borderWidth: 0, spacing: 3 }]
+      datasets: [{ data: datosValidos.map(d => d.valor), backgroundColor: datosValidos.map((d, i) => { const estado = d.label.toLowerCase(); return estado.includes('inactiv') ? CHART_AMBER : estado.includes('activ') ? CHART_RED : [CHART_RED, CHART_AMBER, CHART_GRAY, '#9898a1'][i % 4]; }), hoverOffset: 5, borderWidth: 0, spacing: 3 }]
     };
   }
 
