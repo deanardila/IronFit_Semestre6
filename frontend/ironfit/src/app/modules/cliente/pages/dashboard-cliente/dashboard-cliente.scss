@@ -170,7 +170,7 @@
 .dashboard-header-right .dashboard-greeting {
   margin: 0;
   color: var(--client-muted);
-  font-size: .9rem;
+  font-size: 19px;
   font-weight: 500;
   line-height: 1.4;
 }
@@ -319,7 +319,7 @@
   .dashboard-summary .stat-card { min-height: 100px; }
   .dashboard-logo { height: auto; max-height: 74px; max-width: 220px; }
   .dashboard-welcome { padding: 1.15rem 1.25rem; }
-  .dashboard-header-right .dashboard-greeting { font-size: .8rem; }
+  .dashboard-header-right .dashboard-greeting { font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .stat-card, .quick-menu-item { transition: none; }
