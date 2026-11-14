@@ -12,6 +12,14 @@ import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 
 Chart.register(...registerables);
 
+// Paleta visual del dashboard; no modifica los datos de entrenamiento.
+const CLIENT_RED = '#f11d25';
+const CLIENT_AMBER = '#ffbd60';
+const CLIENT_TEXT = '#a1a1aa';
+const CLIENT_GRID = 'rgba(255,255,255,0.07)';
+const CLIENT_TOOLTIP = '#202023';
+
+
 @Component({
   selector: 'app-dashboard-cliente',
   standalone: false,
@@ -22,6 +30,20 @@ export class DashboardCliente implements OnInit {
 
   nombreUsuario = '';
   showMenu = false;
+
+  // Preferimos el nombre del perfil y evitamos mostrar un correo como saludo.
+  get nombreBienvenida(): string {
+    try {
+      const perfil = JSON.parse(localStorage.getItem('miPerfilCache') || 'null');
+      const nombres = typeof perfil?.nombres === 'string' ? perfil.nombres.trim() : '';
+      if (nombres && !nombres.includes('@')) return nombres;
+    } catch {
+      // Si el caché no es válido, conservamos el nombre de sesión.
+    }
+    const guardado = this.nombreUsuario.trim();
+    return guardado && !guardado.includes('@') ? guardado : 'Cliente';
+  }
+
 
   cargando = false;
   error = '';
@@ -63,65 +85,49 @@ export class DashboardCliente implements OnInit {
   lineOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { labels: { color: '#f5f5f5' } }
-    },
+    animation: { duration: 350 },
+    plugins: { legend: { labels: { color: CLIENT_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9 } }, tooltip: { backgroundColor: CLIENT_TOOLTIP, titleColor: '#fff', bodyColor: '#e4e4e7', borderColor: '#404046', borderWidth: 1, padding: 12 } },
     scales: {
-      x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-      y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' } }
+      x: { ticks: { color: CLIENT_TEXT, font: { family: 'DM Sans' } }, grid: { color: CLIENT_GRID }, border: { display: false } },
+      y: { ticks: { color: CLIENT_TEXT, font: { family: 'DM Sans' } }, grid: { color: CLIENT_GRID }, border: { display: false } }
     }
   };
 
   linePercentOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: { labels: { color: '#f5f5f5' } }
-    },
+    animation: { duration: 350 },
+    plugins: { legend: { labels: { color: CLIENT_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9 } }, tooltip: { backgroundColor: CLIENT_TOOLTIP, titleColor: '#fff', bodyColor: '#e4e4e7', borderColor: '#404046', borderWidth: 1, padding: 12 } },
     scales: {
-      x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-      y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.08)' }, min: 0, max: 100 }
+      x: { ticks: { color: CLIENT_TEXT, font: { family: 'DM Sans' } }, grid: { color: CLIENT_GRID }, border: { display: false } },
+      y: { ticks: { color: CLIENT_TEXT, font: { family: 'DM Sans' } }, grid: { color: CLIENT_GRID }, border: { display: false }, min: 0, max: 100 }
     }
   };
 
   doughnutOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '68%',
+    animation: { duration: 350 },
     plugins: {
-      legend: {
-        position: 'bottom',
-        labels: { color: '#f5f5f5' }
-      }
+      legend: { position: 'bottom', labels: { ...{ color: CLIENT_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9 }, padding: 16 } },
+      tooltip: { backgroundColor: CLIENT_TOOLTIP, titleColor: '#fff', bodyColor: '#e4e4e7', borderColor: '#404046', borderWidth: 1, padding: 12 }
     }
   };
 
   radarOptions: ChartOptions<'radar'> = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        labels: {
-          color: '#f5f5f5'
-        }
-      }
-    },
+    animation: { duration: 350 },
+    plugins: { legend: { labels: { color: CLIENT_TEXT, font: { family: 'DM Sans', size: 12 }, usePointStyle: true, boxWidth: 9 } }, tooltip: { backgroundColor: CLIENT_TOOLTIP, titleColor: '#fff', bodyColor: '#e4e4e7', borderColor: '#404046', borderWidth: 1, padding: 12 } },
     scales: {
       r: {
         min: 0,
         beginAtZero: true,
-        ticks: {
-          color: '#9ca3af',
-          backdropColor: 'transparent'
-        },
-        grid: {
-          color: 'rgba(255,255,255,0.12)'
-        },
-        angleLines: {
-          color: 'rgba(255,255,255,0.12)'
-        },
-        pointLabels: {
-          color: '#f5f5f5'
-        }
+        ticks: { color: CLIENT_TEXT, backdropColor: 'transparent', font: { family: 'DM Sans' } },
+        grid: { color: CLIENT_GRID },
+        angleLines: { color: CLIENT_GRID },
+        pointLabels: { color: '#e4e4e7', font: { family: 'DM Sans' } }
       }
     }
   };
