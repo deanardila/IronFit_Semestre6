@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 export interface EjercicioDTO {
     id: string;
+    activo?: boolean;
     nombre: string;
     descripcion: string;
     categoria: string;
@@ -86,6 +87,10 @@ export class Ejercicios {
 
     actualizarEjercicio(id: string, ejercicio: EjercicioCrearDTO): Observable<EjercicioDTO> {
         return this.http.put<EjercicioDTO>(`${this.apiUrl}/${id}`, ejercicio);
+    }
+
+    cambiarEstado(id: string, activo: boolean): Observable<void> {
+        return this.http.patch<void>(`${this.apiUrl}/${id}/estado`, null, { params: { activo } });
     }
 
     eliminarEjercicio(id: string): Observable<void> {
