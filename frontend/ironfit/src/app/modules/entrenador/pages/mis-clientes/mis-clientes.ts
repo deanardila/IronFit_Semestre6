@@ -29,6 +29,16 @@ export class MisClientes implements OnInit {
   clientesFiltrados: ClienteAsignadoVista[] = [];
 
   clienteDetalleId: string | null = null;
+  clienteSeleccionado: ClienteAsignadoVista | null = null;
+
+  identificarCliente(_index: number, cliente: ClienteAsignadoVista): string {
+    return cliente.id;
+  }
+
+  cerrarCliente(): void {
+    this.clienteSeleccionado = null;
+    this.clienteDetalleId = null;
+  }
   clienteDetalleTab: 'resumen' | 'planes' | 'progreso' = 'resumen';
 
   cargando = false;
@@ -82,6 +92,11 @@ export class MisClientes implements OnInit {
           .map(asignacion => this.convertirAsignacionACliente(asignacion));
 
         this.clientesFiltrados = this.clientes;
+        if (this.clienteSeleccionado) {
+          const actualizado = this.clientes.find(c => c.id === this.clienteSeleccionado?.id);
+          this.clienteSeleccionado = actualizado || null;
+          this.clienteDetalleId = actualizado?.id || null;
+        }
 
         this.totalElementos = respuesta.totalElementos ?? 0;
         this.totalPaginas = respuesta.totalPaginas ?? 0;
@@ -127,7 +142,8 @@ export class MisClientes implements OnInit {
   }
 
   alternarCliente(cliente: ClienteAsignadoVista): void {
-    this.clienteDetalleId = this.clienteDetalleId === cliente.id ? null : cliente.id;
+    this.clienteSeleccionado = cliente;
+    this.clienteDetalleId = cliente.id;
     this.clienteDetalleTab = 'resumen';
   }
 
