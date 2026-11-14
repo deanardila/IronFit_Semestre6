@@ -134,7 +134,7 @@
 
     <ng-container *ngIf="!cargando && !error">
 
-        <section class="dashboard-summary">
+        <section class="dashboard-summary" aria-label="Indicadores del entrenador">
         <div class="stat-card">
             <div class="stat-card-header">
             <span class="stat-label">Clientes activos</span>
@@ -166,9 +166,6 @@
             <div class="stat-value">{{ cumplimientoMes }}%</div>
             <div class="stat-footer">promedio mensual</div>
         </div>
-        </section>
-
-        <section class="dashboard-summary dashboard-summary-secondary">
         <div class="stat-card alert-card">
             <div class="stat-card-header">
             <span class="stat-label">Evaluaciones pendientes</span>
