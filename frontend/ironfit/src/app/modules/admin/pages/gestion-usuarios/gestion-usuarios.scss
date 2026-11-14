@@ -393,3 +393,93 @@
   opacity: .5;
   cursor: not-allowed;
 }
+
+/* Paginación unificada con Catálogo de ejercicios. */
+.paginacion-usuarios {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.paginacion-usuarios .paginacion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.paginacion-usuarios .paginacion-info span {
+  color: #e4e4e7;
+  font: 700 13px 'DM Sans', sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.paginacion-usuarios .paginacion-info small {
+  color: #a1a1aa;
+  font: 400 12px 'DM Sans', sans-serif;
+}
+.paginacion-usuarios .paginacion-controles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.paginacion-usuarios .btn-paginacion {
+  min-height: 42px;
+  border: 1px solid #39393e;
+  border-radius: 9px;
+  padding: 10px 15px;
+  background: #1b1b1f;
+  color: #eee;
+  font: 700 13px 'DM Sans', sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+}
+.paginacion-usuarios .btn-paginacion:hover:not(:disabled) {
+  background: #29292d;
+  border-color: #f11d25;
+  filter: none;
+  box-shadow: none;
+  transform: none;
+}
+.paginacion-usuarios .btn-paginacion:disabled {
+  opacity: .48;
+  cursor: not-allowed;
+  background: #1b1b1f;
+  color: #eee;
+  filter: none;
+}
+.paginacion-usuarios .select-paginacion {
+  min-height: 42px;
+  padding: 10px 12px;
+  background: #212124;
+  color: #fff;
+  border: 1px solid #39393e;
+  border-radius: 9px;
+  font: 600 13px 'DM Sans', sans-serif;
+}
+.paginacion-usuarios .select-paginacion:focus {
+  outline: none;
+  border-color: #f11d25;
+  box-shadow: 0 0 0 3px rgba(241,29,37,.13);
+}
+@media (max-width: 768px) {
+  .paginacion-usuarios {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .paginacion-usuarios .paginacion-controles {
+    justify-content: space-between;
+  }
+  .paginacion-usuarios .btn-paginacion,
+  .paginacion-usuarios .select-paginacion {
+    flex: 0 1 auto;
+  }
+}
