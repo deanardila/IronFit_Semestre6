@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
 .dashboard-summary-secondary {
     margin-top: 1rem;
     }
@@ -275,4 +277,41 @@
 @media (prefers-reduced-motion: reduce) {
   .stat-card { transition: none; }
   .stat-card:hover { transform: none; }
+}
+
+/* Tipografía de prueba: BBH Bogle solo para el título hero; DM Sans en la interfaz. */
+:host, .dashboard-layout {
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.dashboard-welcome h1 {
+  font-family: 'BBH Bogle', Impact, sans-serif;
+  font-size: clamp(1.55rem, 2.8vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: .005em;
+}
+.dashboard-welcome p,
+.dashboard-role-pill,
+.stat-label,
+.stat-value,
+.stat-footer,
+.chart-header h2,
+.chart-header span,
+.quick-menu-toggle,
+.quick-menu-panel,
+.dashboard-header {
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+/* Ajustes visuales ya aprobados localmente: mismo tono en layout y cabecera. */
+.dashboard-layout, .dashboard-header {
+  background-color: #100c0c;
+}
+.dashboard-logo {
+  height: 90px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+@media (max-width: 740px) {
+  .dashboard-logo { height: auto; max-height: 74px; max-width: 220px; }
 }
