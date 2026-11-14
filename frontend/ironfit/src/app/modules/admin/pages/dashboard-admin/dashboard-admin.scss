@@ -343,3 +343,33 @@
   .stat-card, .quick-menu-item { transition: none; }
   .stat-card:hover { transform: none; }
 }
+
+/* Cabecera ADMIN alineada con la versión aprobada del entrenador. */
+.dashboard-header-left {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.dashboard-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(.7rem, 1.5vw, 1.5rem);
+}
+.dashboard-header-right .dashboard-greeting {
+  margin: 0;
+  color: #a1a1aa;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .9rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.dashboard-header-right .dashboard-greeting strong {
+  color: #f7f7f8;
+  font-weight: 700;
+}
+@media (max-width: 740px) {
+  .dashboard-header { gap: 1rem; }
+  .dashboard-header-right { gap: .6rem; flex-wrap: wrap; }
+  .dashboard-header-right .dashboard-greeting { font-size: .8rem; }
+}
