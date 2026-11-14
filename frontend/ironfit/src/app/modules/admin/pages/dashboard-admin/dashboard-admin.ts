@@ -26,6 +26,20 @@ export class DashboardAdmin implements OnInit {
   nombreUsuario = '';
   showMenu = false;
 
+  // El perfil se refresca después del login: el getter muestra el nombre
+  // cuando llega al caché, sin exponer el correo en el encabezado.
+  get nombreBienvenida(): string {
+    try {
+      const perfil = JSON.parse(localStorage.getItem('miPerfilCache') || 'null');
+      const nombres = typeof perfil?.nombres === 'string' ? perfil.nombres.trim() : '';
+      if (nombres && !nombres.includes('@')) return nombres;
+    } catch {
+      // Si el caché no es válido, usamos el nombre de sesión.
+    }
+    const guardado = this.nombreUsuario.trim();
+    return guardado && !guardado.includes('@') ? guardado : 'Administrador';
+  }
+
   cargando = false;
   error = '';
   fechaDashboard = '';
