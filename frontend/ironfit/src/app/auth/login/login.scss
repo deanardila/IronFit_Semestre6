@@ -235,3 +235,28 @@
 @media (prefers-reduced-motion: reduce) {
   .auth-button, .auth-input { transition: none; }
 }
+
+/* Identidad horizontal oficial: panel izquierdo en escritorio. */
+.auth-visual-content { width: 100%; }
+.auth-brand-horizontal {
+  display: block;
+  width: 100%;
+  max-width: 465px;
+  height: auto;
+  margin: 0 0 clamp(38px, 7vh, 82px);
+  object-fit: contain;
+}
+.auth-logo-mobile { display: none; }
+.auth-visual-content h2 { font-size: clamp(2.4rem, 4vw, 4.1rem); }
+.auth-visual { background: radial-gradient(ellipse at 80% 82%, rgba(241,29,37,.15), transparent 53%), #0b0b0b; }
+.auth-visual::before { opacity: .45; }
+
+@media (max-width: 740px) {
+  .auth-logo-mobile {
+    display: block;
+    width: min(100%, 315px);
+    max-width: 315px;
+    max-height: none;
+    margin: 0 0 38px;
+  }
+}
