@@ -1,24 +1,28 @@
 <div class="perfil-layout">
-    <div class="perfil-header">
-        <div class="perfil-header-left">
-            <button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver</button>
-            <h1>Mi perfil</h1>
+    <header class="perfil-header">
+        <div class="perfil-header-top">
+            <img src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit" class="perfil-logo" />
+            <button type="button" class="btn-volver" (click)="volverAlDashboard()">← Volver al panel</button>
         </div>
-        <p>Actualiza tu información personal y tu contraseña.</p>
-    </div>
+        <div class="perfil-header-main">
+            <span class="perfil-eyebrow">TU ESPACIO PERSONAL</span>
+            <h1>Mi perfil</h1>
+            <p>Gestiona tus datos personales y la seguridad de tu cuenta.</p>
+        </div>
+    </header>
 
-    <div *ngIf="mensajeExito" class="mensaje exito">
+    <div *ngIf="mensajeExito" class="mensaje exito" role="status">
         {{ mensajeExito }}
     </div>
 
-    <div *ngIf="mensajeError" class="mensaje error">
+    <div *ngIf="mensajeError" class="mensaje error" role="alert">
         {{ mensajeError }}
     </div>
 
     <div class="perfil-grid">
 
         <section class="perfil-card">
-        <h2>Datos personales</h2>
+        <div class="perfil-card-heading"><span class="perfil-card-icon" aria-hidden="true">01</span><div><h2>Datos personales</h2><p>Información de tu cuenta IronFit</p></div></div>
 
         <div class="form-row">
             <label for="nombres">Nombres</label>
@@ -68,13 +72,14 @@
         </section>
 
         <section class="perfil-card">
-        <h2>Cambiar contraseña</h2>
+        <div class="perfil-card-heading"><span class="perfil-card-icon" aria-hidden="true">02</span><div><h2>Seguridad</h2><p>Actualiza tu contraseña de acceso</p></div></div>
 
         <div class="form-row">
             <label for="nuevaPassword">Nueva contraseña</label>
             <input
             id="nuevaPassword"
             type="password"
+            autocomplete="new-password"
             [(ngModel)]="password.nueva"
             name="nuevaPassword">
         </div>
@@ -84,6 +89,7 @@
             <input
             id="confirmarPassword"
             type="password"
+            autocomplete="new-password"
             [(ngModel)]="password.confirmar"
             name="confirmarPassword">
         </div>
