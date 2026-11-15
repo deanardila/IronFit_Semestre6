@@ -1,43 +1,27 @@
 <div class="evaluaciones-layout">
-
-    <header class="evaluaciones-header">
-        <div class="evaluaciones-header-left">
-            <button class="btn-volver" type="button" (click)="volver()">← Volver</button>
-            <h1>Evaluaciones físicas</h1>
-        </div>
-
-        <div class="evaluaciones-header-right">
-            <div class="busqueda-container">
-                <input
-                    type="text"
-                    class="input-busqueda"
-                    placeholder="🔍 Buscar por cliente u observación..."
-                    [(ngModel)]="terminoBusqueda"
-                    (keyup.enter)="aplicarFiltros()" />
-
-                <button
-                    type="button"
-                    class="btn-buscar-evaluaciones"
-                    (click)="aplicarFiltros()">
-                    Buscar
-                </button>
-            </div>
-
-            <button class="btn-nueva-evaluacion" type="button" (click)="toggleFormulario()">
-                {{ (mostrarFormulario || modoEdicion) ? 'Ocultar formulario' : '+ Nueva evaluación' }}
-            </button>
-
-            <button
-                class="btn-actualizar"
-                type="button"
-                (click)="actualizar()"
-                [disabled]="cargando || guardando || !!eliminandoId">
-                Actualizar
-            </button>
-        </div>
-    </header>
-
-    <section *ngIf="mostrarFormulario || modoEdicion" class="formulario-evaluacion">
+  <div class="evaluaciones-topbar">
+    <img src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit" class="evaluaciones-logo">
+    <button class="btn-volver" type="button" (click)="volver()">← Volver al panel</button>
+  </div>
+  <div class="evaluaciones-intro">
+    <span class="evaluaciones-kicker">ENTRENADOR</span>
+    <h1>Evaluaciones físicas</h1>
+    <p>Consulta las mediciones y registra el seguimiento físico de tus clientes.</p>
+  </div>
+  <header class="evaluaciones-header">
+    <div class="evaluaciones-header-right">
+      <div class="busqueda-container">
+        <input type="search" class="input-busqueda" placeholder="🔍 Buscar por cliente u observación..."
+          aria-label="Buscar evaluaciones" [(ngModel)]="terminoBusqueda" (keyup.enter)="aplicarFiltros()">
+        <button class="btn-buscar-evaluaciones" type="button" (click)="aplicarFiltros()">Buscar</button>
+      </div>
+      <button class="btn-nueva-evaluacion" type="button" (click)="toggleFormulario()"
+        [disabled]="guardando">{{ mostrarFormulario && !modoEdicion ? 'Ocultar formulario' : '+ Nueva evaluación' }}</button>
+      <button class="btn-actualizar" type="button" (click)="actualizar()"
+        [disabled]="cargando || guardando || !!eliminandoId">Actualizar</button>
+    </div>
+  </header>
+    <section *ngIf="mostrarFormulario && !modoEdicion" class="formulario-evaluacion">
         <h2>{{ modoEdicion ? 'Editar evaluación física' : 'Crear evaluación física' }}</h2>
 
         <form (ngSubmit)="guardarEvaluacion()" #evaluacionForm="ngForm">
@@ -169,6 +153,7 @@
         </form>
     </section>
 
+
     <section *ngIf="mensajeExito" class="mensaje-exito">
         <p>✅ {{ mensajeExito }}</p>
     </section>
@@ -185,64 +170,27 @@
         <p>📋 No hay evaluaciones físicas registradas.</p>
     </section>
 
-    <section *ngIf="!cargando && !error && evaluacionesFiltradas.length > 0">
-        <table class="evaluaciones-tabla">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Cliente</th>
-                    <th>Peso</th>
-                    <th>Talla</th>
-                    <th>IMC</th>
-                    <th>Grasa</th>
-                    <th>Medidas</th>
-                    <th>Observaciones</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
 
-            <tbody>
-                <tr *ngFor="let e of evaluacionesFiltradas">
-                    <td>{{ formatearFecha(e.fecha) }}</td>
-                    <td>{{ e.clienteNombre || e.clienteId }}</td>
-                    <td>{{ e.pesoCorporal }} kg</td>
-                    <td>{{ e.talla }} m</td>
-                    <td>
-                        <span class="imc-badge">{{ e.imc }}</span>
-                    </td>
-                    <td>{{ e.porcentajeGraso != null ? e.porcentajeGraso + '%' : 'No registra' }}</td>
-                    <td>
-                        <div class="medidas-mini">
-                            <span>Pecho: {{ e.medidasCorporales?.pecho ?? '-' }}</span>
-                            <span>Cintura: {{ e.medidasCorporales?.cintura ?? '-' }}</span>
-                            <span>Brazo: {{ e.medidasCorporales?.brazo ?? '-' }}</span>
-                            <span>Pierna: {{ e.medidasCorporales?.pierna ?? '-' }}</span>
-                        </div>
-                    </td>
-                    <td>{{ e.observaciones || 'Sin observaciones' }}</td>
-                    <td>
-                        <div class="acciones-tabla">
-                            <button
-                                type="button"
-                                class="btn-editar-tabla"
-                                (click)="editarEvaluacion(e)"
-                                [disabled]="guardando || eliminandoId === e.id">
-                                Editar
-                            </button>
-
-                            <button
-                                type="button"
-                                class="btn-eliminar-tabla"
-                                (click)="eliminarEvaluacion(e)"
-                                [disabled]="guardando || eliminandoId === e.id">
-                                {{ eliminandoId === e.id ? 'Eliminando...' : 'Eliminar' }}
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
+  <section class="evaluaciones-resultados" *ngIf="!cargando && !error">
+    <div class="tabla-titulo"><h2>Evaluaciones registradas</h2><span>{{ totalElementos }} evaluaciones</span></div>
+    <div class="evaluaciones-tabla-scroll">
+      <table class="evaluaciones-tabla">
+        <thead><tr><th>Fecha</th><th>Cliente</th><th>Peso</th><th>Talla</th><th>IMC</th><th>Grasa</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let e of evaluacionesFiltradas; trackBy: identificarEvaluacion">
+            <td>{{ formatearFecha(e.fecha) }}</td>
+            <td class="tabla-nombre">{{ e.clienteNombre || e.clienteId }}</td>
+            <td>{{ e.pesoCorporal }} kg</td>
+            <td>{{ e.talla }} m</td>
+            <td><span class="imc-badge">{{ e.imc }}</span></td>
+            <td>{{ e.porcentajeGraso != null ? e.porcentajeGraso + '%' : 'No registra' }}</td>
+            <td><button type="button" class="btn-gestionar" (click)="abrirDetalleEvaluacion(e)"
+              [disabled]="guardando || !!eliminandoId">Gestionar</button></td>
+          </tr>
+          <tr *ngIf="evaluacionesFiltradas.length === 0"><td class="tabla-vacia" colspan="7">No hay evaluaciones físicas registradas para mostrar.</td></tr>
+        </tbody>
+      </table>
+    </div>
         <div class="paginacion-evaluaciones" *ngIf="totalElementos > 0">
             <div class="paginacion-info">
                 <span>
@@ -280,6 +228,168 @@
                 </button>
             </div>
         </div>
+
+  </section>
+  <div class="evaluacion-panel-backdrop" *ngIf="evaluacionSeleccionada" (click)="cerrarDetalleEvaluacion()"></div>
+  <aside class="evaluacion-panel" *ngIf="evaluacionSeleccionada as e" role="dialog" aria-modal="true" aria-labelledby="evaluacion-panel-title">
+    <header class="evaluacion-panel-header">
+      <div><span class="evaluaciones-kicker">EVALUACIÓN FÍSICA</span>
+        <h2 id="evaluacion-panel-title">{{ e.clienteNombre || e.clienteId }}</h2>
+        <p>{{ formatearFecha(e.fecha) }}</p></div>
+      <button class="panel-cerrar" type="button" (click)="cerrarDetalleEvaluacion()" [disabled]="guardando || !!eliminandoId" aria-label="Cerrar panel">×</button>
+    </header>
+    <p class="panel-error" *ngIf="error" role="alert">{{ error }}</p>
+    <div *ngIf="!modoEdicion">
+      <div class="evaluacion-panel-grid">
+        <div><span>Peso corporal</span><strong>{{ e.pesoCorporal }} kg</strong></div>
+        <div><span>Talla</span><strong>{{ e.talla }} m</strong></div>
+        <div><span>IMC</span><strong>{{ e.imc }}</strong></div>
+        <div><span>Porcentaje graso</span><strong>{{ e.porcentajeGraso != null ? e.porcentajeGraso + '%' : 'No registra' }}</strong></div>
+        <div><span>Pecho</span><strong>{{ e.medidasCorporales?.pecho ?? '—' }} cm</strong></div>
+        <div><span>Cintura</span><strong>{{ e.medidasCorporales?.cintura ?? '—' }} cm</strong></div>
+        <div><span>Brazo</span><strong>{{ e.medidasCorporales?.brazo ?? '—' }} cm</strong></div>
+        <div><span>Pierna</span><strong>{{ e.medidasCorporales?.pierna ?? '—' }} cm</strong></div>
+      </div>
+      <div class="evaluacion-panel-observaciones"><span>Observaciones</span><p>{{ e.observaciones || 'Sin observaciones' }}</p></div>
+      <div class="evaluacion-panel-acciones">
+        <button type="button" class="btn-gestionar" (click)="editarEvaluacion(e)" [disabled]="guardando || !!eliminandoId">Modificar evaluación</button>
+        <button type="button" class="btn-eliminar" (click)="eliminarEvaluacion(e)" [disabled]="guardando || !!eliminandoId">
+          {{ eliminandoId === e.id ? 'Eliminando...' : 'Eliminar evaluación' }}
+        </button>
+      </div>
+    </div>
+    <section *ngIf="mostrarFormulario && modoEdicion" class="formulario-evaluacion">
+        <h2>{{ modoEdicion ? 'Editar evaluación física' : 'Crear evaluación física' }}</h2>
+
+        <form (ngSubmit)="guardarEvaluacion()" #editarEvaluacionForm="ngForm">
+
+            <div class="form-grid">
+
+                <div class="form-row form-row-full">
+                    <label>Buscar cliente asignado</label>
+                    <input
+                        type="text"
+                        name="busquedaCliente"
+                        [(ngModel)]="terminoBusquedaCliente"
+                        (input)="buscarClientes()"
+                        placeholder="Buscar por nombre, documento o correo"
+                        autocomplete="off" />
+
+                    <small class="ayuda-cliente" *ngIf="!cargandoClientes && clientesAsignados.length === 0">
+                        No tienes clientes asignados. Solicita al administrador una asignación.
+                    </small>
+
+                    <ul *ngIf="clientesFiltrados.length > 0" class="lista-clientes">
+                        <li
+                            *ngFor="let cliente of clientesFiltrados"
+                            (click)="seleccionarCliente(cliente)"
+                            class="item-cliente">
+                            <strong>{{ cliente.nombreCompleto }}</strong>
+                            <span *ngIf="cliente.documento"> - {{ cliente.documento }}</span>
+                            <small *ngIf="cliente.correo"> {{ cliente.correo }}</small>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="form-row form-row-full" *ngIf="clienteSeleccionado">
+                    <label>Cliente seleccionado</label>
+                    <div class="cliente-seleccionado">
+                        <strong>{{ clienteSeleccionado.nombreCompleto }}</strong>
+                        <span *ngIf="clienteSeleccionado.documento"> - {{ clienteSeleccionado.documento }}</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Fecha</label>
+                    <input
+                        type="datetime-local"
+                        name="fecha"
+                        [(ngModel)]="formulario.fecha" />
+                </div>
+
+                <div class="form-row">
+                    <label>Peso corporal (kg)</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        name="pesoCorporal"
+                        [(ngModel)]="formulario.pesoCorporal"
+                        required />
+                </div>
+
+                <div class="form-row">
+                    <label>Talla (m)</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        name="talla"
+                        [(ngModel)]="formulario.talla"
+                        required />
+                </div>
+
+                <div class="form-row">
+                    <label>IMC calculado</label>
+                    <div class="imc-preview">
+                        {{ calcularImcVista() || 'Se calcula automáticamente' }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Porcentaje graso (%)</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        name="porcentajeGraso"
+                        [(ngModel)]="formulario.porcentajeGraso" />
+                </div>
+
+                <div class="form-row">
+                    <label>Pecho (cm)</label>
+                    <input type="number" step="0.1" min="0" name="pecho" [(ngModel)]="formulario.pecho" />
+                </div>
+
+                <div class="form-row">
+                    <label>Cintura (cm)</label>
+                    <input type="number" step="0.1" min="0" name="cintura" [(ngModel)]="formulario.cintura" />
+                </div>
+
+                <div class="form-row">
+                    <label>Brazo (cm)</label>
+                    <input type="number" step="0.1" min="0" name="brazo" [(ngModel)]="formulario.brazo" />
+                </div>
+
+                <div class="form-row">
+                    <label>Pierna (cm)</label>
+                    <input type="number" step="0.1" min="0" name="pierna" [(ngModel)]="formulario.pierna" />
+                </div>
+
+                <div class="form-row form-row-full">
+                    <label>Observaciones</label>
+                    <textarea
+                        name="observaciones"
+                        [(ngModel)]="formulario.observaciones"
+                        placeholder="Escribe observaciones del progreso físico del cliente...">
+                    </textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="guardando">
+                    {{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Guardar evaluación') }}
+                </button>
+
+                <button type="button" (click)="cancelarFormulario()" [disabled]="guardando">
+                    Cancelar
+                </button>
+            </div>
+
+        </form>
     </section>
 
+
+  </aside>
 </div>
