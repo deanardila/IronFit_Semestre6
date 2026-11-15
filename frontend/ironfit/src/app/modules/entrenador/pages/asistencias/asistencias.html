@@ -1,70 +1,35 @@
 <div class="asistencias-layout">
 
-	<header class="asistencias-header">
-		<div class="asistencias-header-left">
-			<button class="btn-volver" type="button" (click)="volver()">
-				← Volver
-			</button>
-
-			<h1>Asistencias de clientes</h1>
-		</div>
-
-		<div class="asistencias-header-right">
-			<div class="busqueda-container">
-				<input
-					type="text"
-					class="input-busqueda"
-					placeholder="🔍 Buscar cliente, documento, plan o rutina..."
-					[(ngModel)]="terminoBusqueda"
-					(keyup.enter)="aplicarFiltros()" />
-
-				<button
-					type="button"
-					class="btn-buscar-asistencias"
-					(click)="aplicarFiltros()">
-					Buscar
-				</button>
-			</div>
-
-			<input
-				type="date"
-				class="input-fecha"
-				[(ngModel)]="fechaInicio"
-				title="Fecha inicio">
-
-			<input
-				type="date"
-				class="input-fecha"
-				[(ngModel)]="fechaFin"
-				title="Fecha fin">
-
-			<select
-				class="select-estado"
-				[(ngModel)]="filtroEstado"
-				(change)="aplicarFiltros()">
-				<option value="TODOS">Todos</option>
-				<option value="ASISTIO">Asistió</option>
-				<option value="NO_ASISTIO">No asistió</option>
-				<option value="ASISTIO_SIN_RUTINA">Sin rutina</option>
-			</select>
-
-			<button
-				class="btn-limpiar"
-				type="button"
-				(click)="limpiarFiltros()"
-				[disabled]="cargando">
-				Limpiar
-			</button>
-
-			<button
-				class="btn-actualizar"
-				type="button"
-				(click)="actualizar()"
-				[disabled]="cargando">
-				{{ cargando ? 'Cargando...' : 'Actualizar' }}
-			</button>
-		</div>
-	</header>
+  <div class="asistencias-topbar">
+    <img class="asistencias-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit">
+    <button class="btn-volver" type="button" (click)="volver()">← Volver al panel</button>
+  </div>
+  <div class="asistencias-intro">
+    <span class="asistencias-kicker">ENTRENADOR</span>
+    <h1>Asistencias de clientes</h1>
+    <p>Consulta la asistencia registrada, filtra por fechas y revisa el cumplimiento de la página actual.</p>
+  </div>
+  <header class="asistencias-header">
+    <div class="asistencias-header-right">
+      <div class="busqueda-container">
+        <input type="search" class="input-busqueda" placeholder="🔍 Buscar cliente, documento, plan o rutina..."
+          aria-label="Buscar asistencias" [(ngModel)]="terminoBusqueda" (keyup.enter)="aplicarFiltros()">
+        <button type="button" class="btn-buscar-asistencias" (click)="aplicarFiltros()">Buscar</button>
+      </div>
+      <input type="date" class="input-fecha" [(ngModel)]="fechaInicio" aria-label="Fecha inicial" title="Fecha inicio">
+      <input type="date" class="input-fecha" [(ngModel)]="fechaFin" aria-label="Fecha final" title="Fecha fin">
+      <select class="select-estado" [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" aria-label="Filtrar por estado">
+        <option value="TODOS">Todos</option>
+        <option value="ASISTIO">Asistió</option>
+        <option value="NO_ASISTIO">No asistió</option>
+        <option value="ASISTIO_SIN_RUTINA">Sin rutina</option>
+      </select>
+      <button class="btn-limpiar" type="button" (click)="limpiarFiltros()" [disabled]="cargando">Limpiar</button>
+      <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando">
+        {{ cargando ? 'Cargando...' : 'Actualizar' }}
+      </button>
+    </div>
+  </header>
 
 	<section class="metricas-grid" *ngIf="!cargando && !error">
 		<article class="metrica-card">
@@ -110,7 +75,9 @@
 		<p>📋 No hay registros de asistencia para mostrar.</p>
 	</section>
 
-	<section *ngIf="!cargando && !error && asistenciasFiltradas.length > 0">
+	<section class="asistencias-resultados" *ngIf="!cargando && !error && asistenciasFiltradas.length > 0">
+    <div class="tabla-titulo"><h2>Registro de asistencias</h2><span>{{ totalElementos }} registros</span></div>
+    <div class="asistencias-tabla-scroll">
 		<table class="asistencias-tabla">
 			<thead>
 				<tr>
@@ -140,6 +107,7 @@
 				</tr>
 			</tbody>
 		</table>
+    </div>
 
 		<div class="paginacion-asistencias" *ngIf="totalElementos > 0">
 			<div class="paginacion-info">
