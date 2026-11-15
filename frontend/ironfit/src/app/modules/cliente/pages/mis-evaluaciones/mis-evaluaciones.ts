@@ -20,6 +20,16 @@ export class MisEvaluaciones implements OnInit {
   evaluaciones: EvaluacionFisicaDTO[] = [];
   ultimaEvaluacion: EvaluacionFisicaDTO | null = null;
   evaluacionAnterior: EvaluacionFisicaDTO | null = null;
+  evaluacionSeleccionada: EvaluacionFisicaDTO | null = null;
+
+  verDetalle(evaluacion: EvaluacionFisicaDTO): void {
+    this.evaluacionSeleccionada = evaluacion;
+  }
+
+  cerrarDetalle(): void {
+    this.evaluacionSeleccionada = null;
+  }
+
 
   cargando = false;
   error = '';
@@ -44,6 +54,7 @@ export class MisEvaluaciones implements OnInit {
   cargarMisEvaluaciones(): void {
     this.cargando = true;
     this.error = '';
+    this.evaluacionSeleccionada = null;
 
     this.evaluacionesService.listarEvaluacionesPaginadas(
       this.paginaActual,
