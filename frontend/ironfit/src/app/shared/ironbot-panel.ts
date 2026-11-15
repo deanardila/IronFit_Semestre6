@@ -8,17 +8,6 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
   standalone: false,
   template: `
     <section class="ironbot-panel" *ngIf="cargando || respuesta || error">
-      <header class="ironbot-header">
-        <div class="ironbot-identity">
-          <img class="ironbot-avatar" src="assets/ironfit/IronBot_Avatar.svg" alt="Logo de IronBot">
-          <div>
-            <span class="ironbot-kicker">IRONBOT · IRONFIT</span>
-            <h3>{{ respuesta?.titulo || 'Asistente de análisis' }}</h3>
-          </div>
-        </div>
-        <span class="ironbot-source" *ngIf="respuesta?.fuente">Fuente: {{ respuesta?.fuente }}</span>
-      </header>
-
       <div class="ironbot-loading" *ngIf="cargando">Analizando información...</div>
       <div class="ironbot-error" *ngIf="!cargando && error">{{ error }}</div>
 
@@ -51,7 +40,10 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
           </div>
         </ng-container>
       </ng-container>
-      <p class="ironbot-disclaimer" *ngIf="respuesta?.disponible">Análisis informativo basado en los datos disponibles en IronFit.</p>
+      <div class="ironbot-footnotes" *ngIf="respuesta">
+        <span *ngIf="respuesta.fuente">Fuente: {{ respuesta.fuente }}</span>
+        <span *ngIf="respuesta.disponible">Análisis informativo basado en los datos disponibles en IronFit.</span>
+      </div>
     </section>
   `,
   styles: [`
@@ -80,6 +72,11 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
     .ironbot-identity > div{min-width:0}
     @media(max-width:760px){.ironbot-avatar{width:50px;height:50px}}
     :host{display:block;font-family:'DM Sans',system-ui,sans-serif}
+    .ironbot-panel{padding:18px;background:#202023;border:1px solid #39393e;border-radius:11px}
+    .ironbot-loading,.ironbot-error,.ironbot-unavailable{margin:0;text-align:left}
+    .ironbot-footnotes{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-top:15px;color:#a1a1aa;font:500 11px/1.5 'DM Sans',sans-serif}
+    .ironbot-panel > .ironbot-footnotes:first-child{margin-top:0}
+
     .ironbot-panel{margin:0;padding:22px;border:1px solid #303035;border-radius:14px;background:#171719;color:#f7f7f8}
     .ironbot-header{align-items:center;padding-bottom:17px;border-bottom:1px solid #303035}
     .ironbot-kicker{color:#f11d25;font:800 11px 'DM Sans',sans-serif;letter-spacing:.10em}
