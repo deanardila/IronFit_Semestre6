@@ -34,6 +34,7 @@
             <article class="stat-card">
                 <strong>{{ sesionesTotales }}</strong>
                 <span>Sesiones totales</span>
+                <small>Entrenamientos registrados</small>
             </article>
 
             <article class="stat-card">
@@ -46,7 +47,8 @@
 
             <article class="stat-card">
                 <strong>{{ rachaActualSemana }}</strong>
-                <span>Racha actual (sem)</span>
+                <span>Actividad de esta semana</span>
+                <small>Sesiones realizadas esta semana</small>
             </article>
 
         </div>
@@ -67,7 +69,7 @@
                     <div class="dia-circulo">
                         <span *ngIf="dia.entrenado">✓</span>
                         <span *ngIf="!dia.entrenado && dia.esHoy">Hoy</span>
-                        <span *ngIf="!dia.entrenado && !dia.esHoy && dia.futuro">Desc</span>
+                        <span *ngIf="!dia.entrenado && !dia.esHoy && dia.futuro">—</span>
                         <span *ngIf="!dia.entrenado && !dia.esHoy && !dia.futuro">—</span>
                     </div>
                 </div>
