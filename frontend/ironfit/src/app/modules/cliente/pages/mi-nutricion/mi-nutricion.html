@@ -1,41 +1,72 @@
 <div class="nutricion-page">
+  <div class="nutricion-topbar">
+    <img src="assets/ironfit/IronFit_Horizontal.png" class="nutricion-logo" alt="IronFit">
+    <button type="button" class="btn-secundario" (click)="volver()">← Volver al panel</button>
+  </div>
+
+  <div class="nutricion-intro">
+    <span class="nutricion-kicker">CLIENTE</span>
+    <h1>Mi nutrición</h1>
+    <p>Consulta las metas nutricionales definidas por tu entrenador para acompañar tus entrenamientos.</p>
+  </div>
+
   <header class="nutricion-header">
     <div>
-      <button type="button" class="btn-secundario" (click)="volver()">← Volver</button>
-      <h1>Mi nutrición</h1>
-      <p>Consulta las metas nutricionales definidas por tu entrenador.</p>
+      <h2>Planes nutricionales</h2>
+      <p>Consulta las calorías, los macronutrientes y las indicaciones de tu plan.</p>
     </div>
-
     <button type="button" class="btn-secundario" (click)="cargar()" [disabled]="cargando">
-      Actualizar
+      {{ cargando ? 'Cargando...' : 'Actualizar' }}
     </button>
   </header>
 
-  <section *ngIf="cargando" class="estado-panel">⏳ Cargando tu plan nutricional...</section>
-  <section *ngIf="!cargando && error" class="estado-panel error-panel">⚠️ {{ error }}</section>
+  <section *ngIf="cargando" class="estado-panel" role="status">Cargando tu plan nutricional...</section>
+  <section *ngIf="!cargando && error" class="estado-panel error-panel" role="alert">{{ error }}</section>
   <section *ngIf="!cargando && !error && planes.length === 0" class="estado-panel">
     Todavía no tienes un plan nutricional asignado.
   </section>
 
-  <section *ngFor="let nutricion of planes" class="nutricion-card">
-    <div class="titulo-plan">
-      <div>
-        <span>Plan de entrenamiento</span>
-        <h2>{{ nutricion.planNombre || 'Plan actual' }}</h2>
+  <ng-container *ngIf="!cargando && !error">
+    <section *ngFor="let nutricion of planes" class="nutricion-card">
+      <div class="titulo-plan">
+        <div>
+          <span>PLAN DE ENTRENAMIENTO</span>
+          <h2>{{ nutricion.planNombre || 'Plan actual' }}</h2>
+        </div>
+        <div class="nutricion-entrenador">
+          <span>Entrenador</span>
+          <strong>{{ nutricion.entrenadorNombre || 'No registra' }}</strong>
+        </div>
       </div>
-      <small>Entrenador: {{ nutricion.entrenadorNombre || '-' }}</small>
-    </div>
 
-    <div class="macros-grid">
-      <article><span>Calorías</span><strong>{{ nutricion.kcalObjetivo }}</strong><small>kcal / día</small></article>
-      <article><span>Proteína</span><strong>{{ nutricion.proteinaG }} g</strong></article>
-      <article><span>Carbohidratos</span><strong>{{ nutricion.carbohidratosG }} g</strong></article>
-      <article><span>Grasa</span><strong>{{ nutricion.grasaG }} g</strong></article>
-    </div>
+      <div class="nutricion-seccion-label">METAS DIARIAS</div>
+      <div class="macros-grid">
+        <article>
+          <span>Calorías objetivo</span>
+          <strong>{{ nutricion.kcalObjetivo }}</strong>
+          <small>kcal / día</small>
+        </article>
+        <article>
+          <span>Proteína</span>
+          <strong>{{ nutricion.proteinaG }} <em>g</em></strong>
+          <small>Meta diaria</small>
+        </article>
+        <article>
+          <span>Carbohidratos</span>
+          <strong>{{ nutricion.carbohidratosG }} <em>g</em></strong>
+          <small>Meta diaria</small>
+        </article>
+        <article>
+          <span>Grasas</span>
+          <strong>{{ nutricion.grasaG }} <em>g</em></strong>
+          <small>Meta diaria</small>
+        </article>
+      </div>
 
-    <div class="descripcion-box">
-      <span>Indicaciones</span>
-      <p>{{ nutricion.descripcion }}</p>
-    </div>
-  </section>
+      <div class="descripcion-box">
+        <span>Indicaciones del entrenador</span>
+        <p>{{ nutricion.descripcion || 'No hay indicaciones adicionales registradas.' }}</p>
+      </div>
+    </section>
+  </ng-container>
 </div>
