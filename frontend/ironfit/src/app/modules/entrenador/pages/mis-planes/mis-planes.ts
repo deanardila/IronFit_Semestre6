@@ -37,6 +37,8 @@ export class MisPlanes implements OnInit {
   }
 
   cerrarDetallePlan(): void {
+    if (this.guardando) return;
+    if (this.modoEdicion) this.resetFormulario();
     this.planSeleccionado = null;
     this.planDetalleId = null;
   }
@@ -112,6 +114,8 @@ export class MisPlanes implements OnInit {
   }
 
   alternarDetallePlan(plan: PlanEntrenamientoDTO): void {
+    if (this.guardando) return;
+    if (this.modoEdicion) this.resetFormulario();
     this.planSeleccionado = plan;
     this.planDetalleId = plan.id;
     this.detalleTab = 'resumen';
@@ -480,7 +484,7 @@ export class MisPlanes implements OnInit {
           next: () => {
             this.guardando = false;
             this.resetFormulario();
-            this.paginaActual = 0;
+            // Conservar la página y el panel abierto después de modificar.
             this.cargarPlanes();
           },
           error: (err: any) => {
@@ -518,9 +522,12 @@ export class MisPlanes implements OnInit {
     }
 
     this.error = null;
-    this.cerrarDetallePlan();
+    // La edición permanece dentro de Gestionar; el formulario de creación es independiente.
+    this.planSeleccionado = plan;
+    this.planDetalleId = plan.id;
+    this.detalleTab = 'resumen';
     this.modoEdicion = true;
-    this.mostrarFormularioCrear = true;
+    this.mostrarFormularioCrear = false;
     this.idPlanEditando = plan.id;
 
     this.formulario = {
@@ -543,7 +550,6 @@ export class MisPlanes implements OnInit {
     this.terminoBusquedaCliente = plan.clienteNombre || plan.clienteId || '';
     this.clientes = [];
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.cdr.detectChanges();
   }
 
