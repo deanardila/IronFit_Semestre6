@@ -30,6 +30,8 @@ export class MisRutinas implements OnInit {
 
   error = '';
   mensajeExito = '';
+  rutinaRealizadaHoy = false;
+  comprobandoRegistro = false;
 
   planes: PlanEntrenamientoDTO[] = [];
   planActivo: PlanEntrenamientoDTO | null = null;
@@ -75,6 +77,8 @@ export class MisRutinas implements OnInit {
     this.cargando = true;
     this.error = '';
     this.mensajeExito = '';
+    this.rutinaRealizadaHoy = false;
+    this.comprobandoRegistro = false;
     this.rutinas = [];
     this.rutinasFiltradas = [];
     this.planActivo = null;
@@ -140,18 +144,56 @@ export class MisRutinas implements OnInit {
   toggleRutina(rutina: RutinaDTO): void {
     if (this.modoSesionActiva || this.guardandoEntrenamiento) return;
     if (this.rutinaAbiertaId === rutina.id) {
-      this.rutinaAbiertaId = null;
+      this.cerrarPanelRutina();
       return;
     }
 
     this.mensajeExito = '';
+    this.error = '';
+    this.rutinaRealizadaHoy = false;
     this.rutinaAbiertaId = rutina.id;
+    this.consultarRegistroDeHoy(rutina.id);
 
     if (this.ejerciciosPorRutina[rutina.id]) {
       return;
     }
 
     this.cargarEjercicios(rutina.id);
+  }
+
+  private consultarRegistroDeHoy(rutinaId: string): void {
+    this.comprobandoRegistro = true;
+    this.entrenamientoRealizadoService.listarMisEntrenamientos().subscribe({
+      next: (entrenamientos) => {
+        // La comprobación es solo para orientar la interfaz: el backend
+        // sigue siendo quien impide guardar un entrenamiento duplicado.
+        if (this.rutinaAbiertaId !== rutinaId) return;
+        const hoy = this.fechaLocalHoy();
+        this.rutinaRealizadaHoy = (entrenamientos || []).some(registro =>
+          registro.rutinaId === rutinaId &&
+          typeof registro.fecha === 'string' &&
+          registro.fecha.substring(0, 10) === hoy &&
+          !['CANCELADO', 'CANCELADA', 'ANULADO', 'ANULADA'].includes((registro.estado || '').toUpperCase())
+        );
+        this.comprobandoRegistro = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.warn('No se pudo verificar si la rutina se realizó hoy', err);
+        if (this.rutinaAbiertaId !== rutinaId) return;
+        // Si esta consulta falla, se permite intentar; el backend valida.
+        this.comprobandoRegistro = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  private fechaLocalHoy(): string {
+    const fecha = new Date();
+    const yyyy = fecha.getFullYear();
+    const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dd = String(fecha.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   cargarEjercicios(rutinaId: string): void {
@@ -177,6 +219,8 @@ export class MisRutinas implements OnInit {
   iniciarSesionHoy(): void {
     this.error = '';
     this.mensajeExito = '';
+
+    if (this.rutinaRealizadaHoy || this.comprobandoRegistro) return;
 
     if (!this.planActivo) {
       this.error = 'No tienes un plan activo para iniciar una sesión.';
@@ -235,6 +279,7 @@ export class MisRutinas implements OnInit {
   }
 
   finalizarEntrenamiento(): void {
+    if (this.rutinaRealizadaHoy || this.guardandoEntrenamiento) return;
     this.error = '';
     this.mensajeExito = '';
 
@@ -270,12 +315,22 @@ export class MisRutinas implements OnInit {
         // Mostrar únicamente la confirmación en el mismo panel lateral.
         // Nunca se muestra si el servidor devuelve un error.
         this.mensajeExito = 'Entrenamiento registrado correctamente.';
+        this.rutinaRealizadaHoy = true;
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error registrando entrenamiento', err);
-        this.error = this.obtenerMensajeError(err, 'No se pudo registrar el entrenamiento.');
-        this.guardandoEntrenamiento = false;
+        const mensaje = String(this.obtenerMensajeError(err, 'No se pudo registrar el entrenamiento.'));
+        const esDuplicado = /ya registraste|ya (se )?registr[oó]|ya realizaste|ya fue realizada|ya existe.*(rutina|entrenamiento)/i.test(mensaje);
+        if (esDuplicado) {
+          this.cancelarSesion();
+          this.rutinaRealizadaHoy = true;
+          this.mensajeExito = '';
+          this.error = '';
+        } else {
+          this.error = mensaje;
+          this.guardandoEntrenamiento = false;
+        }
         this.cdr.detectChanges();
       }
     });
@@ -286,6 +341,8 @@ export class MisRutinas implements OnInit {
     this.rutinaAbiertaId = null;
     this.mensajeExito = '';
     this.error = '';
+    this.rutinaRealizadaHoy = false;
+    this.comprobandoRegistro = false;
   }
 
   get rutinaSeleccionada(): RutinaDTO | null {
