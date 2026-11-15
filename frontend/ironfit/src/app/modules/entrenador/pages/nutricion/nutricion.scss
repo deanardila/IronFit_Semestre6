@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
 .nutricion-page {
   min-height: 100vh;
   padding: 32px 38px;
@@ -138,3 +139,49 @@ input:focus, textarea:focus { border-color: #e11d2e; }
   .plan-contexto, .macros-grid { grid-template-columns: 1fr; }
   .titulo-plan { flex-direction:column; }
 }
+
+
+/* IronFit — diseño uniforme del módulo Nutrición ENTRENADOR */
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.nutricion-page { box-sizing:border-box; max-width:1200px; min-height:100vh; padding:1.75rem 2rem; margin:0 auto; background:#100c0c; display:flex; flex-direction:column; gap:20px; }
+.nutricion-topbar { display:flex; justify-content:space-between; align-items:center; gap:15px; min-height:90px; padding-bottom:14px; border-bottom:1px solid #303035; }
+.nutricion-logo { height:90px; width:auto; max-width:min(100%,330px); object-fit:contain; }
+.nutricion-intro { padding:19px 24px 21px; border:1px solid #303035; border-radius:16px; background:linear-gradient(115deg,#19191b,#111113); }
+.nutricion-kicker { display:inline-block; padding:4px 8px; border:1px solid rgba(241,29,37,.22); border-radius:6px; color:#f11d25; background:rgba(241,29,37,.09); font-size:11px; font-weight:800; letter-spacing:.1em; }
+.nutricion-intro h1 { margin:10px 0 4px; color:#fff; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; letter-spacing:0; text-transform:none; }
+.nutricion-intro p { margin:0; color:#a1a1aa; font-size:13px; }
+.nutricion-header { margin:0; padding:17px 20px; background:#202023; border:1px solid #303035; border-radius:14px; box-shadow:none; }
+.nutricion-header h2 { margin:8px 0 4px; color:#fff; font:800 20px 'DM Sans',sans-serif; }
+.nutricion-header p { margin:0; color:#a1a1aa; font-size:13px; }
+.nutricion-label { color:#a1a1aa; font-size:11px; font-weight:800; letter-spacing:.08em; }
+.btn-secundario,.btn-principal { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; min-height:42px; border:1px solid #39393e; border-radius:9px; padding:10px 15px; background:#1b1b1f; color:#eee; font:700 13px 'DM Sans',sans-serif; text-transform:none; letter-spacing:0; white-space:nowrap; box-shadow:none; cursor:pointer; }
+.btn-secundario:hover:not(:disabled) { background:#29292d; border-color:#f11d25; color:#eee; }
+.btn-principal { background:#f11d25; border-color:#f11d25; color:#fff; }
+.btn-principal:hover:not(:disabled) { background:#d71a21; border-color:#f11d25; color:#fff; }
+button:disabled { opacity:.48; cursor:not-allowed; }
+.estado-panel { margin:0; padding:16px; background:#171719; border:1px solid #303035; border-radius:12px; color:#a1a1aa; font-size:13px; }
+.error-panel { color:#ff9aa0; border-color:rgba(241,29,37,.35); }
+.ok-panel { color:#a6e7b9; border-color:rgba(34,197,94,.35); }
+.nutricion-card { margin:0; padding:22px; border:1px solid #303035; border-radius:14px; background:#171719; }
+.plan-contexto { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:0 0 24px; }
+.plan-contexto > div { box-sizing:border-box; min-width:0; padding:15px; background:#202023; border:1px solid #39393e; border-radius:10px; }
+.plan-contexto span { display:block; margin:0 0 8px; color:#a1a1aa; font:700 11px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.plan-contexto strong { display:block; color:#fff; font:700 14px 'DM Sans',sans-serif; overflow-wrap:anywhere; }
+.estado-badge { display:inline-flex!important; width:max-content; border:1px solid rgba(241,29,37,.3); border-radius:999px; padding:6px 11px; font:800 11px 'DM Sans',sans-serif!important; }
+.estado-badge.activo { color:#a6e7b9; background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.3); }
+.estado-badge.inactivo { color:#ff8188; background:rgba(241,29,37,.1); border-color:rgba(241,29,37,.3); }
+.nutricion-seccion-titulo { margin:0 0 18px; border-top:1px solid #39393e; padding-top:21px; }
+.nutricion-seccion-titulo h3 { margin:0 0 5px; color:#fff; font:800 17px 'DM Sans',sans-serif; }
+.nutricion-seccion-titulo p { margin:0; color:#a1a1aa; font-size:13px; }
+.macros-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:19px; }
+.macros-grid label { min-width:0; }
+.macros-grid label > span,.descripcion-field > span { display:block; margin:0 0 8px; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; text-transform:none; letter-spacing:0; }
+.nutricion-form input,.nutricion-form textarea { box-sizing:border-box; width:100%; min-width:0; border:1px solid #39393e; border-radius:9px; background:#212124; color:#fff; padding:11px 13px; font:500 13px 'DM Sans',sans-serif; }
+.nutricion-form input:focus,.nutricion-form textarea:focus { border-color:#f11d25; outline:none; box-shadow:0 0 0 3px rgba(241,29,37,.13); }
+.nutricion-form textarea { resize:vertical; min-height:135px; }
+.descripcion-field { display:block; margin-top:0; }
+.form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+button:focus-visible,input:focus-visible,textarea:focus-visible { outline:2px solid #ffbd60; outline-offset:3px; }
+@media(max-width:900px) { .nutricion-page { padding:1.25rem 1rem; } .nutricion-logo { height:64px; max-width:180px; } .macros-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .nutricion-header { flex-direction:column; align-items:stretch; } .plan-contexto { grid-template-columns:1fr; } .form-actions .btn-principal { width:100%; } }
+@media(max-width:480px) { .macros-grid { grid-template-columns:1fr; } }
