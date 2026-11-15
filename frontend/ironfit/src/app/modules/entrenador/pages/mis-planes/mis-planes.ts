@@ -30,6 +30,16 @@ export class MisPlanes implements OnInit {
 
   // Solo controla la vista; no modifica los servicios ni la seleccion del plan en backend.
   planDetalleId: string | null = null;
+  planSeleccionado: PlanEntrenamientoDTO | null = null;
+
+  identificarPlan(_index: number, plan: PlanEntrenamientoDTO): string {
+    return plan.id;
+  }
+
+  cerrarDetallePlan(): void {
+    this.planSeleccionado = null;
+    this.planDetalleId = null;
+  }
   detalleTab: 'resumen' | 'rutinas' | 'progreso' | 'nutricion' = 'resumen';
 
   prediccionSeleccionada: PrediccionPlanDTO | null = null;
@@ -102,7 +112,8 @@ export class MisPlanes implements OnInit {
   }
 
   alternarDetallePlan(plan: PlanEntrenamientoDTO): void {
-    this.planDetalleId = this.planDetalleId === plan.id ? null : plan.id;
+    this.planSeleccionado = plan;
+    this.planDetalleId = plan.id;
     this.detalleTab = 'resumen';
   }
 
@@ -182,6 +193,24 @@ export class MisPlanes implements OnInit {
     }
   }
 
+  // Al llegar desde Mis clientes, localizar el plan concreto incluso si
+  // no está incluido en la primera página de resultados.
+  private localizarPlanEnResultados(): void {
+    if (!this.planDetalleId || this.planSeleccionado || this.cargando) return;
+    const id = this.planDetalleId;
+    this.planesService.obtenerPlan(id).pipe(timeout(this.requestTimeoutMs)).subscribe({
+      next: plan => {
+        if (this.planDetalleId !== id) return;
+        if (plan.entrenadorId !== this.entrenadorId) return;
+        this.planSeleccionado = this.normalizarPlanes([plan])[0];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // El listado principal sigue siendo utilizable si el plan ya no existe.
+      }
+    });
+  }
+
   inicializarModulo(): void {
     this.cargando = true;
     this.error = null;
@@ -218,6 +247,12 @@ export class MisPlanes implements OnInit {
         next: (respuesta) => {
           this.planes = this.normalizarPlanes(respuesta.contenido || []);
           this.planesFiltrados = this.planes;
+          if (this.planDetalleId) {
+            const encontrado = this.planes.find(plan => plan.id === this.planDetalleId);
+            this.planSeleccionado = encontrado || null;
+          } else {
+            this.planSeleccionado = null;
+          }
 
           this.totalElementos = respuesta.totalElementos ?? 0;
           this.totalPaginas = respuesta.totalPaginas ?? 0;
@@ -226,6 +261,7 @@ export class MisPlanes implements OnInit {
           this.tamanoPagina = respuesta.tamano ?? this.tamanoPagina;
 
           this.cargando = false;
+          this.localizarPlanEnResultados();
           this.cdr.detectChanges();
         },
         error: (err: any) => {
@@ -482,6 +518,7 @@ export class MisPlanes implements OnInit {
     }
 
     this.error = null;
+    this.cerrarDetallePlan();
     this.modoEdicion = true;
     this.mostrarFormularioCrear = true;
     this.idPlanEditando = plan.id;
