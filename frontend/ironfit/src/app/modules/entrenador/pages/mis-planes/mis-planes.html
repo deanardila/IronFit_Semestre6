@@ -305,7 +305,8 @@
 					</div>
 					<button *ngIf="detalleTab === 'progreso' && !modoEdicion" class="btn-ironbot-principal" type="button" (click)="analizarPlanConIronBot(p)"
 						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
-						{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando con IronBot...' : '✧ Analizar con IronBot' }}
+						<img class="ironbot-boton-logo" src="assets/ironfit/IronBot_Avatar.svg" alt="" aria-hidden="true">
+						<span>{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando con IronBot...' : 'Analizar con IronBot' }}</span>
 					</button>
 
 						<section
