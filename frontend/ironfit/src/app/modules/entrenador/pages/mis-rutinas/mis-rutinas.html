@@ -173,10 +173,13 @@
     </header>
     <ng-container *ngIf="!modoEdicion">
       <div class="rutina-panel-dato"><span>Descripción</span><strong>{{ rutina.descripcion || 'Sin descripción' }}</strong></div>
-      <div class="rutina-panel-dato"><span>Estado</span>
-        <button type="button" class="estado-badge estado-click" [class.activo]="rutina.activo" [class.inactivo]="!rutina.activo"
-          (click)="cambiarEstadoRutina(rutina)" [disabled]="guardando || cambiandoEstadoId === rutina.id">
-          {{ cambiandoEstadoId === rutina.id ? 'Procesando...' : (rutina.activo ? 'ACTIVA' : 'INACTIVA') }}</button>
+      <div class="rutina-estado-control">
+        <span>Estado de la rutina</span>
+        <button type="button" class="estado-badge estado-accion" [class.activo]="rutina.activo" [class.inactivo]="!rutina.activo"
+          (click)="cambiarEstadoRutina(rutina)" [disabled]="guardando || cambiandoEstadoId === rutina.id"
+          [attr.aria-label]="'Cambiar estado de la rutina ' + rutina.nombre">
+          {{ cambiandoEstadoId === rutina.id ? 'Procesando...' : (rutina.activo ? 'ACTIVA' : 'INACTIVA') }}
+        </button>
       </div>
       <div class="rutina-panel-acciones">
         <button type="button" class="btn-card" (click)="editarRutina(rutina)" [disabled]="guardando || !!cambiandoEstadoId">Modificar rutina</button>
