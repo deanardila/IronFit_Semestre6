@@ -28,7 +28,7 @@
     <button type="button" class="btn-actualizar" (click)="actualizar()"
       [disabled]="guardando || cargando || !!cambiandoEstadoId">Actualizar</button>
   </header>
-	<section *ngIf="mostrarFormularioCrear || modoEdicion" class="formulario-plan">
+	<section *ngIf="mostrarFormularioCrear && !modoEdicion" class="formulario-plan">
 		<h2>{{ modoEdicion ? 'Editar plan' : 'Crear plan' }}</h2>
 
 		<form (ngSubmit)="guardarPlan()" #planForm="ngForm">
@@ -177,13 +177,101 @@
       </button>
     </div>
 				<div class="plan-detalle">
-					<div class="plan-tabs" role="group" aria-label="Secciones del plan">
+					<div class="plan-tabs" *ngIf="!modoEdicion" role="group" aria-label="Secciones del plan">
 						<button type="button" [class.seleccionada]="detalleTab === 'resumen'" (click)="detalleTab = 'resumen'">Resumen</button>
 						<button type="button" [class.seleccionada]="detalleTab === 'rutinas'" (click)="detalleTab = 'rutinas'">Plan y rutinas</button>
 						<button type="button" [class.seleccionada]="detalleTab === 'progreso'" (click)="detalleTab = 'progreso'">Progreso</button>
 						<button type="button" [class.seleccionada]="detalleTab === 'nutricion'" (click)="detalleTab = 'nutricion'">Nutrición</button>
 					</div>
-					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'resumen'">
+	<section *ngIf="modoEdicion" class="formulario-plan formulario-plan-panel">
+		<h2>{{ modoEdicion ? 'Editar plan' : 'Crear plan' }}</h2>
+
+		<form (ngSubmit)="guardarPlan()" #edicionPlanForm="ngForm">
+
+			<div class="form-row">
+				<label>Nombre</label>
+				<input type="text" name="nombre" [(ngModel)]="formulario.nombre" required />
+			</div>
+
+			<div class="form-row">
+				<label>Descripción</label>
+				<textarea name="descripcion" [(ngModel)]="formulario.descripcion" required></textarea>
+			</div>
+
+			<div class="form-row">
+				<label>Objetivo</label>
+				<input type="text" name="objetivo" [(ngModel)]="formulario.objetivo" required />
+			</div>
+
+			<div class="form-row">
+				<label>Fecha inicio</label>
+				<input
+					type="date"
+					name="fechaInicio"
+					[(ngModel)]="formulario.fechaInicio"
+					[min]="modoEdicion ? null : minFechaPlan"
+					required
+				/>
+			</div>
+
+			<div class="form-row">
+				<label>Fecha fin</label>
+				<input
+					type="date"
+					name="fechaFin"
+					[(ngModel)]="formulario.fechaFin"
+					[min]="formulario.fechaInicio || minFechaPlan"
+					required
+				/>
+			</div>
+
+			<div class="form-row">
+				<label>Buscar cliente</label>
+				<input
+					type="text"
+					name="busquedaCliente"
+					[(ngModel)]="terminoBusquedaCliente"
+					(input)="buscarClientes()"
+					placeholder="Buscar cliente asignado por nombre o documento"
+					autocomplete="off"
+				/>
+
+				<small class="ayuda-cliente" *ngIf="!cargandoClientesAsignados && clientesAsignados.length === 0">
+					No tienes clientes asignados. Solicita al administrador una asignación.
+				</small>
+
+				<ul *ngIf="clientes.length > 0" class="lista-clientes">
+					<li
+						*ngFor="let cliente of clientes"
+						(click)="seleccionarCliente(cliente)"
+						class="item-cliente">
+						<strong>{{ cliente.nombres }} {{ cliente.apellidos }}</strong>
+						<span> - {{ cliente.numDoc || 'Sin documento' }}</span>
+					</li>
+				</ul>
+			</div>
+
+			<div class="form-row" *ngIf="clienteSeleccionado">
+				<label>Cliente seleccionado</label>
+				<div class="cliente-seleccionado">
+					<strong>{{ clienteSeleccionado.nombres }} {{ clienteSeleccionado.apellidos }}</strong>
+					<span *ngIf="clienteSeleccionado.numDoc"> - {{ clienteSeleccionado.numDoc }}</span>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" [disabled]="guardando">
+					{{ guardando ? 'Guardando...' : (modoEdicion ? 'Actualizar' : 'Crear') }}
+				</button>
+
+				<button type="button" (click)="cancelarFormulario()" [disabled]="guardando">
+					Cancelar
+				</button>
+			</div>
+		</form>
+	</section>
+
+					<div class="plan-detalle-contenido" *ngIf="detalleTab === 'resumen' && !modoEdicion">
 						<h4>Resumen del plan</h4>
 						<div class="plan-detalle-datos">
 							<span><strong>Cliente</strong>{{ p.clienteNombre || p.clienteId }}</span>
@@ -215,13 +303,13 @@
 						<button class="btn-detalle-accion" type="button" (click)="gestionarNutricion(p)"
 							[disabled]="guardando || cambiandoEstadoId === p.id">Abrir nutrición</button>
 					</div>
-					<button class="btn-ironbot-principal" type="button" (click)="analizarPlanConIronBot(p)"
+					<button *ngIf="detalleTab === 'progreso' && !modoEdicion" class="btn-ironbot-principal" type="button" (click)="analizarPlanConIronBot(p)"
 						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
 						{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando con IronBot...' : '✧ Analizar con IronBot' }}
 					</button>
 
 						<section
-							*ngIf="planPrediccionId === p.id && prediccionSeleccionada"
+							*ngIf="detalleTab === 'progreso' && !modoEdicion && planPrediccionId === p.id && prediccionSeleccionada"
 							class="panel-prediccion">
 
 							<h2>Análisis predictivo del plan</h2>
@@ -274,12 +362,12 @@
 						</section>
 
 						<section
-							*ngIf="planPrediccionId === p.id && errorPrediccion"
+							*ngIf="detalleTab === 'progreso' && !modoEdicion && planPrediccionId === p.id && errorPrediccion"
 							class="mensaje-error">
 							{{ errorPrediccion }}
 						</section>
 
-						<app-ironbot-panel *ngIf="planIronBotId === p.id && (cargandoIronBot || ironBotRespuesta || errorIronBot)"
+						<app-ironbot-panel *ngIf="detalleTab === 'progreso' && !modoEdicion && planIronBotId === p.id && (cargandoIronBot || ironBotRespuesta || errorIronBot)"
 							[respuesta]="ironBotRespuesta"
 							[cargando]="cargandoIronBot"
 							[error]="errorIronBot"
