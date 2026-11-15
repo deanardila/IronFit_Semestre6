@@ -777,3 +777,9 @@ button:disabled {
 button:focus-visible,.select-paginacion:focus-visible { outline:2px solid #ffbd60; outline-offset:3px; }
 @media(max-width:850px) { .rutinas-page { padding:1.25rem 1rem; } .rutinas-logo { height:64px; max-width:180px; } .rutinas-header { flex-direction:row; } .busqueda-container { flex-direction:row; } .paginacion-rutinas { flex-direction:column; align-items:stretch; } .form-grid { grid-template-columns:1fr; } }
 @media(max-width:520px) { .rutina-panel { padding:20px; } .busqueda-container { flex-wrap:wrap; } .filtros-tabs,.dias-tabs { flex-direction:row; } .paginacion-controles { flex-direction:row; } }
+
+/* Control de estado igual al de Mis planes. */
+.rutina-estado-control { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:20px 0 6px; }
+.rutina-estado-control > span { color:#a1a1aa; font-size:12px; font-weight:700; }
+.rutina-estado-control .estado-accion { cursor:pointer; min-width:0; white-space:nowrap; }
+.rutina-estado-control .estado-accion:hover:not(:disabled) { filter:brightness(1.1); }
