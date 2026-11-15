@@ -1,21 +1,22 @@
 <div class="asistencias-page">
 
+    <div class="asistencias-topbar">
+      <img src="assets/ironfit/IronFit_Horizontal.png" class="asistencias-logo" alt="IronFit">
+      <button class="btn-volver" type="button" (click)="volver()">← Volver al panel</button>
+    </div>
+    <div class="asistencias-intro">
+      <span class="asistencias-kicker">CLIENTE</span>
+      <h1>Mis asistencias</h1>
+      <p>Consulta tus sesiones registradas, tu asistencia y el seguimiento semanal.</p>
+    </div>
     <header class="asistencias-header">
-        <div class="asistencias-header-left">
-            <button class="btn-volver" type="button" (click)="volver()">
-                ← Volver
-            </button>
-
-            <h1>Mis asistencias</h1>
-        </div>
-
-        <button
-            class="btn-actualizar"
-            type="button"
-            (click)="actualizar()"
-            [disabled]="cargando">
-            {{ cargando ? 'Cargando...' : 'Actualizar' }}
-        </button>
+      <div class="asistencias-header-left">
+        <h2>Seguimiento de entrenamientos</h2>
+        <p>Resumen de tu actividad y registros de entrenamiento.</p>
+      </div>
+      <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando">
+        {{ cargando ? 'Cargando...' : 'Actualizar' }}
+      </button>
     </header>
 
     <section *ngIf="cargando" class="estado-panel">
@@ -114,30 +115,19 @@
                 <p>📋 Aún no tienes entrenamientos registrados.</p>
             </div>
 
-            <div class="historial-lista" *ngIf="historialReciente.length > 0">
-
-                <article
-                    class="historial-card"
-                    *ngFor="let item of historialReciente"
-                    [class.completado]="item.estado === 'COMPLETADO'"
-                    [class.pendiente]="item.estado === 'PENDIENTE'">
-
-                    <div class="historial-left">
-                        <span class="estado-dot"></span>
-
-                        <div>
-                            <h3>{{ item.titulo }}</h3>
-                            <p>{{ item.fechaTexto }} · {{ item.detalle }}</p>
-                        </div>
-                    </div>
-
-                    <div class="historial-tiempo">
-                        <span *ngIf="item.duracionTexto !== '—'">◷</span>
-                        {{ item.duracionTexto }}
-                    </div>
-
-                </article>
-
+            <div class="historial-tabla-scroll" *ngIf="historialReciente.length > 0">
+              <table class="historial-tabla">
+                <thead><tr><th>Rutina</th><th>Fecha</th><th>Ejercicios</th><th>Duración estimada</th><th>Estado</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let item of historialReciente">
+                    <td class="tabla-rutina">{{ item.titulo }}</td>
+                    <td>{{ item.fechaTexto }}</td>
+                    <td>{{ item.detalle }}</td>
+                    <td>{{ item.duracionTexto }}</td>
+                    <td><span class="estado-historial" [class.completado]="item.estado === 'COMPLETADO'" [class.pendiente]="item.estado === 'PENDIENTE'">{{ item.estado || 'Sin estado' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
         </section>
 
