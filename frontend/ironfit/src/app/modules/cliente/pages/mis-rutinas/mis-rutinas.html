@@ -1,13 +1,21 @@
 <div class="rutinas-page">
 
+    <div class="rutinas-topbar">
+        <img src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit" class="rutinas-logo">
+        <button class="btn-volver" type="button" (click)="volver()">← Volver al panel</button>
+    </div>
+    <div class="rutinas-intro">
+        <span class="rutinas-kicker">CLIENTE</span>
+        <h1>Mis rutinas</h1>
+        <p>Consulta tus ejercicios, elige una rutina y registra tu entrenamiento del día.</p>
+    </div>
     <header class="rutinas-header">
         <div class="rutinas-header-left">
-        <button class="btn-volver" type="button" (click)="volver()">← Volver</button>
-        <h1>Mis rutinas</h1>
+            <h2>Rutinas de entrenamiento</h2>
+            <p>Selecciona un día y abre la rutina que deseas realizar.</p>
         </div>
-
-        <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando">
-        {{ cargando ? 'Cargando...' : 'Actualizar' }}
+        <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando || guardandoEntrenamiento">
+          {{ cargando ? 'Cargando...' : 'Actualizar' }}
         </button>
     </header>
 
@@ -32,7 +40,7 @@
             <p>{{ planActivo.objetivo }}</p>
         </div>
 
-        <span class="estado-badge">Activo</span>
+        <span class="estado-badge">ACTIVO</span>
         </div>
 
         <div class="dias-tabs">
@@ -57,7 +65,7 @@
             *ngFor="let rutina of rutinasFiltradas"
             [class.abierta]="rutinaAbiertaId === rutina.id">
 
-            <button class="rutina-main" type="button" (click)="toggleRutina(rutina)">
+            <button class="rutina-main" type="button" (click)="toggleRutina(rutina)" [attr.aria-expanded]="rutinaAbiertaId === rutina.id">
 
             <div class="rutina-icono">
                 🏋️
@@ -140,7 +148,7 @@
 
         </div>
 
-        <div *ngIf="mensajeExito" class="estado-panel exito-panel">
+        <div *ngIf="mensajeExito" class="estado-panel exito-panel" role="status">
     <p>✅ {{ mensajeExito }}</p>
     </div>
 
@@ -148,7 +156,7 @@
         class="btn-iniciar-sesion"
         type="button"
         (click)="iniciarSesionHoy()"
-        [disabled]="!rutinaAbiertaId || !!cargandoEjerciciosId || modoSesionActiva">
+        [disabled]="!rutinaAbiertaId || !!cargandoEjerciciosId || modoSesionActiva || guardandoEntrenamiento">
 
         <span *ngIf="!rutinaAbiertaId">
             Primero abre una rutina
@@ -159,7 +167,7 @@
         </span>
 
         <span *ngIf="rutinaAbiertaId && !cargandoEjerciciosId && !modoSesionActiva">
-            ▷ Iniciar sesión de hoy
+            Iniciar sesión de hoy
         </span>
 
         <span *ngIf="modoSesionActiva">
