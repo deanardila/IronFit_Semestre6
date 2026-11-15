@@ -373,3 +373,15 @@
   .dashboard-header-right { gap: .6rem; flex-wrap: wrap; }
   .dashboard-header-right .dashboard-greeting { font-size: .8rem; }
 }
+
+
+/* Identidad del bot en el encabezado exterior, resultado aislado debajo. */
+.ironbot-dashboard-section { display:flex; flex-direction:column; gap:20px; text-align:left; }
+.ironbot-dashboard-section .ironbot-dashboard-title { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin:0; }
+.ironbot-dashboard-brand { display:flex; align-items:center; gap:14px; min-width:0; }
+.ironbot-dashboard-brand > div { min-width:0; }
+.ironbot-dashboard-brand h2 { margin:0 0 4px; color:#fff; font:800 20px 'DM Sans',sans-serif; }
+.ironbot-dashboard-brand span { color:#a1a1aa; font-size:12px; }
+.ironbot-dashboard-avatar { display:block; flex:none; box-sizing:border-box; width:64px; height:64px; padding:5px; border:1px solid #39393e; border-radius:13px; background:#080809; object-fit:contain; }
+.ironbot-dashboard-section app-ironbot-panel { display:block; width:100%; }
+@media(max-width:600px){ .ironbot-dashboard-section .ironbot-dashboard-title { align-items:stretch; flex-direction:column; } .ironbot-dashboard-avatar{width:54px;height:54px;} }
