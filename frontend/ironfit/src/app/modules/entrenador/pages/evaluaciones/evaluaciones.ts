@@ -25,6 +25,24 @@ export class Evaluaciones implements OnInit {
 
   evaluaciones: EvaluacionFisicaDTO[] = [];
   evaluacionesFiltradas: EvaluacionFisicaDTO[] = [];
+  evaluacionSeleccionada: EvaluacionFisicaDTO | null = null;
+
+  identificarEvaluacion(_index: number, evaluacion: EvaluacionFisicaDTO): string {
+    return evaluacion.id;
+  }
+
+  abrirDetalleEvaluacion(evaluacion: EvaluacionFisicaDTO): void {
+    if (this.guardando || this.eliminandoId) return;
+    this.resetFormulario();
+    this.error = '';
+    this.evaluacionSeleccionada = evaluacion;
+  }
+
+  cerrarDetalleEvaluacion(): void {
+    if (this.guardando || this.eliminandoId) return;
+    this.resetFormulario();
+    this.evaluacionSeleccionada = null;
+  }
 
   clientesAsignados: any[] = [];
   clientesFiltrados: any[] = [];
@@ -87,6 +105,11 @@ export class Evaluaciones implements OnInit {
         next: (respuesta) => {
           this.evaluaciones = respuesta.contenido || [];
           this.evaluacionesFiltradas = this.evaluaciones;
+          if (this.evaluacionSeleccionada) {
+            this.evaluacionSeleccionada = this.evaluaciones.find(
+              e => e.id === this.evaluacionSeleccionada?.id
+            ) || null;
+          }
 
           this.totalElementos = respuesta.totalElementos ?? 0;
           this.totalPaginas = respuesta.totalPaginas ?? 0;
@@ -222,6 +245,7 @@ export class Evaluaciones implements OnInit {
       return;
     }
 
+    this.evaluacionSeleccionada = null;
     this.mostrarFormulario = true;
     this.modoEdicion = false;
     this.idEvaluacionEditando = null;
@@ -289,7 +313,6 @@ export class Evaluaciones implements OnInit {
             this.mensajeExito = 'Evaluación física actualizada correctamente.';
             this.guardando = false;
             this.resetFormulario();
-            this.paginaActual = 0;
             this.cargarEvaluaciones();
           },
           error: (err) => {
@@ -329,6 +352,7 @@ export class Evaluaciones implements OnInit {
 
     this.error = '';
     this.mensajeExito = '';
+    this.evaluacionSeleccionada = evaluacion;
     this.mostrarFormulario = true;
     this.modoEdicion = true;
     this.idEvaluacionEditando = evaluacion.id;
@@ -356,7 +380,6 @@ export class Evaluaciones implements OnInit {
     this.terminoBusquedaCliente = evaluacion.clienteNombre || evaluacion.clienteId;
     this.clientesFiltrados = [];
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.cdr.detectChanges();
   }
 
@@ -382,6 +405,9 @@ export class Evaluaciones implements OnInit {
         next: () => {
           this.mensajeExito = 'Evaluación física eliminada correctamente.';
           this.eliminandoId = null;
+          if (this.evaluacionSeleccionada?.id === evaluacion.id) {
+            this.evaluacionSeleccionada = null;
+          }
           this.cargarEvaluaciones();
         },
         error: (err) => {
