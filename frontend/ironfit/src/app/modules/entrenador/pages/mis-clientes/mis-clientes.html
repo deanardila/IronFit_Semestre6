@@ -88,51 +88,20 @@
       </section>
       <section *ngIf="clienteDetalleTab === 'planes'"><h3>Plan y rutinas</h3><p>Consulta los planes de este cliente y accede a sus rutinas desde Mis planes.</p><button class="cliente-ir-planes" type="button" (click)="abrirPlanDeCliente(cliente)">Consultar planes</button></section>
       <section *ngIf="clienteDetalleTab === 'progreso'" class="cliente-progreso">
-        <h3>Predicción de progreso</h3>
-        <p>Consulta las predicciones de adherencia y rendimiento de Weka, y luego la interpretación de IronBot.</p>
+        <h3>Progreso del cliente</h3>
+        <p>Selecciona un plan para consultar su predicción de Weka y el análisis de IronBot desde Mis planes.</p>
         <p *ngIf="cargandoPlanesProgreso" class="progreso-estado">Buscando planes del cliente...</p>
         <p *ngIf="errorPlanesProgreso" class="progreso-error" role="alert">{{ errorPlanesProgreso }}</p>
-        <div *ngIf="!cargandoPlanesProgreso && errorPlanesProgreso">
-          <button type="button" class="cliente-ir-planes" (click)="cargarPlanesProgreso(cliente)">Reintentar</button>
-        </div>
-        <div *ngIf="!cargandoPlanesProgreso && !errorPlanesProgreso && planesDelCliente.length === 0" class="progreso-estado">
-          Este cliente no tiene planes de entrenamiento disponibles para esta consulta.
-        </div>
+        <button *ngIf="!cargandoPlanesProgreso && errorPlanesProgreso" type="button" class="cliente-ir-planes" (click)="cargarPlanesProgreso(cliente)">Reintentar</button>
+        <p *ngIf="!cargandoPlanesProgreso && !errorPlanesProgreso && planesDelCliente.length === 0" class="progreso-estado">No se encontraron planes para este cliente.</p>
         <ng-container *ngIf="!cargandoPlanesProgreso && planesDelCliente.length > 0">
           <label class="progreso-label" for="plan-progreso-cliente">Plan de entrenamiento</label>
-          <select id="plan-progreso-cliente" class="progreso-select" [(ngModel)]="planProgresoId" (change)="cambiarPlanProgreso()">
+          <select id="plan-progreso-cliente" class="progreso-select" [(ngModel)]="planProgresoId">
             <option *ngFor="let plan of planesDelCliente" [ngValue]="plan.id">{{ plan.nombre }} · {{ plan.activo ? 'Activo' : 'Inactivo' }}</option>
           </select>
-          <button type="button" class="cliente-ir-planes" (click)="consultarPrediccion()" [disabled]="cargandoPrediccion || cargandoIronBot">
-            {{ cargandoPrediccion ? 'Consultando Weka...' : 'Consultar predicción con Weka' }}
-          </button>
-          <p *ngIf="errorPrediccion" class="progreso-error" role="alert">{{ errorPrediccion }}</p>
-          <div *ngIf="prediccion as resultado" class="cliente-prediccion">
-            <h4>Resultados de Weka</h4>
-            <div class="progreso-resultados">
-              <article class="progreso-card">
-                <span>Adherencia estimada</span>
-                <strong>{{ resultado.adherencia.prediccion }}</strong>
-                <small>Modelo: {{ resultado.adherencia.modelo }}</small>
-                <div class="progreso-probabilidades" *ngFor="let item of resultado.adherencia.probabilidades | keyvalue">{{ item.key }}: {{ item.value }}%</div>
-              </article>
-              <article class="progreso-card">
-                <span>Rendimiento estimado</span>
-                <strong>{{ resultado.rendimiento.prediccion }}</strong>
-                <small>Modelo: {{ resultado.rendimiento.modelo }}</small>
-                <div class="progreso-probabilidades" *ngFor="let item of resultado.rendimiento.probabilidades | keyvalue">{{ item.key }}: {{ item.value }}%</div>
-              </article>
-            </div>
-            <button type="button" class="cliente-ironbot-principal" (click)="interpretarConIronBot()" [disabled]="cargandoIronBot">
-              {{ cargandoIronBot ? 'Interpretando...' : '✧ Interpretar con IronBot' }}
-            </button>
-          </div>
-          <app-ironbot-panel *ngIf="cargandoIronBot || ironBotRespuesta || errorIronBot"
-            [respuesta]="ironBotRespuesta" [cargando]="cargandoIronBot" [error]="errorIronBot"
-            (reanalizar)="interpretarConIronBot()"></app-ironbot-panel>
+          <button type="button" class="cliente-ir-planes" (click)="abrirAnalisisDelPlan(cliente)" [disabled]="!planProgresoId">Ver análisis del plan</button>
         </ng-container>
       </section>
-      <div class="cliente-ironbot" *ngIf="clienteDetalleTab !== 'progreso'"><button class="cliente-ironbot-principal" type="button" (click)="abrirProgresoCliente()">✧ Consultar progreso e IronBot</button><p>Consulta la predicción con Weka e interpreta el resultado con IronBot, sin salir de Mis clientes.</p></div>
     </div>
   </aside>
 </div>
