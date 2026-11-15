@@ -10,7 +10,7 @@
   </div>
   <header class="page-header">
     <div class="header-actions">
-      <button class="btn-nuevo" type="button" (click)="mostrarCrear()" [disabled]="cargando || guardando">+ Agregar ejercicio</button>
+      <button class="btn-nuevo" type="button" (click)="mostrarCrear()" [disabled]="cargando || guardando" [attr.aria-expanded]="mostrarFormulario && !modoEdicion">{{ mostrarFormulario && !modoEdicion ? 'Ocultar formulario' : '+ Agregar ejercicio' }}</button>
       <button class="btn-actualizar" type="button" (click)="actualizar()" [disabled]="cargando || guardando">{{ cargando ? 'Cargando...' : 'Actualizar' }}</button>
     </div>
   </header>
