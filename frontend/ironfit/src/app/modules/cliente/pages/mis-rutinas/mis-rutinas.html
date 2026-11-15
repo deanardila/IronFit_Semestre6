@@ -88,7 +88,11 @@
         <button type="button" class="panel-cerrar" (click)="cerrarPanelRutina()" [disabled]="modoSesionActiva || guardandoEntrenamiento" aria-label="Cerrar panel">×</button>
       </header>
       <div *ngIf="error" class="estado-panel error-panel" role="alert">{{ error }}</div>
-      <div *ngIf="!modoSesionActiva">
+      <div *ngIf="mensajeExito" class="estado-panel exito-panel confirmacion-entrenamiento" role="status">
+        <span class="confirmacion-icono" aria-hidden="true">✓</span>
+        <p>{{ mensajeExito }}</p>
+      </div>
+      <div *ngIf="!modoSesionActiva && !mensajeExito">
         <div class="rutina-panel-subtitulo"><h3>Ejercicios asignados</h3></div>
             <div class="ejercicios-panel" *ngIf="rutinaAbiertaId === rutina.id">
 
@@ -242,36 +246,4 @@
     </section>
     </aside>
 
-    <div class="resultado-backdrop" *ngIf="resumenEntrenamiento" (click)="cerrarResumenEntrenamiento()"></div>
-    <aside class="resultado-panel" *ngIf="resumenEntrenamiento as resumen" role="dialog" aria-modal="true" aria-labelledby="resultado-titulo">
-      <div class="resultado-encabezado">
-        <div class="resultado-check">✓</div>
-        <div><span class="rutinas-kicker">ENTRENAMIENTO REGISTRADO</span>
-          <h2 id="resultado-titulo">¡Sesión completada!</h2>
-          <p>Tu entrenamiento se guardó correctamente.</p>
-        </div>
-      </div>
-      <div class="resultado-contexto">
-        <strong>{{ resumen.rutinaNombre }}</strong>
-        <span>{{ resumen.fechaRegistro }}</span>
-      </div>
-      <div class="resultado-metricas">
-        <div><strong>{{ resumen.completados }}</strong><span>Realizados</span></div>
-        <div><strong>{{ resumen.ejercicios.length }}</strong><span>Registrados</span></div>
-      </div>
-      <h3>Detalle de tu sesión</h3>
-      <div class="resultado-lista">
-        <article class="resultado-ejercicio" *ngFor="let ejercicio of resumen.ejercicios">
-          <div class="resultado-ejercicio-header">
-            <strong>{{ ejercicio.ejercicioNombre }}</strong>
-            <span [class.completado]="ejercicio.completado">{{ ejercicio.completado ? 'Realizado' : 'No realizado' }}</span>
-          </div>
-          <p>{{ ejercicio.seriesRealizadas }} series · {{ ejercicio.repeticionesRealizadas }} repeticiones · {{ ejercicio.pesoUsado }} kg</p>
-        </article>
-      </div>
-      <div class="resultado-observacion" *ngIf="resumen.observacion">
-        <span>Tu observación</span><p>{{ resumen.observacion }}</p>
-      </div>
-      <button type="button" class="btn-cerrar-resultado" (click)="cerrarResumenEntrenamiento()">Volver a mis rutinas</button>
-    </aside>
 </div>
