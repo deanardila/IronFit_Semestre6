@@ -881,6 +881,22 @@ button:focus-visible,.select-paginacion:focus-visible { outline:2px solid #ffbd6
 .formulario-plan-panel .mensaje-error { text-align:left; margin:0 0 14px; }
 
 
+/* Logo compacto de IronBot en el botón de análisis. */
+.plan-panel .btn-ironbot-principal {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.plan-panel .btn-ironbot-principal .ironbot-boton-logo {
+  display:block;
+  flex:0 0 27px;
+  width:27px;
+  height:27px;
+  object-fit:contain;
+  border-radius:50%;
+}
+.plan-panel .btn-ironbot-principal span { min-width:0; }
 /* Separación entre predicción Weka e interpretación IronBot. */
 .plan-panel .panel-prediccion { margin:22px 0 24px; }
 .plan-panel .btn-ironbot-principal { margin:16px 0 20px; }
