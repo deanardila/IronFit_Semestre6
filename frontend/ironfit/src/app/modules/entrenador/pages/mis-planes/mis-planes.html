@@ -23,7 +23,7 @@
       </select>
     </label>
     <button type="button" class="btn-crear-plan" (click)="toggleFormularioCrear()">
-      {{ (mostrarFormularioCrear || modoEdicion) ? 'Ocultar formulario' : '+ Nuevo plan' }}
+      {{ mostrarFormularioCrear ? 'Ocultar formulario' : '+ Nuevo plan' }}
     </button>
     <button type="button" class="btn-actualizar" (click)="actualizar()"
       [disabled]="guardando || cargando || !!cambiandoEstadoId">Actualizar</button>
@@ -184,6 +184,7 @@
 						<button type="button" [class.seleccionada]="detalleTab === 'nutricion'" (click)="detalleTab = 'nutricion'">Nutrición</button>
 					</div>
 	<section *ngIf="modoEdicion" class="formulario-plan formulario-plan-panel">
+    <p class="mensaje-error" *ngIf="error" role="alert">{{ error }}</p>
 		<h2>{{ modoEdicion ? 'Editar plan' : 'Crear plan' }}</h2>
 
 		<form (ngSubmit)="guardarPlan()" #edicionPlanForm="ngForm">
