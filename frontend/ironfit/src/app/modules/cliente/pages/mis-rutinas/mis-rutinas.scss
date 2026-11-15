@@ -779,3 +779,33 @@ button:focus-visible,input:focus-visible,textarea:focus-visible { outline:2px so
   color:#a6e7b9;
   font:700 14px/1.45 'DM Sans',sans-serif;
 }
+
+
+/* Estado de rutina ya registrada: aviso dentro del mismo panel. */
+.rutina-panel .aviso-entrenamiento {
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:16px;
+  margin-top:10px;
+  background:rgba(255,189,96,.08);
+  border:1px solid rgba(255,189,96,.32);
+  border-radius:11px;
+}
+.aviso-entrenamiento .aviso-icono {
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:rgba(255,189,96,.13);
+  color:#ffbd60;
+  font-size:20px;
+  font-weight:800;
+}
+.rutina-panel .aviso-entrenamiento p {
+  margin:0;
+  color:#ffbd60;
+  font:700 14px/1.5 'DM Sans',sans-serif;
+}
