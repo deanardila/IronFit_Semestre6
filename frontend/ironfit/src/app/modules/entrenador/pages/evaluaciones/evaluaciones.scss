@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
 /* ================== EVALUACIONES FÍSICAS (ENTRENADOR) ================== */
 
 .evaluaciones-layout {
@@ -562,3 +563,87 @@ section p {
   font-size: 13px;
   vertical-align: middle;
 }
+
+
+/* Identidad IronFit — Evaluaciones físicas ENTRENADOR */
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.evaluaciones-layout { box-sizing:border-box; max-width:1200px; min-height:100vh; margin:0 auto; padding:1.75rem 2rem; background:#100c0c; color:#f7f7f8; display:flex; flex-direction:column; gap:20px; }
+.evaluaciones-topbar { display:flex; align-items:center; justify-content:space-between; gap:15px; min-height:90px; padding-bottom:14px; border-bottom:1px solid #303035; }
+.evaluaciones-logo { height:90px; max-width:min(100%,330px); width:auto; object-fit:contain; }
+.evaluaciones-intro { padding:19px 24px 21px; border:1px solid #303035; border-radius:16px; background:linear-gradient(115deg,#19191b,#111113); }
+.evaluaciones-kicker { display:inline-block; padding:4px 8px; border:1px solid rgba(241,29,37,.22); border-radius:6px; color:#f11d25; background:rgba(241,29,37,.09); font-size:11px; font-weight:800; letter-spacing:.1em; }
+.evaluaciones-intro h1 { margin:10px 0 4px; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; text-transform:none; letter-spacing:0; color:#fff; }
+.evaluaciones-intro p { margin:0; color:#a1a1aa; font-size:13px; }
+.evaluaciones-header { padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; justify-content:flex-end; gap:10px; }
+.evaluaciones-header-right { width:100%; flex:1 1 auto; display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; }
+.busqueda-container { display:flex; flex:1 1 340px; min-width:0; max-width:none; gap:9px; }
+.input-busqueda { min-width:0; width:100%; flex:1; box-sizing:border-box; min-height:42px; padding:10px 14px; border:1px solid #39393e; border-radius:9px; background:#212124; color:#fff; font:500 13px 'DM Sans',sans-serif; }
+.input-busqueda::placeholder { color:#a1a1aa; }
+.input-busqueda:focus,.form-row input:focus,.form-row textarea:focus { outline:none; border-color:#f11d25; background:#212124; box-shadow:0 0 0 3px rgba(241,29,37,.13); }
+.btn-volver,.btn-actualizar,.btn-buscar-evaluaciones,.btn-nueva-evaluacion,.btn-paginacion,.btn-gestionar,.btn-eliminar { display:inline-flex; box-sizing:border-box; align-items:center; justify-content:center; min-height:42px; padding:10px 15px; border:1px solid #39393e; border-radius:9px; background:#1b1b1f; color:#eee; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; white-space:nowrap; cursor:pointer; box-shadow:none; }
+.btn-nueva-evaluacion { background:#f11d25; color:#fff; border-color:#f11d25; }
+.btn-nueva-evaluacion:hover:not(:disabled) { transform:none; filter:none; box-shadow:none; background:#d71a21; color:#fff; }
+.btn-volver:hover:not(:disabled),.btn-actualizar:hover:not(:disabled),.btn-buscar-evaluaciones:hover:not(:disabled),.btn-paginacion:hover:not(:disabled),.btn-gestionar:hover:not(:disabled) { transform:none; filter:none; background:#29292d; color:#eee; border-color:#f11d25; }
+.btn-eliminar { background:rgba(241,29,37,.08); color:#ff9aa0; border-color:rgba(241,29,37,.45); }
+.btn-eliminar:hover:not(:disabled) { background:rgba(241,29,37,.18); color:#fff; }
+.formulario-evaluacion { padding:21px; border:1px solid #303035; border-radius:14px; background:#171719; box-shadow:none; }
+.formulario-evaluacion h2 { margin:0 0 15px; font:800 17px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; color:#fff; }
+.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+.form-row label { color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; text-transform:none; letter-spacing:0; }
+.form-row input,.form-row textarea { box-sizing:border-box; width:100%; min-width:0; padding:11px 13px; border:1px solid #39393e; border-radius:9px; background:#212124; color:#fff; font:500 13px 'DM Sans',sans-serif; }
+.form-row input[type="datetime-local"] { color-scheme:dark; }
+.form-row textarea { min-height:90px; }
+.lista-clientes { position:relative; border:1px solid #39393e; border-radius:9px; background:#212124; }
+.item-cliente { color:#eee; }
+.item-cliente:hover { background:rgba(241,29,37,.12); }
+.ayuda-cliente { color:#ffbd60; }
+.cliente-seleccionado,.imc-preview { background:#202023; color:#fff; border:1px solid #39393e; }
+.form-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.form-actions button { box-sizing:border-box; min-height:42px; border:1px solid #39393e; border-radius:9px; padding:10px 15px; font:700 13px 'DM Sans',sans-serif; text-transform:none; letter-spacing:0; box-shadow:none; }
+.form-actions button[type="submit"] { background:#f11d25; color:#fff; border-color:#f11d25; }
+.form-actions button[type="submit"]:hover:not(:disabled) { transform:none; filter:none; background:#d71a21; }
+.form-actions button[type="button"] { background:#242427; color:#eee; }
+.form-actions button[type="button"]:hover:not(:disabled) { transform:none; filter:none; background:#303035; }
+.mensaje-error p,.mensaje-exito p,section > p { box-shadow:none; border-radius:12px; background:#171719; border:1px solid #303035; color:#a1a1aa; padding:16px; text-align:left; font:500 13px 'DM Sans',sans-serif; }
+.mensaje-error p { color:#ff9aa0; border-color:rgba(241,29,37,.35); }
+.mensaje-exito p { color:#a6e7b9; border-color:rgba(34,197,94,.35); }
+.evaluaciones-resultados { min-width:0; }
+.tabla-titulo { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:15px 17px; border:1px solid #303035; border-bottom:0; border-radius:14px 14px 0 0; background:#202023; }
+.tabla-titulo h2 { margin:0; color:#fff; font:800 16px 'DM Sans',sans-serif; }
+.tabla-titulo span { color:#a1a1aa; font-size:12px; }
+.evaluaciones-tabla-scroll { width:100%; overflow-x:auto; border:1px solid #303035; border-radius:0 0 14px 14px; }
+.evaluaciones-tabla { display:table; min-width:940px; width:100%; margin:0; border-collapse:collapse; background:#171719; border-radius:0; overflow:visible; box-shadow:none; }
+.evaluaciones-tabla th { padding:15px 13px; border-bottom:1px solid #35353b; text-align:left; background:#202023; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; letter-spacing:.02em; text-transform:none; }
+.evaluaciones-tabla td { padding:14px 13px; border-bottom:1px solid #303035; color:#e4e4e7; font:500 13px 'DM Sans',sans-serif; vertical-align:middle; }
+.evaluaciones-tabla tbody tr:nth-child(odd),.evaluaciones-tabla tbody tr:nth-child(odd) td { background:#171719; }
+.evaluaciones-tabla tbody tr:nth-child(even),.evaluaciones-tabla tbody tr:nth-child(even) td { background:#202023; }
+.evaluaciones-tabla tbody tr:hover,.evaluaciones-tabla tbody tr:hover td { background:#29292d; }
+.tabla-nombre { color:#fff!important; font-weight:700!important; }
+.tabla-vacia { color:#a1a1aa!important; padding:26px!important; text-align:center; }
+.imc-badge { border:1px solid rgba(34,197,94,.3); background:rgba(34,197,94,.1); color:#a6e7b9; font:800 12px 'DM Sans',sans-serif; }
+.paginacion-evaluaciones { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-top:12px; padding:0; border:0; border-radius:0; box-shadow:none; background:transparent; }
+.paginacion-info span { font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; color:#eee; }
+.paginacion-info small { color:#a1a1aa; font-size:12px; }
+.paginacion-controles { display:flex; flex-wrap:wrap; gap:10px; }
+.select-paginacion { box-sizing:border-box; min-height:42px; border:1px solid #39393e; border-radius:9px; background:#212124; padding:10px 12px; color:#fff; font:600 13px 'DM Sans',sans-serif; }
+.evaluacion-panel-backdrop { position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.68); }
+.evaluacion-panel { position:fixed; box-sizing:border-box; top:0; right:0; width:min(560px,100vw); height:100dvh; overflow-y:auto; z-index:101; padding:28px; border-left:1px solid #39393e; background:#171719; box-shadow:-30px 0 90px rgba(0,0,0,.65); }
+.evaluacion-panel-header { display:flex; justify-content:space-between; gap:15px; align-items:flex-start; border-bottom:1px solid #36363c; padding-bottom:22px; }
+.evaluacion-panel-header h2 { margin:9px 0 5px; color:#fff; font:800 23px/1.2 'DM Sans',sans-serif; overflow-wrap:anywhere; }
+.evaluacion-panel-header p { margin:0; color:#a1a1aa; font-size:13px; }
+.panel-cerrar { flex:none; width:38px; height:38px; border:1px solid #3c3c42; border-radius:9px; background:#242427; color:#eee; font-size:23px; cursor:pointer; }
+.evaluacion-panel-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:20px 0; }
+.evaluacion-panel-grid > div { display:flex; flex-direction:column; gap:6px; border:1px solid #39393e; border-radius:9px; padding:13px; background:#202023; }
+.evaluacion-panel-grid span,.evaluacion-panel-observaciones > span { color:#a1a1aa; font-size:12px; }
+.evaluacion-panel-grid strong { color:#fff; font-size:15px; overflow-wrap:anywhere; }
+.evaluacion-panel-observaciones { border-top:1px solid #313137; padding:17px 0; }
+.evaluacion-panel-observaciones p { color:#eee; font-size:13px; line-height:1.6; margin:7px 0 0; background:transparent; border:0; box-shadow:none; padding:0; }
+.evaluacion-panel-acciones { display:flex; flex-wrap:wrap; gap:10px; }
+.evaluacion-panel-acciones button { flex:1 1 auto; }
+.evaluacion-panel .formulario-evaluacion { margin-top:16px; padding:17px; background:#202023; border-color:#39393e; }
+.evaluacion-panel .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.evaluacion-panel .form-row-full { grid-column:1/-1; }
+.panel-error { padding:12px; color:#ff9aa0; background:#202023; border:1px solid rgba(241,29,37,.35); border-radius:9px; font-size:13px; }
+button:focus-visible,input:focus-visible,select:focus-visible { outline:2px solid #ffbd60; outline-offset:3px; }
+@media(max-width:850px) { .evaluaciones-layout { padding:1.25rem 1rem; } .evaluaciones-logo { height:64px; max-width:180px; } .busqueda-container { min-width:0; flex:1 1 100%; flex-direction:row; } .evaluaciones-tabla { display:table; min-width:940px; } .paginacion-evaluaciones { flex-direction:column; align-items:stretch; } }
+@media(max-width:580px) { .evaluacion-panel { padding:20px; } .evaluacion-panel .form-grid,.form-grid { grid-template-columns:1fr; } .busqueda-container { flex-wrap:wrap; } }
