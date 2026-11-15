@@ -214,7 +214,9 @@ export class MisRutinas implements OnInit {
     this.mostrarFormulario = false;
     this.modoEdicion = false;
     this.rutinaEditandoId = null;
-    this.rutinaSeleccionada = null;
+    // Conservar el detalle abierto si seguimos gestionando el mismo plan.
+    const rutinaAbiertaId = this.rutinaSeleccionada?.planId === planId
+      ? this.rutinaSeleccionada.id : null;
 
     this.planesService.obtenerPlan(planId)
       .pipe(timeout(this.requestTimeoutMs))
@@ -240,6 +242,8 @@ export class MisRutinas implements OnInit {
                 );
 
                 this.aplicarFiltroDia();
+                this.rutinaSeleccionada = rutinaAbiertaId
+                  ? this.rutinas.find(rutina => rutina.id === rutinaAbiertaId) || null : null;
 
                 this.cargando = false;
                 this.cdr.detectChanges();
@@ -363,6 +367,7 @@ export class MisRutinas implements OnInit {
       return;
     }
 
+    this.rutinaSeleccionada = null;
     this.rutinaSeleccionada = null;
     this.mostrarFormulario = true;
     this.modoEdicion = false;
