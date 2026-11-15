@@ -15,7 +15,6 @@
       <button type="button" class="btn-buscar-planes" (click)="aplicarFiltros()">Buscar</button>
     </div>
     <label class="filtro-estado-container">
-      <span>Estado</span>
       <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" aria-label="Filtrar planes por estado">
         <option value="TODOS">Todos</option>
         <option value="ACTIVOS">Activos</option>
@@ -173,7 +172,7 @@
       <button type="button" class="estado-badge estado-accion" [class.activo]="p.activo" [class.inactivo]="!p.activo"
         (click)="cambiarEstado(p)" [disabled]="guardando || cambiandoEstadoId === p.id"
         [attr.aria-label]="'Cambiar estado del plan ' + p.nombre">
-        {{ cambiandoEstadoId === p.id ? 'Procesando...' : (p.activo ? 'ACTIVO · Cambiar estado' : 'INACTIVO · Cambiar estado') }}
+        {{ cambiandoEstadoId === p.id ? 'Procesando...' : (p.activo ? 'ACTIVO' : 'INACTIVO') }}
       </button>
     </div>
 				<div class="plan-detalle">
