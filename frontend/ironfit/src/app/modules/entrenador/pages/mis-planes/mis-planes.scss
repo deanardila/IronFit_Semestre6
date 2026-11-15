@@ -879,3 +879,10 @@ button:focus-visible,.select-paginacion:focus-visible { outline:2px solid #ffbd6
 .formulario-plan-panel .form-actions button { flex:1 1 auto; }
 .formulario-plan-panel .lista-clientes { max-height:190px; overflow-y:auto; }
 .formulario-plan-panel .mensaje-error { text-align:left; margin:0 0 14px; }
+
+
+/* Separación entre predicción Weka e interpretación IronBot. */
+.plan-panel .panel-prediccion { margin:22px 0 24px; }
+.plan-panel .btn-ironbot-principal { margin:16px 0 20px; }
+.plan-panel app-ironbot-panel { display:block; margin:24px 0 14px; }
+.plan-panel .panel-prediccion + app-ironbot-panel { margin-top:24px; }
