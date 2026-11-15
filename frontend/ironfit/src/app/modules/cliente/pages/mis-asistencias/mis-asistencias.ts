@@ -315,7 +315,7 @@ export class MisAsistencias implements OnInit {
     const dias = [
       { etiqueta: 'L', suma: 0 },
       { etiqueta: 'M', suma: 1 },
-      { etiqueta: 'X', suma: 2 },
+      { etiqueta: 'M', suma: 2 },
       { etiqueta: 'J', suma: 3 },
       { etiqueta: 'V', suma: 4 },
       { etiqueta: 'S', suma: 5 },
