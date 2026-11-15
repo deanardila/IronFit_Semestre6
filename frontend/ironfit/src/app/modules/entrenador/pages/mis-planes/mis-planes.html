@@ -1,47 +1,33 @@
 <div class="planes-layout">
-
-	<header class="planes-header">
-		<div class="planes-header-left">
-			<button class="btn-volver" (click)="volver()">← Volver</button>
-			<h1>Mis planes de entrenamiento</h1>
-		</div>
-
-		<div class="planes-header-right">
-			<div class="busqueda-container">
-				<input
-					type="text"
-					class="input-busqueda"
-					placeholder="🔍 Buscar por nombre, cliente u objetivo..."
-					[(ngModel)]="terminoBusqueda"
-					(keyup.enter)="aplicarFiltros()"
-				/>
-
-				<button
-					type="button"
-					class="btn-buscar-planes"
-					(click)="aplicarFiltros()">
-					Buscar
-				</button>
-			</div>
-
-			<button class="btn-crear-plan" (click)="toggleFormularioCrear()">
-				{{ (mostrarFormularioCrear || modoEdicion) ? 'Ocultar formulario' : '+ Nuevo plan' }}
-			</button>
-
-			<button class="btn-actualizar" (click)="actualizar()" [disabled]="guardando || cargando || !!cambiandoEstadoId">
-				Actualizar
-			</button>
-		</div>
-
-		<div class="filtro-estado-container">
-			<select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
-				<option value="TODOS">Todos</option>
-				<option value="ACTIVOS">Activos</option>
-				<option value="INACTIVOS">Inactivos</option>
-			</select>
-		</div>
-	</header>
-
+  <div class="planes-topbar">
+    <img class="planes-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit">
+    <button type="button" class="btn-volver" (click)="volver()">← Volver al panel</button>
+  </div>
+  <div class="planes-intro">
+    <span class="planes-kicker">ENTRENADOR</span>
+    <h1>Mis planes de entrenamiento</h1>
+    <p>Gestiona planes, rutinas, nutrición y análisis de progreso desde un mismo lugar.</p>
+  </div>
+  <header class="planes-header">
+    <div class="busqueda-container">
+      <input type="search" class="input-busqueda" placeholder="🔍 Buscar por nombre, cliente u objetivo..."
+        aria-label="Buscar planes de entrenamiento" [(ngModel)]="terminoBusqueda" (keyup.enter)="aplicarFiltros()">
+      <button type="button" class="btn-buscar-planes" (click)="aplicarFiltros()">Buscar</button>
+    </div>
+    <label class="filtro-estado-container">
+      <span>Estado</span>
+      <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" aria-label="Filtrar planes por estado">
+        <option value="TODOS">Todos</option>
+        <option value="ACTIVOS">Activos</option>
+        <option value="INACTIVOS">Inactivos</option>
+      </select>
+    </label>
+    <button type="button" class="btn-crear-plan" (click)="toggleFormularioCrear()">
+      {{ (mostrarFormularioCrear || modoEdicion) ? 'Ocultar formulario' : '+ Nuevo plan' }}
+    </button>
+    <button type="button" class="btn-actualizar" (click)="actualizar()"
+      [disabled]="guardando || cargando || !!cambiandoEstadoId">Actualizar</button>
+  </header>
 	<section *ngIf="mostrarFormularioCrear || modoEdicion" class="formulario-plan">
 		<h2>{{ modoEdicion ? 'Editar plan' : 'Crear plan' }}</h2>
 
@@ -130,52 +116,67 @@
 		</form>
 	</section>
 
-	<section *ngIf="cargando">
-		<p>⏳ Cargando planes...</p>
-	</section>
-
-	<section *ngIf="!cargando && error" class="mensaje-error">
-		<p>⚠️ {{ error }}</p>
-	</section>
-
-	<section *ngIf="!cargando && !error && planesFiltrados.length === 0">
-		<p>📋 No hay planes registrados.</p>
-	</section>
-
-	<section *ngIf="!cargando && !error && planesFiltrados.length > 0">
-		<div class="planes-tarjetas">
-			<article class="plan-tarjeta" *ngFor="let p of planesFiltrados" [class.plan-tarjeta--abierta]="planDetalleId === p.id">
-				<div class="plan-tarjeta-cabecera">
-					<div class="plan-avatar" aria-hidden="true">◉</div>
-					<div class="plan-tarjeta-identidad">
-						<h3>{{ p.clienteNombre || p.clienteId }}</h3>
-						<p>{{ p.nombre }}</p>
-						<small>{{ p.objetivo }}</small>
-					</div>
-					<button type="button" class="estado-badge" [class.activo]="p.activo"
-						[class.inactivo]="!p.activo" (click)="cambiarEstado(p)"
-						[disabled]="cambiandoEstadoId === p.id"
-						[attr.aria-label]="'Cambiar estado del plan ' + p.nombre">
-						{{ cambiandoEstadoId === p.id ? 'Procesando...' : (p.activo ? 'ACTIVO' : 'INACTIVO') }}
-					</button>
-					<button class="btn-plan-detalle" type="button" [attr.aria-expanded]="planDetalleId === p.id"
-						(click)="alternarDetallePlan(p)">
-						{{ planDetalleId === p.id ? 'Cerrar' : 'Ver más' }}
-					</button>
-				</div>
-				<div class="plan-tarjeta-resumen" *ngIf="planDetalleId !== p.id">
-					<span><strong>Inicio:</strong> {{ p.fechaInicio }}</span>
-					<span><strong>Fin:</strong> {{ p.fechaFin }}</span>
-					<span><strong>Entrenador:</strong> {{ p.entrenadorNombre || p.entrenadorId }}</span>
-				</div>
-				<div class="plan-acciones-cerrado" *ngIf="planDetalleId !== p.id">
-					<button class="btn-ironbot-secundario" type="button"
-						(click)="analizarPlanConIronBot(p)"
-						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
-						{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : '♧ Abrir IronBot' }}
-					</button>
-				</div>
-				<div class="plan-detalle" *ngIf="planDetalleId === p.id">
+  <section class="estado-panel" *ngIf="cargando">Cargando planes de entrenamiento...</section>
+  <section class="mensaje-error" *ngIf="!cargando && error" role="alert">{{ error }}</section>
+  <section class="planes-resultados">
+    <div class="tabla-titulo">
+      <h2>Planes de entrenamiento</h2>
+      <span>{{ totalElementos }} {{ totalElementos === 1 ? 'plan registrado' : 'planes registrados' }}</span>
+    </div>
+    <div class="planes-tabla-scroll">
+      <table class="planes-tabla">
+        <thead><tr>
+          <th>Plan</th><th>Cliente</th><th>Objetivo</th>
+          <th>Inicio</th><th>Fin</th><th>Estado</th><th>Acciones</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let p of planesFiltrados; trackBy: identificarPlan">
+            <td class="plan-nombre">{{ p.nombre }}</td>
+            <td>{{ p.clienteNombre || p.clienteId }}</td>
+            <td>{{ p.objetivo || '—' }}</td>
+            <td>{{ p.fechaInicio }}</td>
+            <td>{{ p.fechaFin }}</td>
+            <td><span class="estado-badge" [class.activo]="p.activo" [class.inactivo]="!p.activo">{{ p.activo ? 'ACTIVO' : 'INACTIVO' }}</span></td>
+            <td><button type="button" class="btn-plan-detalle" (click)="alternarDetallePlan(p)">Gestionar</button></td>
+          </tr>
+          <tr *ngIf="!cargando && !error && planesFiltrados.length === 0">
+            <td colspan="7" class="tabla-vacia">No se encontraron planes con estos filtros.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="paginacion-planes" *ngIf="totalElementos > 0">
+      <div class="paginacion-info"><span>Página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}</span><small>Total planes: {{ totalElementos }}</small></div>
+      <div class="paginacion-controles">
+        <button type="button" class="btn-paginacion" (click)="irPaginaAnterior()"
+          [disabled]="cargando || paginaActual === 0">← Anterior</button>
+        <select class="select-paginacion" [(ngModel)]="tamanoPagina" (change)="cambiarTamanoPagina()" aria-label="Planes por página">
+          <option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">{{ opcion }} por página</option>
+        </select>
+        <button type="button" class="btn-paginacion" (click)="irPaginaSiguiente()"
+          [disabled]="cargando || ultimaPagina || paginaActual >= totalPaginas - 1">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+  <div class="plan-panel-backdrop" *ngIf="planSeleccionado" (click)="cerrarDetallePlan()"></div>
+  <aside class="plan-panel" *ngIf="planSeleccionado as p" role="dialog" aria-modal="true" aria-labelledby="plan-panel-titulo">
+    <header class="plan-panel-header">
+      <div>
+        <span class="planes-kicker">PLAN DE ENTRENAMIENTO</span>
+        <h2 id="plan-panel-titulo">{{ p.nombre }}</h2>
+        <p>{{ p.clienteNombre || p.clienteId }}</p>
+      </div>
+      <button type="button" class="panel-cerrar" aria-label="Cerrar detalles" (click)="cerrarDetallePlan()">×</button>
+    </header>
+    <div class="plan-estado-control">
+      <span>Estado del plan</span>
+      <button type="button" class="estado-badge estado-accion" [class.activo]="p.activo" [class.inactivo]="!p.activo"
+        (click)="cambiarEstado(p)" [disabled]="guardando || cambiandoEstadoId === p.id"
+        [attr.aria-label]="'Cambiar estado del plan ' + p.nombre">
+        {{ cambiandoEstadoId === p.id ? 'Procesando...' : (p.activo ? 'ACTIVO · Cambiar estado' : 'INACTIVO · Cambiar estado') }}
+      </button>
+    </div>
+				<div class="plan-detalle">
 					<div class="plan-tabs" role="group" aria-label="Secciones del plan">
 						<button type="button" [class.seleccionada]="detalleTab === 'resumen'" (click)="detalleTab = 'resumen'">Resumen</button>
 						<button type="button" [class.seleccionada]="detalleTab === 'rutinas'" (click)="detalleTab = 'rutinas'">Plan y rutinas</button>
@@ -286,46 +287,5 @@
 						</app-ironbot-panel>
 
 				</div>
-			</article>
-		</div>
-
-		<div class="paginacion-planes" *ngIf="totalElementos > 0">
-			<div class="paginacion-info">
-				<span>
-					Mostrando página {{ paginaActual + 1 }} de {{ totalPaginas || 1 }}
-				</span>
-				<small>
-					Total planes: {{ totalElementos }}
-				</small>
-			</div>
-
-			<div class="paginacion-controles">
-				<button
-					type="button"
-					class="btn-paginacion"
-					(click)="irPaginaAnterior()"
-					[disabled]="paginaActual === 0">
-					← Anterior
-				</button>
-
-				<select
-					class="select-paginacion"
-					[(ngModel)]="tamanoPagina"
-					(change)="cambiarTamanoPagina()">
-					<option *ngFor="let opcion of opcionesTamanoPagina" [ngValue]="opcion">
-						{{ opcion }} por página
-					</option>
-				</select>
-
-				<button
-					type="button"
-					class="btn-paginacion"
-					(click)="irPaginaSiguiente()"
-					[disabled]="ultimaPagina || paginaActual >= totalPaginas - 1">
-					Siguiente →
-				</button>
-			</div>
-		</div>
-	</section>
-
+  </aside>
 </div>
