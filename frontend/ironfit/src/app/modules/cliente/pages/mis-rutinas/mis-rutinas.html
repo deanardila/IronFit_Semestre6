@@ -58,38 +58,38 @@
         <p>📋 No hay rutinas asignadas para este día.</p>
         </div>
 
-        <div class="rutinas-lista" *ngIf="rutinasFiltradas.length > 0">
 
-        <article
-            class="rutina-card"
-            *ngFor="let rutina of rutinasFiltradas"
-            [class.abierta]="rutinaAbiertaId === rutina.id">
+        <div class="tabla-titulo"><h2>Rutinas asignadas</h2><span>{{ rutinasFiltradas.length }} rutinas</span></div>
+        <div class="rutinas-tabla-scroll">
+          <table class="rutinas-tabla">
+            <thead><tr><th>Rutina</th><th>Día</th><th>Descripción</th><th>Orden</th><th>Acciones</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let rutina of rutinasFiltradas">
+                <td class="tabla-nombre">{{ rutina.nombre }}</td>
+                <td>{{ rutina.diaSemana || 'Sin día' }}</td>
+                <td>{{ rutina.descripcion || '—' }}</td>
+                <td>{{ rutina.orden }}</td>
+                <td><button class="btn-gestionar" type="button" (click)="toggleRutina(rutina)" [disabled]="modoSesionActiva || guardandoEntrenamiento">Ver rutina</button></td>
+              </tr>
+              <tr *ngIf="rutinasFiltradas.length === 0"><td colspan="5" class="tabla-vacia">No hay rutinas asignadas para este día.</td></tr>
+            </tbody>
+          </table>
+        </div>
+    </section>
 
-            <button class="rutina-main" type="button" (click)="toggleRutina(rutina)" [attr.aria-expanded]="rutinaAbiertaId === rutina.id">
-
-            <div class="rutina-icono">
-                🏋️
-            </div>
-
-            <div class="rutina-info">
-                <h3>{{ rutina.nombre }}</h3>
-                <p>
-                {{ rutina.diaSemana || 'Sin día' }}
-                <span *ngIf="rutina.descripcion"> · {{ rutina.descripcion }}</span>
-                </p>
-            </div>
-
-            <div class="rutina-meta">
-                <span>{{ obtenerEjercicios(rutina.id).length || '-' }}</span>
-                <small>ejercicios</small>
-            </div>
-
-            <span class="rutina-flecha">
-                {{ rutinaAbiertaId === rutina.id ? '⌃' : '›' }}
-            </span>
-
-            </button>
-
+    <div class="rutina-panel-backdrop" *ngIf="rutinaSeleccionada" (click)="cerrarPanelRutina()"></div>
+    <aside class="rutina-panel" *ngIf="rutinaSeleccionada as rutina" role="dialog" aria-modal="true" aria-labelledby="cliente-rutina-titulo">
+      <header class="rutina-panel-header">
+        <div>
+          <span class="rutinas-kicker">RUTINA DE ENTRENAMIENTO</span>
+          <h2 id="cliente-rutina-titulo">{{ rutina.nombre }}</h2>
+          <p>{{ rutina.diaSemana || 'Sin día' }} · {{ rutina.descripcion || 'Sin descripción' }}</p>
+        </div>
+        <button type="button" class="panel-cerrar" (click)="cerrarPanelRutina()" [disabled]="modoSesionActiva || guardandoEntrenamiento" aria-label="Cerrar panel">×</button>
+      </header>
+      <div *ngIf="error" class="estado-panel error-panel" role="alert">{{ error }}</div>
+      <div *ngIf="!modoSesionActiva">
+        <div class="rutina-panel-subtitulo"><h3>Ejercicios asignados</h3></div>
             <div class="ejercicios-panel" *ngIf="rutinaAbiertaId === rutina.id">
 
             <div *ngIf="cargandoEjerciciosId === rutina.id" class="mini-estado">
@@ -143,38 +143,11 @@
             </div>
 
             </div>
-
-        </article>
-
-        </div>
-
-        <div *ngIf="mensajeExito" class="estado-panel exito-panel" role="status">
-    <p>✅ {{ mensajeExito }}</p>
-    </div>
-
-    <button
-        class="btn-iniciar-sesion"
-        type="button"
-        (click)="iniciarSesionHoy()"
-        [disabled]="!rutinaAbiertaId || !!cargandoEjerciciosId || modoSesionActiva || guardandoEntrenamiento">
-
-        <span *ngIf="!rutinaAbiertaId">
-            Primero abre una rutina
-        </span>
-
-        <span *ngIf="rutinaAbiertaId && cargandoEjerciciosId">
-            Cargando ejercicios...
-        </span>
-
-        <span *ngIf="rutinaAbiertaId && !cargandoEjerciciosId && !modoSesionActiva">
-            Iniciar sesión de hoy
-        </span>
-
-        <span *ngIf="modoSesionActiva">
-            Sesión en curso
-        </span>
-    </button>
-
+        <button class="btn-iniciar-sesion" type="button" (click)="iniciarSesionHoy()"
+          [disabled]="cargandoEjerciciosId === rutina.id || obtenerEjercicios(rutina.id).length === 0 || guardandoEntrenamiento">
+          {{ cargandoEjerciciosId === rutina.id ? 'Cargando ejercicios...' : 'Iniciar entrenamiento' }}
+        </button>
+      </div>
     <section *ngIf="modoSesionActiva && rutinaSesion" class="sesion-panel">
 
     <div class="sesion-header">
@@ -267,7 +240,38 @@
     </button>
 
     </section>
+    </aside>
 
-    </section>
-
+    <div class="resultado-backdrop" *ngIf="resumenEntrenamiento" (click)="cerrarResumenEntrenamiento()"></div>
+    <aside class="resultado-panel" *ngIf="resumenEntrenamiento as resumen" role="dialog" aria-modal="true" aria-labelledby="resultado-titulo">
+      <div class="resultado-encabezado">
+        <div class="resultado-check">✓</div>
+        <div><span class="rutinas-kicker">ENTRENAMIENTO REGISTRADO</span>
+          <h2 id="resultado-titulo">¡Sesión completada!</h2>
+          <p>Tu entrenamiento se guardó correctamente.</p>
+        </div>
+      </div>
+      <div class="resultado-contexto">
+        <strong>{{ resumen.rutinaNombre }}</strong>
+        <span>{{ resumen.fechaRegistro }}</span>
+      </div>
+      <div class="resultado-metricas">
+        <div><strong>{{ resumen.completados }}</strong><span>Realizados</span></div>
+        <div><strong>{{ resumen.ejercicios.length }}</strong><span>Registrados</span></div>
+      </div>
+      <h3>Detalle de tu sesión</h3>
+      <div class="resultado-lista">
+        <article class="resultado-ejercicio" *ngFor="let ejercicio of resumen.ejercicios">
+          <div class="resultado-ejercicio-header">
+            <strong>{{ ejercicio.ejercicioNombre }}</strong>
+            <span [class.completado]="ejercicio.completado">{{ ejercicio.completado ? 'Realizado' : 'No realizado' }}</span>
+          </div>
+          <p>{{ ejercicio.seriesRealizadas }} series · {{ ejercicio.repeticionesRealizadas }} repeticiones · {{ ejercicio.pesoUsado }} kg</p>
+        </article>
+      </div>
+      <div class="resultado-observacion" *ngIf="resumen.observacion">
+        <span>Tu observación</span><p>{{ resumen.observacion }}</p>
+      </div>
+      <button type="button" class="btn-cerrar-resultado" (click)="cerrarResumenEntrenamiento()">Volver a mis rutinas</button>
+    </aside>
 </div>
