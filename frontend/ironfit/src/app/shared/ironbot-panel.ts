@@ -9,9 +9,12 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
   template: `
     <section class="ironbot-panel" *ngIf="cargando || respuesta || error">
       <header class="ironbot-header">
-        <div>
-          <span class="ironbot-kicker">IRONBOT · IRONFIT</span>
-          <h3>{{ respuesta?.titulo || 'Asistente de análisis' }}</h3>
+        <div class="ironbot-identity">
+          <img class="ironbot-avatar" src="assets/ironfit/IronBot_Avatar.svg" alt="Logo de IronBot">
+          <div>
+            <span class="ironbot-kicker">IRONBOT · IRONFIT</span>
+            <h3>{{ respuesta?.titulo || 'Asistente de análisis' }}</h3>
+          </div>
         </div>
         <span class="ironbot-source" *ngIf="respuesta?.fuente">Fuente: {{ respuesta?.fuente }}</span>
       </header>
@@ -71,6 +74,11 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
     .ironbot-error{color:#fca5a5}
     @media(max-width:760px){.ironbot-grid{grid-template-columns:1fr}.ironbot-header{flex-direction:column}.ironbot-actions .retry{margin-left:0}}
 
+
+    .ironbot-identity{display:flex;align-items:center;gap:13px;min-width:0}
+    .ironbot-avatar{display:block;flex:none;width:58px;height:58px;object-fit:contain;border:1px solid #39393e;border-radius:13px;background:#080809;padding:5px;box-sizing:border-box}
+    .ironbot-identity > div{min-width:0}
+    @media(max-width:760px){.ironbot-avatar{width:50px;height:50px}}
     :host{display:block;font-family:'DM Sans',system-ui,sans-serif}
     .ironbot-panel{margin:0;padding:22px;border:1px solid #303035;border-radius:14px;background:#171719;color:#f7f7f8}
     .ironbot-header{align-items:center;padding-bottom:17px;border-bottom:1px solid #303035}
