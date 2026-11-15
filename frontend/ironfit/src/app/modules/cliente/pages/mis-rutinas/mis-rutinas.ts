@@ -16,14 +16,6 @@ interface DatosEjercicioSesion {
   completado: boolean;
 }
 
-interface ResumenEntrenamiento {
-  rutinaNombre: string;
-  fechaRegistro: string;
-  ejercicios: DatosEjercicioSesion[];
-  completados: number;
-  observacion: string;
-}
-
 @Component({
   selector: 'app-mis-rutinas',
   standalone: false,
@@ -38,7 +30,6 @@ export class MisRutinas implements OnInit {
 
   error = '';
   mensajeExito = '';
-  resumenEntrenamiento: ResumenEntrenamiento | null = null;
 
   planes: PlanEntrenamientoDTO[] = [];
   planActivo: PlanEntrenamientoDTO | null = null;
@@ -84,7 +75,6 @@ export class MisRutinas implements OnInit {
     this.cargando = true;
     this.error = '';
     this.mensajeExito = '';
-    this.resumenEntrenamiento = null;
     this.rutinas = [];
     this.rutinasFiltradas = [];
     this.planActivo = null;
@@ -154,6 +144,7 @@ export class MisRutinas implements OnInit {
       return;
     }
 
+    this.mensajeExito = '';
     this.rutinaAbiertaId = rutina.id;
 
     if (this.ejerciciosPorRutina[rutina.id]) {
@@ -186,7 +177,6 @@ export class MisRutinas implements OnInit {
   iniciarSesionHoy(): void {
     this.error = '';
     this.mensajeExito = '';
-    this.resumenEntrenamiento = null;
 
     if (!this.planActivo) {
       this.error = 'No tienes un plan activo para iniciar una sesión.';
@@ -275,17 +265,11 @@ export class MisRutinas implements OnInit {
 
     this.entrenamientoRealizadoService.registrarEntrenamiento(request).subscribe({
       next: () => {
-        // Snapshot del registro confirmado por el backend, antes de vaciar el formulario.
-        this.resumenEntrenamiento = {
-          rutinaNombre: request.rutinaNombre,
-          fechaRegistro: new Date().toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' }),
-          ejercicios: ejerciciosRealizados.map(ejercicio => ({ ...ejercicio })),
-          completados: ejerciciosRealizados.filter(ejercicio => ejercicio.completado).length,
-          observacion: request.observacionCliente || ''
-        };
         this.guardandoEntrenamiento = false;
         this.cancelarSesion();
-        this.rutinaAbiertaId = null;
+        // Mostrar únicamente la confirmación en el mismo panel lateral.
+        // Nunca se muestra si el servidor devuelve un error.
+        this.mensajeExito = 'Entrenamiento registrado correctamente.';
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -297,13 +281,11 @@ export class MisRutinas implements OnInit {
     });
   }
 
-  cerrarResumenEntrenamiento(): void {
-    this.resumenEntrenamiento = null;
-  }
-
   cerrarPanelRutina(): void {
     if (this.modoSesionActiva || this.guardandoEntrenamiento) return;
     this.rutinaAbiertaId = null;
+    this.mensajeExito = '';
+    this.error = '';
   }
 
   get rutinaSeleccionada(): RutinaDTO | null {
