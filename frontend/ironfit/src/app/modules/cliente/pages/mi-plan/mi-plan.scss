@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
 .mi-plan-page {
     min-height: 100vh;
     padding: 32px 38px;
@@ -269,3 +270,40 @@
         width: 100%;
     }
 }
+
+/* Mi plan CLIENTE — identidad uniforme IronFit */
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.mi-plan-page { box-sizing:border-box; max-width:1200px; min-height:100vh; margin:0 auto; padding:1.75rem 2rem; display:flex; flex-direction:column; gap:20px; background:#100c0c; }
+.mi-plan-topbar { display:flex; justify-content:space-between; align-items:center; min-height:90px; gap:15px; padding-bottom:14px; border-bottom:1px solid #303035; }
+.mi-plan-logo { height:90px; max-width:min(100%,330px); width:auto; object-fit:contain; }
+.mi-plan-intro { padding:19px 24px 21px; border:1px solid #303035; border-radius:16px; background:linear-gradient(115deg,#19191b,#111113); }
+.mi-plan-kicker { display:inline-flex; padding:4px 8px; color:#f11d25; background:rgba(241,29,37,.09); border:1px solid rgba(241,29,37,.22); border-radius:6px; font-size:11px; font-weight:800; letter-spacing:.1em; }
+.mi-plan-intro h1 { margin:10px 0 4px; color:#fff; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; letter-spacing:0; text-transform:none; }
+.mi-plan-intro p { margin:0; color:#a1a1aa; font-size:13px; }
+.mi-plan-header { display:flex; align-items:center; justify-content:space-between; gap:15px; margin:0; padding:18px 20px; border:1px solid #303035; background:#202023; border-radius:14px; box-shadow:none; }
+.mi-plan-header h2 { margin:0 0 4px; font:800 17px 'DM Sans',sans-serif; color:#fff; }
+.mi-plan-header p { margin:0; color:#a1a1aa; font-size:12px; }
+.btn-volver,.btn-actualizar,.btn-ver-rutinas { display:inline-flex; box-sizing:border-box; justify-content:center; align-items:center; min-height:42px; padding:10px 15px; border:1px solid #39393e; border-radius:9px; background:#1b1b1f; color:#eee; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; white-space:nowrap; box-shadow:none; cursor:pointer; }
+.btn-volver:hover:not(:disabled),.btn-actualizar:hover:not(:disabled) { border-color:#f11d25; background:#29292d; color:#eee; box-shadow:none; transform:none; }
+.btn-ver-rutinas { background:#f11d25; border-color:#f11d25; color:#fff; }
+.btn-ver-rutinas:hover:not(:disabled) { background:#d71a21; border-color:#f11d25; color:#fff; box-shadow:none; transform:none; }
+.estado-panel { margin:0; padding:16px; border:1px solid #303035; border-radius:12px; background:#171719; text-align:left; box-shadow:none; font-size:13px; color:#a1a1aa; }
+.estado-panel p { color:#a1a1aa; }
+.error-panel { border-color:rgba(241,29,37,.35); }
+.error-panel p { color:#ff9aa0; }
+.plan-card-principal { margin:0; padding:22px; background:#171719; border:1px solid #303035; border-radius:14px; box-shadow:none; }
+.info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:20px; }
+.info-item { box-sizing:border-box; min-width:0; min-height:100px; padding:16px; display:flex; flex-direction:column; justify-content:center; gap:7px; border:1px solid #39393e; border-radius:10px; background:#202023; box-shadow:none; }
+.info-item:hover,.descripcion-box:hover,.rutinas-resumen-box:hover { border-color:#39393e; }
+.info-label { margin:0; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.info-item p { color:#fff; margin:0; font:700 15px/1.4 'DM Sans',sans-serif; overflow-wrap:anywhere; }
+.estado-badge { padding:6px 11px; border-radius:999px; font:800 11px 'DM Sans',sans-serif; letter-spacing:0; }
+.estado-badge.activo { color:#a6e7b9; background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); }
+.descripcion-box { margin-top:0; padding:18px; border:1px solid #39393e; border-radius:10px; background:#202023; box-shadow:none; }
+.descripcion-box p { margin:8px 0 0; color:#e4e4e7; font:500 13px/1.65 'DM Sans',sans-serif; white-space:pre-wrap; }
+.rutinas-resumen-box { margin-top:16px; padding:20px; border:1px solid #39393e; border-radius:12px; background:#202023; display:flex; justify-content:space-between; align-items:center; gap:18px; box-shadow:none; }
+.rutinas-resumen-box h3 { margin:8px 0; color:#fff; font:800 18px 'DM Sans',sans-serif; letter-spacing:0; }
+.rutinas-resumen-box p { margin:0; color:#a1a1aa; font:500 13px/1.55 'DM Sans',sans-serif; }
+button:focus-visible { outline:2px solid #ffbd60; outline-offset:3px; }
+@media(max-width:900px) { .mi-plan-page { padding:1.25rem 1rem; } .mi-plan-logo { height:64px; max-width:180px; } .info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:600px) { .mi-plan-header { flex-direction:column; align-items:stretch; } .info-grid { grid-template-columns:1fr; } .rutinas-resumen-box { flex-direction:column; align-items:stretch; } .btn-ver-rutinas { width:100%; } }
