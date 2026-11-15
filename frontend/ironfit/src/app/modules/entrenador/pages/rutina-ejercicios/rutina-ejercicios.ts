@@ -31,6 +31,23 @@ export class RutinaEjercicios implements OnInit {
   mensajeExito = '';
 
   ejerciciosRutina: RutinaEjercicioDTO[] = [];
+  ejercicioSeleccionado: RutinaEjercicioDTO | null = null;
+
+  identificarEjercicio(_index: number, item: RutinaEjercicioDTO): string {
+    return item.id;
+  }
+
+  abrirDetalleEjercicio(item: RutinaEjercicioDTO): void {
+    if (this.guardando || this.eliminandoId) return;
+    this.cancelarFormulario();
+    this.ejercicioSeleccionado = item;
+  }
+
+  cerrarDetalleEjercicio(): void {
+    if (this.guardando || this.eliminandoId) return;
+    this.cancelarFormulario();
+    this.ejercicioSeleccionado = null;
+  }
   ejerciciosCatalogo: EjercicioDTO[] = [];
   ejerciciosFiltrados: EjercicioDTO[] = [];
 
@@ -92,6 +109,11 @@ export class RutinaEjercicios implements OnInit {
     this.rutinaService.getEjerciciosPorRutina(this.rutinaId).subscribe({
       next: (ejerciciosRutina) => {
         this.ejerciciosRutina = ejerciciosRutina || [];
+        if (this.ejercicioSeleccionado) {
+          this.ejercicioSeleccionado = this.ejerciciosRutina.find(
+            item => item.id === this.ejercicioSeleccionado?.id
+          ) || null;
+        }
         this.cargando = false;
         this.cdr.detectChanges();
       },
@@ -174,6 +196,7 @@ export class RutinaEjercicios implements OnInit {
   }
 
   mostrarCrear(): void {
+    this.ejercicioSeleccionado = null;
     this.mostrarFormulario = true;
     this.modoEdicion = false;
     this.ejercicioEditandoId = null;
@@ -205,6 +228,7 @@ export class RutinaEjercicios implements OnInit {
   }
 
   editarEjercicio(item: RutinaEjercicioDTO): void {
+    this.ejercicioSeleccionado = item;
     this.mostrarFormulario = true;
     this.modoEdicion = true;
     this.ejercicioEditandoId = item.id;
@@ -222,7 +246,6 @@ export class RutinaEjercicios implements OnInit {
       orden: item.orden || 1,
     };
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   guardar(): void {
@@ -280,6 +303,7 @@ export class RutinaEjercicios implements OnInit {
   }
 
   eliminar(item: RutinaEjercicioDTO): void {
+    if (this.guardando || this.eliminandoId) return;
     this.error = '';
     this.mensajeExito = '';
     this.eliminandoId = item.id;
