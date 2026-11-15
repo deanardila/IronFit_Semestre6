@@ -200,10 +200,10 @@
           <tr *ngFor="let item of ejerciciosRutina; trackBy: identificarEjercicio">
             <td class="tabla-nombre">{{ item.ejercicioNombre }}</td>
             <td>{{ item.grupoMuscular || '—' }}</td>
-            <td>{{ item.series ?? 0 }}</td>
-            <td>{{ item.repeticiones ?? 0 }}</td>
-            <td>{{ item.pesoSugerido ?? 0 }} kg</td>
-            <td>{{ item.descansoSegundos ?? 0 }} s</td>
+            <td>{{ item.series }}</td>
+            <td>{{ item.repeticiones }}</td>
+            <td>{{ item.pesoSugerido }} kg</td>
+            <td>{{ item.descansoSegundos }} s</td>
             <td>{{ item.orden }}</td>
             <td><button type="button" class="btn-gestionar" (click)="abrirDetalleEjercicio(item)" [disabled]="guardando || !!eliminandoId">Gestionar</button></td>
           </tr>
@@ -223,11 +223,11 @@
     <ng-container *ngIf="!modoEdicion">
       <div class="ejercicio-panel-dato"><span>Descripción</span><strong>{{ item.ejercicioDescripcion || 'Sin descripción' }}</strong></div>
       <div class="ejercicio-panel-grid">
-        <div><span>Series</span><strong>{{ item.series ?? 0 }}</strong></div>
-        <div><span>Repeticiones</span><strong>{{ item.repeticiones ?? 0 }}</strong></div>
-        <div><span>Peso sugerido</span><strong>{{ item.pesoSugerido ?? 0 }} kg</strong></div>
-        <div><span>Descanso</span><strong>{{ item.descansoSegundos ?? 0 }} s</strong></div>
-        <div><span>Tiempo</span><strong>{{ item.tiempoSegundos ?? 0 }} s</strong></div>
+        <div><span>Series</span><strong>{{ item.series }}</strong></div>
+        <div><span>Repeticiones</span><strong>{{ item.repeticiones }}</strong></div>
+        <div><span>Peso sugerido</span><strong>{{ item.pesoSugerido }} kg</strong></div>
+        <div><span>Descanso</span><strong>{{ item.descansoSegundos }} s</strong></div>
+        <div><span>Tiempo</span><strong>{{ item.tiempoSegundos }} s</strong></div>
         <div><span>Orden</span><strong>{{ item.orden }}</strong></div>
       </div>
       <div class="ejercicio-panel-acciones">
