@@ -236,7 +236,7 @@ export class DashboardCliente implements OnInit {
 
     return {
       labels: datosValidos.map(d => d.label),
-      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: label === 'Peso corporal' ? CLIENT_AMBER : CLIENT_RED, pointBorderColor: '#171719', pointBorderWidth: 2, borderColor: label === 'Peso corporal' ? CLIENT_AMBER : CLIENT_RED, backgroundColor: label === 'Peso corporal' ? 'rgba(255,189,96,.13)' : 'rgba(241,29,37,.14)', borderWidth: 2.5 }]
+      datasets: [{ data: datosValidos.map(d => d.valor), label, tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5, pointBackgroundColor: CLIENT_RED, pointBorderColor: '#171719', pointBorderWidth: 2, borderColor: label === 'Peso corporal' ? CLIENT_AMBER : CLIENT_RED, backgroundColor: label === 'Peso corporal' ? 'rgba(255,189,96,.13)' : 'rgba(241,29,37,.14)', borderWidth: 2.5 }]
     };
   }
 
