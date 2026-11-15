@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
 .rutinas-page {
     min-height: 100vh;
     padding: 32px 38px;
@@ -642,3 +643,73 @@
     min-width: auto;
     }
 }
+
+/* Mis rutinas CLIENTE: identidad unificada IronFit */
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.rutinas-page { box-sizing:border-box; max-width:1200px; min-height:100vh; margin:0 auto; padding:1.75rem 2rem; background:#100c0c; display:flex; flex-direction:column; gap:20px; color:#f7f7f8; }
+.rutinas-topbar { display:flex; align-items:center; justify-content:space-between; gap:15px; min-height:90px; padding-bottom:14px; border-bottom:1px solid #303035; }
+.rutinas-logo { height:90px; max-width:min(100%,330px); width:auto; object-fit:contain; }
+.rutinas-intro { padding:19px 24px 21px; background:linear-gradient(115deg,#19191b,#111113); border:1px solid #303035; border-radius:16px; }
+.rutinas-kicker { display:inline-flex; padding:4px 8px; color:#f11d25; background:rgba(241,29,37,.09); border:1px solid rgba(241,29,37,.22); border-radius:6px; font-size:11px; font-weight:800; letter-spacing:.1em; }
+.rutinas-intro h1 { margin:10px 0 4px; color:#fff; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; letter-spacing:0; text-transform:none; }
+.rutinas-intro p { margin:0; color:#a1a1aa; font-size:13px; }
+.rutinas-header { display:flex; justify-content:space-between; align-items:center; gap:15px; margin:0; padding:17px 20px; background:#202023; border:1px solid #303035; border-radius:14px; box-shadow:none; }
+.rutinas-header-left { display:block; }
+.rutinas-header h2 { margin:0 0 4px; color:#fff; font:800 17px 'DM Sans',sans-serif; }
+.rutinas-header p { margin:0; color:#a1a1aa; font-size:12px; }
+.btn-volver,.btn-actualizar,.btn-cancelar-sesion,.btn-iniciar-sesion,.btn-finalizar-entrenamiento { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 15px; border:1px solid #39393e; border-radius:9px; background:#1b1b1f; color:#eee; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; white-space:nowrap; box-shadow:none; cursor:pointer; }
+.btn-volver:hover:not(:disabled),.btn-actualizar:hover:not(:disabled),.btn-cancelar-sesion:hover:not(:disabled) { background:#29292d; border-color:#f11d25; color:#eee; box-shadow:none; transform:none; }
+.btn-iniciar-sesion,.btn-finalizar-entrenamiento { background:#f11d25; border-color:#f11d25; color:#fff; }
+.btn-iniciar-sesion:hover:not(:disabled),.btn-finalizar-entrenamiento:hover:not(:disabled) { background:#d71a21; border-color:#f11d25; color:#fff; box-shadow:none; transform:none; }
+.btn-iniciar-sesion:disabled,.btn-finalizar-entrenamiento:disabled { opacity:.45; background:#27272b; border-color:#39393e; color:#a1a1aa; cursor:not-allowed; }
+.estado-panel { margin:0; padding:16px; background:#171719; border:1px solid #303035; border-radius:12px; box-shadow:none; text-align:left; color:#a1a1aa; }
+.estado-panel p { color:#a1a1aa; }
+.error-panel { border-color:rgba(241,29,37,.35); }
+.error-panel p { color:#ff9aa0; }
+.exito-panel { border-color:rgba(34,197,94,.35); }
+.exito-panel p { color:#a6e7b9; }
+.rutinas-content { gap:14px; }
+.plan-resumen { padding:19px; background:#202023; border:1px solid #303035; border-radius:14px; box-shadow:none; }
+.label { margin:0 0 7px; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.plan-resumen h2 { margin:0 0 5px; color:#fff; font:800 20px 'DM Sans',sans-serif; }
+.plan-resumen p { color:#a1a1aa; font:500 13px 'DM Sans',sans-serif; }
+.estado-badge { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:#a6e7b9; font:800 11px 'DM Sans',sans-serif; padding:6px 11px; border-radius:999px; letter-spacing:0; }
+.dias-tabs { display:flex; flex-wrap:wrap; gap:8px; }
+.dia-tab { border:1px solid #39393e; border-radius:9px; padding:10px 13px; background:#212124; color:#aaaab3; font:700 12px 'DM Sans',sans-serif; cursor:pointer; }
+.dia-tab:hover:not(:disabled) { background:#29292d; border-color:#f11d25; color:#fff; }
+.dia-tab.activo,.dia-tab.activo:hover { background:rgba(241,29,37,.12); border-color:#f11d25; color:#fff; }
+.rutinas-lista { display:flex; flex-direction:column; gap:10px; }
+.rutina-card { border:1px solid #303035; background:#171719; border-radius:12px; box-shadow:none; overflow:hidden; }
+.rutina-card.abierta { border-color:rgba(241,29,37,.55); }
+.rutina-main { padding:16px; grid-template-columns:42px minmax(0,1fr)78px 22px; gap:12px; background:transparent; color:#fff; }
+.rutina-main:hover { background:#242427; }
+.rutina-icono,.ejercicio-icono { background:rgba(241,29,37,.09); border:1px solid rgba(241,29,37,.23); border-radius:9px; }
+.rutina-info h3 { color:#fff; font:800 16px 'DM Sans',sans-serif; }
+.rutina-info p { color:#a1a1aa; font:500 13px 'DM Sans',sans-serif; line-height:1.5; }
+.rutina-meta,.stat-box { border:1px solid #39393e; background:#202023; box-shadow:none; }
+.rutina-meta span,.stat-box strong { color:#fff; }
+.rutina-meta small,.stat-box span { color:#a1a1aa; }
+.rutina-flecha { color:#f11d25; }
+.ejercicios-panel { padding:0 16px 16px; }
+.mini-estado { background:#202023; color:#a1a1aa; border:1px solid #39393e; border-radius:9px; }
+.ejercicio-card { background:#202023; border:1px solid #39393e; border-radius:10px; box-shadow:none; }
+.ejercicio-left h4 { color:#fff; font:800 15px 'DM Sans',sans-serif; }
+.ejercicio-left p,.ejercicio-left small { color:#a1a1aa; font:500 12px/1.5 'DM Sans',sans-serif; }
+.sesion-panel { margin:0; padding:22px; border:1px solid #303035; border-radius:14px; background:#171719; box-shadow:none; }
+.sesion-header { margin-bottom:19px; }
+.sesion-header h3 { margin:0 0 6px; font:800 20px 'DM Sans',sans-serif; color:#fff; letter-spacing:0; }
+.sesion-header p { margin:0; color:#a1a1aa; font:500 13px 'DM Sans',sans-serif; }
+.sesion-ejercicios { gap:11px; }
+.sesion-ejercicio { padding:17px; border:1px solid #39393e; border-radius:11px; background:#202023; box-shadow:none; }
+.sesion-ejercicio h4 { font:800 15px 'DM Sans',sans-serif; letter-spacing:0; }
+.sesion-ejercicio p { font:500 12px 'DM Sans',sans-serif; color:#a1a1aa; letter-spacing:0; text-transform:none; }
+.check-realizado { height:40px; min-width:0; padding:0 12px; border:1px solid rgba(241,29,37,.35); border-radius:9px; background:rgba(241,29,37,.08); color:#ff9aa0; font:700 12px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.check-realizado.completado { border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.1); color:#a6e7b9; }
+.sesion-inputs { gap:12px; }
+.sesion-inputs label,.observacion-box label { color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.sesion-inputs input,.observacion-box textarea { box-sizing:border-box; width:100%; min-width:0; padding:11px 13px; border:1px solid #39393e; border-radius:9px; background:#19191b; color:#fff; font:500 13px 'DM Sans',sans-serif; }
+.sesion-inputs input:focus,.observacion-box textarea:focus { border-color:#f11d25; box-shadow:0 0 0 3px rgba(241,29,37,.13); }
+.observacion-box textarea { width:100%; min-height:100px; }
+button:focus-visible,input:focus-visible,textarea:focus-visible { outline:2px solid #ffbd60; outline-offset:3px; }
+@media(max-width:850px) { .rutinas-page { padding:1.25rem 1rem; } .rutinas-logo { height:64px; max-width:180px; } }
+@media(max-width:600px) { .rutinas-header { flex-direction:column; align-items:stretch; } .rutina-main { grid-template-columns:38px minmax(0,1fr)22px; } .rutina-meta { display:none; } .ejercicio-card { grid-template-columns:1fr; } .ejercicio-stats { flex-wrap:wrap; } .plan-resumen { align-items:flex-start; } .sesion-inputs { grid-template-columns:1fr; } }
