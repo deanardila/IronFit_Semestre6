@@ -1,398 +1,55 @@
-/* ================== MIS ASISTENCIAS - CLIENTE ================== */
+@import url('https://fonts.googleapis.com/css2?family=BBH+Bogle&family=DM+Sans:wght@400;500;600;700;800&display=swap');
 
-    .asistencias-page {
-    min-height: 100vh;
-    padding: 2.2rem 2.6rem;
-    background: radial-gradient(circle at top, #101010 0, #050505 45%, #000 100%);
-    color: var(--ironfit-text);
-    font-family: inherit;
-    }
-
-    /* ---------- HEADER ---------- */
-
-    .asistencias-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.2rem;
-    padding: 1rem 1.25rem;
-    border-radius: var(--ironfit-radius-lg);
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-    margin-bottom: 1.6rem;
-    }
-
-    .asistencias-header-left {
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
-    }
-
-    .asistencias-header h1 {
-    margin: 0;
-    font-size: 1.35rem;
-    font-weight: 900;
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    color: var(--ironfit-text);
-    }
-
-    /* ---------- BOTONES ---------- */
-
-    .btn-volver,
-    .btn-actualizar {
-    border-radius: 999px;
-    padding: 0.65rem 1.35rem;
-    background: rgba(0, 0, 0, 0.78);
-    color: var(--ironfit-text);
-    border: 1px solid var(--ironfit-border);
-    cursor: pointer;
-    font-size: 0.82rem;
-    font-weight: 900;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    transition: all 0.18s ease;
-    }
-
-    .btn-volver:hover,
-    .btn-actualizar:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 170, 0, 0.55);
-    transform: translateY(-1px);
-    }
-
-    .btn-actualizar:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-    transform: none;
-    }
-
-    /* ---------- ESTADOS ---------- */
-
-    .estado-panel {
-    border-radius: var(--ironfit-radius-lg);
-    padding: 1rem 1.2rem;
-    background: linear-gradient(145deg, #111111, #050505);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-    text-align: center;
-    color: var(--ironfit-text-muted);
-    }
-
-    .estado-panel p {
-    margin: 0;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    }
-
-    .error-panel {
-    border-color: rgba(239, 68, 68, 0.45);
-    color: #fca5a5;
-    }
-
-    /* ---------- CONTENIDO ---------- */
-
-    .asistencias-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1.35rem;
-    }
-
-    /* ---------- TARJETAS SUPERIORES ---------- */
-
-    .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.8rem;
-    }
-
-    .stat-card {
-    min-height: 5.1rem;
-    border-radius: var(--ironfit-radius-md);
-    background: linear-gradient(145deg, var(--ironfit-surface), #070707);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    line-height: 1.05;
-    }
-
-    .stat-card strong {
-    font-size: 1.75rem;
-    font-weight: 900;
-    color: var(--ironfit-text);
-    letter-spacing: 0.05em;
-    }
-
-    .stat-card span {
-    margin-top: 0.25rem;
-    color: var(--ironfit-text-muted);
-    font-size: 0.72rem;
-    font-weight: 800;
-    }
-
-    .stat-card small {
-    margin-top: 0.35rem;
-    color: #9ed36a;
-    font-size: 0.72rem;
-    font-weight: 900;
-    }
-
-    /* ---------- SEMANA ---------- */
-
-    .semana-section,
-    .historial-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    }
-
-    .semana-section h2,
-    .historial-section h2 {
-    margin: 0;
-    color: var(--ironfit-text-muted);
-    font-size: 0.82rem;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    }
-
-    .semana-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 0.7rem;
-    }
-
-    .dia-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.45rem;
-    }
-
-    .dia-label {
-    color: var(--ironfit-text-muted);
-    font-size: 0.72rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    }
-
-    .dia-circulo {
-    width: 1.55rem;
-    height: 1.55rem;
-    border-radius: 999px;
-    background: #151515;
-    border: 1px solid var(--ironfit-border);
-    color: var(--ironfit-text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.55rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    }
-
-    .dia-item.entrenado .dia-circulo {
-    background: #c5ee91;
-    border-color: #c5ee91;
-    color: #111111;
-    }
-
-    .dia-item.hoy .dia-circulo {
-    border-color: rgba(255, 170, 0, 0.65);
-    color: var(--ironfit-text);
-    }
-
-    .dia-item.futuro .dia-circulo {
-    border-style: dashed;
-    color: #777;
-    }
-
-    /* ---------- HISTORIAL ---------- */
-
-    .historial-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    }
-
-    .historial-card {
-    min-height: 3.4rem;
-    border-radius: var(--ironfit-radius-md);
-    background: linear-gradient(145deg, var(--ironfit-surface), #070707);
-    border: 1px solid var(--ironfit-border);
-    box-shadow: var(--ironfit-shadow-soft);
-    padding: 0.65rem 0.85rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    }
-
-    .historial-left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-    }
-
-    .estado-dot {
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 999px;
-    background: #75a843;
-    flex: 0 0 auto;
-    }
-
-    .historial-card.pendiente .estado-dot {
-    background: #f59e0b;
-    }
-
-    .historial-card h3 {
-    margin: 0;
-    font-size: 0.88rem;
-    color: var(--ironfit-text);
-    font-weight: 900;
-    line-height: 1.1;
-    }
-
-    .historial-card p {
-    margin: 0.13rem 0 0;
-    color: var(--ironfit-text-muted);
-    font-size: 0.72rem;
-    font-weight: 700;
-    }
-
-    .historial-tiempo {
-    color: var(--ironfit-text-muted);
-    font-size: 0.78rem;
-    font-weight: 900;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    }
-
-    /* ---------- PAGINACIÓN HISTORIAL CLIENTE ---------- */
-
-    .historial-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-    }
-
-    .historial-header h2 {
-        margin: 0;
-    }
-
-    .historial-header small {
-        display: block;
-        margin-top: 0.35rem;
-        color: var(--ironfit-text-muted);
-        font-size: 0.76rem;
-        font-weight: 800;
-    }
-
-    .paginacion-controles {
-        display: flex;
-        align-items: center;
-        gap: 0.65rem;
-        flex-wrap: wrap;
-    }
-
-    .btn-paginacion {
-        border-radius: 999px;
-        padding: 0.52rem 0.95rem;
-        font-size: 0.74rem;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        background: radial-gradient(circle at top left, #ffb347, #ff8a1f 55%, #f97316);
-        color: #111111;
-        border: none;
-        cursor: pointer;
-        transition: all 0.15s ease;
-    }
-
-    .btn-paginacion:hover:not(:disabled) {
-        transform: translateY(-1px);
-        filter: brightness(1.05);
-    }
-
-    .btn-paginacion:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-        filter: grayscale(0.4);
-    }
-
-    .select-paginacion {
-        height: 36px;
-        border-radius: 999px;
-        padding: 0 0.75rem;
-        background: #171717;
-        border: 1px solid rgba(255, 138, 31, 0.35);
-        color: var(--ironfit-text);
-        outline: none;
-        font-weight: 800;
-    }
-
-    .select-paginacion:focus {
-        border-color: #ff8a1f;
-    }
-
-    @media (max-width: 800px) {
-        .historial-header {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .paginacion-controles {
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        .btn-paginacion,
-        .select-paginacion {
-            flex: 1;
-        }
-    }
-
-    /* ---------- RESPONSIVE ---------- */
-
-    @media (max-width: 800px) {
-    .asistencias-page {
-        padding: 1.25rem 1rem;
-    }
-
-    .asistencias-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .asistencias-header h1 {
-        font-size: 1.05rem;
-        letter-spacing: 0.28em;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .semana-grid {
-        gap: 0.35rem;
-    }
-
-    .historial-card {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .historial-tiempo {
-        align-self: flex-end;
-    }
-}
+/* Mis asistencias CLIENTE: estilo uniforme IronFit */
+:host { display:block; min-height:100vh; background:#000; color:#f7f7f8; font-family:'DM Sans',system-ui,sans-serif; }
+.asistencias-page { box-sizing:border-box; max-width:1200px; min-height:100vh; margin:0 auto; padding:1.75rem 2rem; display:flex; flex-direction:column; gap:20px; background:#100c0c; color:#f7f7f8; }
+.asistencias-topbar { display:flex; align-items:center; justify-content:space-between; gap:15px; min-height:90px; padding-bottom:14px; border-bottom:1px solid #303035; }
+.asistencias-logo { height:90px; width:auto; max-width:min(100%,330px); object-fit:contain; }
+.asistencias-intro { padding:19px 24px 21px; border:1px solid #303035; border-radius:16px; background:linear-gradient(115deg,#19191b,#111113); }
+.asistencias-kicker { display:inline-flex; padding:4px 8px; color:#f11d25; border:1px solid rgba(241,29,37,.22); border-radius:6px; background:rgba(241,29,37,.09); font-size:11px; font-weight:800; letter-spacing:.1em; }
+.asistencias-intro h1 { margin:10px 0 4px; color:#fff; font:400 clamp(1.65rem,2.5vw,2.3rem)/1.14 'BBH Bogle',Impact,sans-serif; letter-spacing:0; text-transform:none; }
+.asistencias-intro p { margin:0; color:#a1a1aa; font:500 13px 'DM Sans',sans-serif; }
+.asistencias-header { display:flex; align-items:center; justify-content:space-between; gap:15px; margin:0; padding:17px 20px; background:#202023; border:1px solid #303035; border-radius:14px; box-shadow:none; }
+.asistencias-header-left { display:block; }
+.asistencias-header-left h2 { margin:0 0 4px; color:#fff; font:800 17px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; }
+.asistencias-header-left p { margin:0; color:#a1a1aa; font:500 12px 'DM Sans',sans-serif; }
+.btn-volver,.btn-actualizar,.btn-paginacion { box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:10px 15px; background:#1b1b1f; border:1px solid #39393e; border-radius:9px; color:#eee; font:700 13px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; white-space:nowrap; box-shadow:none; cursor:pointer; }
+.btn-volver:hover:not(:disabled),.btn-actualizar:hover:not(:disabled),.btn-paginacion:hover:not(:disabled) { background:#29292d; border-color:#f11d25; color:#eee; box-shadow:none; transform:none; filter:none; }
+.btn-paginacion:disabled { opacity:.45; cursor:not-allowed; filter:none; }
+.select-paginacion { min-height:42px; height:42px; padding:10px 12px; border:1px solid #39393e; border-radius:9px; background:#212124; color:#fff; font:600 13px 'DM Sans',sans-serif; }
+.estado-panel { padding:16px; border:1px solid #303035; border-radius:12px; background:#171719; color:#a1a1aa; box-shadow:none; text-align:left; }
+.estado-panel p { margin:0; color:#a1a1aa; font:500 13px 'DM Sans',sans-serif; letter-spacing:0; }
+.error-panel { border-color:rgba(241,29,37,.35); }
+.error-panel p { color:#ff9aa0; }
+.asistencias-content { gap:17px; }
+.stats-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.stat-card { box-sizing:border-box; min-width:0; min-height:112px; padding:19px; border-radius:12px; border:1px solid #303035; background:#171719; box-shadow:none; justify-content:center; align-items:flex-start; text-align:left; gap:7px; }
+.stat-card strong { color:#fff; font:800 28px/1.2 'DM Sans',sans-serif; letter-spacing:0; }
+.stat-card span { margin:0; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; }
+.stat-card small { margin:0; color:#FFBD60; font:700 11px/1.5 'DM Sans',sans-serif; }
+.semana-section,.historial-section { display:flex; flex-direction:column; gap:13px; padding:19px; border:1px solid #303035; border-radius:14px; background:#171719; }
+.semana-section h2,.historial-section h2 { margin:0; font:800 17px 'DM Sans',sans-serif; letter-spacing:0; text-transform:none; color:#fff; }
+.semana-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:9px; }
+.dia-item { min-width:0; padding:10px 5px; border:1px solid #39393e; border-radius:10px; background:#202023; gap:10px; }
+.dia-label { color:#a1a1aa; font:800 12px 'DM Sans',sans-serif; }
+.dia-circulo { width:36px; height:36px; border:1px solid #39393e; border-radius:50%; background:#19191b; color:#a1a1aa; font:800 11px 'DM Sans',sans-serif; }
+.dia-item.entrenado .dia-circulo { background:rgba(34,197,94,.12); color:#a6e7b9; border-color:rgba(34,197,94,.4); }
+.dia-item.hoy .dia-circulo { border-color:#FFBD60; color:#FFBD60; }
+.dia-item.futuro .dia-circulo { border:1px dashed #505058; color:#a1a1aa; }
+.historial-header { gap:12px; }
+.historial-header small { margin-top:5px; color:#a1a1aa; font:500 12px 'DM Sans',sans-serif; }
+.paginacion-controles { display:flex; gap:9px; flex-wrap:wrap; }
+.historial-tabla-scroll { width:100%; overflow-x:auto; border:1px solid #303035; border-radius:11px; }
+.historial-tabla { width:100%; min-width:780px; border-collapse:collapse; background:#171719; }
+.historial-tabla th { padding:15px 13px; text-align:left; background:#202023; border-bottom:1px solid #35353b; color:#a1a1aa; font:700 12px 'DM Sans',sans-serif; }
+.historial-tabla td { padding:14px 13px; border-bottom:1px solid #303035; color:#e4e4e7; font:500 13px 'DM Sans',sans-serif; vertical-align:middle; }
+.historial-tabla td.tabla-rutina { color:#fff; font-weight:700; }
+.historial-tabla tbody tr:nth-child(odd),.historial-tabla tbody tr:nth-child(odd) td { background:#171719; }
+.historial-tabla tbody tr:nth-child(even),.historial-tabla tbody tr:nth-child(even) td { background:#202023; }
+.historial-tabla tbody tr:hover,.historial-tabla tbody tr:hover td { background:#29292d; }
+.estado-historial { display:inline-flex; align-items:center; border:1px solid #44444b; background:#27272b; color:#c6c6cc; padding:6px 10px; border-radius:999px; font:800 11px 'DM Sans',sans-serif; white-space:nowrap; }
+.estado-historial.completado { border-color:rgba(34,197,94,.3); background:rgba(34,197,94,.1); color:#a6e7b9; }
+.estado-historial.pendiente { border-color:rgba(255,189,96,.35); background:rgba(255,189,96,.08); color:#FFBD60; }
+button:focus-visible,select:focus-visible { outline:2px solid #FFBD60; outline-offset:3px; }
+@media(max-width:900px) { .asistencias-page { padding:1.25rem 1rem; } .asistencias-logo { height:64px; max-width:180px; } }
+@media(max-width:650px) { .asistencias-header { flex-direction:column; align-items:stretch; } .stats-grid { grid-template-columns:1fr; } .semana-section,.historial-section { padding:14px; } .semana-grid { gap:5px; } .dia-item { padding:8px 2px; } .dia-circulo { width:30px; height:30px; font-size:10px; } .historial-header { flex-direction:column; align-items:stretch; } .paginacion-controles { justify-content:space-between; } }
