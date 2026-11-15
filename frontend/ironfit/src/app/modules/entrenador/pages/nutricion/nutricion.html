@@ -1,71 +1,71 @@
 <div class="nutricion-page">
+  <div class="nutricion-topbar">
+    <img class="nutricion-logo" src="assets/ironfit/IronFit_Horizontal.png" alt="IronFit">
+    <button type="button" class="btn-secundario" (click)="volver()">← Volver a Mis planes</button>
+  </div>
+
+  <div class="nutricion-intro">
+    <span class="nutricion-kicker">ENTRENADOR</span>
+    <h1>Nutrición</h1>
+    <p>Configura las metas nutricionales asociadas al plan de entrenamiento.</p>
+  </div>
+
   <header class="nutricion-header">
     <div>
-      <button type="button" class="btn-secundario" (click)="volver()">← Volver</button>
-      <h1>Plan nutricional</h1>
-      <p *ngIf="plan">{{ plan.nombre }} · {{ plan.clienteNombre || plan.clienteId }}</p>
+      <span class="nutricion-label">PLAN NUTRICIONAL</span>
+      <h2>{{ plan?.nombre || 'Plan seleccionado' }}</h2>
+      <p *ngIf="plan">{{ plan.clienteNombre || plan.clienteId }}</p>
     </div>
-
-    <button type="button" class="btn-secundario" (click)="cargar()" [disabled]="cargando || guardando">
-      Actualizar
-    </button>
+    <button type="button" class="btn-secundario" (click)="cargar()" [disabled]="cargando || guardando">Actualizar</button>
   </header>
 
-  <section *ngIf="cargando" class="estado-panel">
-    ⏳ Cargando plan nutricional...
-  </section>
-
-  <section *ngIf="!cargando && error" class="estado-panel error-panel">
-    ⚠️ {{ error }}
-  </section>
-
-  <section *ngIf="!cargando && mensaje" class="estado-panel ok-panel">
-    {{ mensaje }}
-  </section>
+  <section *ngIf="cargando" class="estado-panel" role="status">Cargando plan nutricional...</section>
+  <section *ngIf="!cargando && error" class="estado-panel error-panel" role="alert">{{ error }}</section>
+  <section *ngIf="!cargando && mensaje" class="estado-panel ok-panel" role="status">{{ mensaje }}</section>
 
   <section *ngIf="!cargando && plan" class="nutricion-card">
     <div class="plan-contexto">
       <div><span>Cliente</span><strong>{{ plan.clienteNombre || plan.clienteId }}</strong></div>
-      <div><span>Objetivo</span><strong>{{ plan.objetivo }}</strong></div>
-      <div><span>Estado</span><strong>{{ plan.activo ? 'Activo' : 'Inactivo' }}</strong></div>
+      <div><span>Objetivo de entrenamiento</span><strong>{{ plan.objetivo }}</strong></div>
+      <div><span>Estado del plan</span>
+        <strong class="estado-badge" [class.activo]="plan.activo" [class.inactivo]="!plan.activo">{{ plan.activo ? 'ACTIVO' : 'INACTIVO' }}</strong>
+      </div>
     </div>
 
-    <form (ngSubmit)="guardar()" class="nutricion-form">
+    <div class="nutricion-seccion-titulo">
+      <div>
+        <h3>{{ nutricion ? 'Actualizar plan nutricional' : 'Crear plan nutricional' }}</h3>
+        <p>Las metas que registres quedarán asociadas únicamente a este plan de entrenamiento.</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="guardar()" #nutricionForm="ngForm" class="nutricion-form">
       <div class="macros-grid">
         <label>
           <span>Calorías objetivo (kcal)</span>
-          <input type="number" name="kcal" min="1" [(ngModel)]="formulario.kcalObjetivo" required />
+          <input type="number" name="kcal" min="1" [(ngModel)]="formulario.kcalObjetivo" [disabled]="guardando" required>
         </label>
-
         <label>
           <span>Proteína (g)</span>
-          <input type="number" name="proteina" min="1" [(ngModel)]="formulario.proteinaG" required />
+          <input type="number" name="proteina" min="1" [(ngModel)]="formulario.proteinaG" [disabled]="guardando" required>
         </label>
-
         <label>
           <span>Carbohidratos (g)</span>
-          <input type="number" name="carbohidratos" min="1" [(ngModel)]="formulario.carbohidratosG" required />
+          <input type="number" name="carbohidratos" min="1" [(ngModel)]="formulario.carbohidratosG" [disabled]="guardando" required>
         </label>
-
         <label>
           <span>Grasa (g)</span>
-          <input type="number" name="grasa" min="1" [(ngModel)]="formulario.grasaG" required />
+          <input type="number" name="grasa" min="1" [(ngModel)]="formulario.grasaG" [disabled]="guardando" required>
         </label>
       </div>
-
       <label class="descripcion-field">
         <span>Descripción / indicaciones</span>
-        <textarea
-          name="descripcion"
-          rows="7"
-          maxlength="1000"
-          [(ngModel)]="formulario.descripcion"
-          placeholder="Indicaciones generales del plan nutricional..."
-          required></textarea>
+        <textarea name="descripcion" rows="7" maxlength="1000"
+          [(ngModel)]="formulario.descripcion" [disabled]="guardando"
+          placeholder="Indicaciones generales del plan nutricional..." required></textarea>
       </label>
-
       <div class="form-actions">
-        <button type="submit" class="btn-principal" [disabled]="guardando">
+        <button type="submit" class="btn-principal" [disabled]="guardando || cargando">
           {{ guardando ? 'Guardando...' : (nutricion ? 'Actualizar plan nutricional' : 'Crear plan nutricional') }}
         </button>
       </div>
