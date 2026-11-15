@@ -37,6 +37,27 @@ export class MisRutinas implements OnInit {
 
   rutinas: RutinaDTO[] = [];
   rutinasFiltradas: RutinaDTO[] = [];
+  rutinaSeleccionada: RutinaDTO | null = null;
+
+  identificarRutina(_index: number, rutina: RutinaDTO): string {
+    return rutina.id;
+  }
+
+  identificarPlan(_index: number, item: PlanRutinasResumen): string {
+    return item.plan.id;
+  }
+
+  abrirDetalleRutina(rutina: RutinaDTO): void {
+    if (this.guardando) return;
+    this.cancelarFormulario();
+    this.rutinaSeleccionada = rutina;
+  }
+
+  cerrarDetalleRutina(): void {
+    if (this.guardando) return;
+    this.cancelarFormulario();
+    this.rutinaSeleccionada = null;
+  }
 
   terminoBusqueda = '';
   filtroEstadoPlan = 'TODOS';
@@ -109,6 +130,7 @@ export class MisRutinas implements OnInit {
     this.planSeleccionado = null;
     this.rutinas = [];
     this.rutinasFiltradas = [];
+    this.rutinaSeleccionada = null;
     this.cancelarFormulario();
 
     this.planesService.getPlanesPaginados(
@@ -192,6 +214,7 @@ export class MisRutinas implements OnInit {
     this.mostrarFormulario = false;
     this.modoEdicion = false;
     this.rutinaEditandoId = null;
+    this.rutinaSeleccionada = null;
 
     this.planesService.obtenerPlan(planId)
       .pipe(timeout(this.requestTimeoutMs))
@@ -340,6 +363,7 @@ export class MisRutinas implements OnInit {
       return;
     }
 
+    this.rutinaSeleccionada = null;
     this.mostrarFormulario = true;
     this.modoEdicion = false;
     this.rutinaEditandoId = null;
@@ -355,6 +379,7 @@ export class MisRutinas implements OnInit {
   }
 
   editarRutina(rutina: RutinaDTO): void {
+    this.rutinaSeleccionada = rutina;
     this.mostrarFormulario = true;
     this.modoEdicion = true;
     this.rutinaEditandoId = rutina.id;
@@ -368,7 +393,6 @@ export class MisRutinas implements OnInit {
       activo: rutina.activo,
     };
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   guardarRutina(): void {
