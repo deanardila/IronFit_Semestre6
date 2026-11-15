@@ -88,11 +88,16 @@
         <button type="button" class="panel-cerrar" (click)="cerrarPanelRutina()" [disabled]="modoSesionActiva || guardandoEntrenamiento" aria-label="Cerrar panel">×</button>
       </header>
       <div *ngIf="error" class="estado-panel error-panel" role="alert">{{ error }}</div>
+      <div *ngIf="comprobandoRegistro" class="estado-panel" role="status">Comprobando si ya registraste esta rutina hoy...</div>
+      <div *ngIf="rutinaRealizadaHoy && !mensajeExito && !comprobandoRegistro" class="estado-panel aviso-entrenamiento" role="status">
+        <span class="aviso-icono" aria-hidden="true">✓</span>
+        <p>Ya registraste esta rutina como realizada el día de hoy.</p>
+      </div>
       <div *ngIf="mensajeExito" class="estado-panel exito-panel confirmacion-entrenamiento" role="status">
         <span class="confirmacion-icono" aria-hidden="true">✓</span>
         <p>{{ mensajeExito }}</p>
       </div>
-      <div *ngIf="!modoSesionActiva && !mensajeExito">
+      <div *ngIf="!modoSesionActiva && !mensajeExito && !rutinaRealizadaHoy && !comprobandoRegistro">
         <div class="rutina-panel-subtitulo"><h3>Ejercicios asignados</h3></div>
             <div class="ejercicios-panel" *ngIf="rutinaAbiertaId === rutina.id">
 
@@ -152,7 +157,7 @@
           {{ cargandoEjerciciosId === rutina.id ? 'Cargando ejercicios...' : 'Iniciar entrenamiento' }}
         </button>
       </div>
-    <section *ngIf="modoSesionActiva && rutinaSesion" class="sesion-panel">
+    <section *ngIf="modoSesionActiva && rutinaSesion && !rutinaRealizadaHoy" class="sesion-panel">
 
     <div class="sesion-header">
         <div>
