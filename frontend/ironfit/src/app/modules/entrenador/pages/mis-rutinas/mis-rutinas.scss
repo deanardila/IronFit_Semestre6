@@ -446,7 +446,7 @@ button:disabled {
 .btn-card {
     border: none;
     background: transparent;
-    color: var(--ironfit-orange);
+    color: #eee;
     font-size: 0.82rem;
     font-weight: 900;
     cursor: pointer;
@@ -455,8 +455,8 @@ button:disabled {
 
 .btn-gestionar:hover,
 .btn-card:hover {
-    color: #ffb347;
-    transform: translateX(2px);
+    color: #eee;
+    transform: none;
 }
 
 /* ---------- PLAN SELECCIONADO ---------- */
@@ -783,3 +783,19 @@ button:focus-visible,.select-paginacion:focus-visible { outline:2px solid #ffbd6
 .rutina-estado-control > span { color:#a1a1aa; font-size:12px; font-weight:700; }
 .rutina-estado-control .estado-accion { cursor:pointer; min-width:0; white-space:nowrap; }
 .rutina-estado-control .estado-accion:hover:not(:disabled) { filter:brightness(1.1); }
+
+/* Uniformidad: el hover modifica el fondo, nunca vuelve naranja el texto. */
+.btn-gestionar:hover:not(:disabled),
+.btn-card:hover:not(:disabled),
+.btn-volver:hover:not(:disabled),
+.btn-actualizar:hover:not(:disabled),
+.btn-buscar-rutinas:hover:not(:disabled),
+.btn-paginacion:hover:not(:disabled),
+.btn-cancelar:hover:not(:disabled) {
+  color: #eee;
+}
+.btn-nueva-rutina:hover:not(:disabled),
+.btn-guardar:hover:not(:disabled),
+.btn-ejercicios:hover:not(:disabled) {
+  color: #fff;
+}
