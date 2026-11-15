@@ -219,7 +219,7 @@ export class MisClientes implements OnInit {
     // Mis planes conserva Weka e IronBot. Abrimos el plan exacto,
     // en la pestaña Progreso, sin ejecutar análisis duplicados aquí.
     const buscar = (cliente.numDoc || '').trim() ||
-      (cliente.nombres || '').trim().split(/\\s+/)[0];
+      (cliente.nombres || '').trim().split(/\s+/)[0];
     this.router.navigate(['/entrenador/MisPlanes'], {
       queryParams: { buscar, plan: plan.id, tab: 'progreso' }
     });
