@@ -196,6 +196,11 @@ export class RutinaEjercicios implements OnInit {
   }
 
   mostrarCrear(): void {
+    if (this.guardando || this.cargando) return;
+    if (this.mostrarFormulario && !this.modoEdicion) {
+      this.cancelarFormulario();
+      return;
+    }
     this.ejercicioSeleccionado = null;
     this.mostrarFormulario = true;
     this.modoEdicion = false;
