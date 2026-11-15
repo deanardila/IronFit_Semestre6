@@ -534,3 +534,44 @@
 button:focus-visible,select:focus-visible { outline:2px solid #ffbd60; outline-offset:3px; }
 @media(max-width:900px) { .mis-evaluaciones-layout { padding:1.25rem 1rem; } .evaluaciones-logo { height:64px; max-width:180px; } .resumen-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:600px) { .mis-evaluaciones-header { flex-direction:column; align-items:stretch; } .resumen-grid { grid-template-columns:1fr; } .evaluacion-panel { padding:20px; } .historial-header { flex-direction:column; align-items:stretch; } .paginacion-controles { justify-content:space-between; } }
+
+/* Ajustes finales de Mis evaluaciones: amarillo del dashboard y pictogramas alineados. */
+.resumen-grid .resumen-card small,
+.resumen-grid .resumen-card small.sube,
+.resumen-grid .resumen-card small.baja,
+.resumen-grid .resumen-card small.neutral {
+  display:block;
+  color:#FFBD60;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.5;
+}
+.metricas-detalladas .metrica-card {
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.metricas-detalladas .metrica-icon {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 48px;
+  width:48px;
+  height:48px;
+  min-width:48px;
+  min-height:48px;
+  box-sizing:border-box;
+  padding:0;
+  border-radius:11px;
+  background:rgba(241,29,37,.10)!important;
+  border:1px solid rgba(241,29,37,.25);
+  font-size:24px;
+  font-weight:400;
+  line-height:1;
+  text-align:center;
+}
+.metricas-detalladas .metrica-info { min-width:0; flex:1; }
+@media(max-width:600px) {
+  .metricas-detalladas .metrica-card { align-items:center; }
+  .metricas-detalladas .metrica-icon { flex-basis:44px; width:44px; min-width:44px; height:44px; min-height:44px; font-size:22px; }
+}
