@@ -861,3 +861,21 @@ button:focus-visible,.select-paginacion:focus-visible { outline:2px solid #ffbd6
 @media(max-width:880px) { .planes-layout { padding:1.25rem 1rem; } .planes-logo { height:64px; max-width:180px; } .planes-header { align-items:stretch; } .busqueda-container { flex:1 1 100%; } .formulario-plan form { grid-template-columns:1fr; } .paginacion-planes { flex-direction:column; align-items:stretch; } }
 @media(max-width:560px) { .plan-panel { padding:20px; } .busqueda-container { flex-wrap:wrap; } .plan-detalle-datos,.prediccion-grid { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { button { transition:none; } }
+
+
+/* Edición contextual del plan: conserva los campos y validaciones existentes. */
+.formulario-plan-panel {
+  margin: 6px 0 20px;
+  padding: 17px;
+  border: 1px solid #39393e;
+  border-radius: 12px;
+  background: #202023;
+}
+.formulario-plan-panel form { display:grid; grid-template-columns:1fr; gap:13px; }
+.formulario-plan-panel .form-row { min-width:0; }
+.formulario-plan-panel .form-row input,
+.formulario-plan-panel .form-row textarea { width:100%; min-width:0; }
+.formulario-plan-panel .form-actions { display:flex; flex-wrap:wrap; gap:9px; }
+.formulario-plan-panel .form-actions button { flex:1 1 auto; }
+.formulario-plan-panel .lista-clientes { max-height:190px; overflow-y:auto; }
+.formulario-plan-panel .mensaje-error { text-align:left; margin:0 0 14px; }
