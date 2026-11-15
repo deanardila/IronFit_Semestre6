@@ -2,8 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { timeout } from 'rxjs';
 import { PlanEntrenamientoDTO, Planes } from '../../../admin/planes';
-import { PrediccionPlanDTO, PrediccionesService } from '../../predicciones';
-import { IronBotResponse, IronBotService } from '../../../../shared/ironbot';
 import {
   AsignacionEntrenadorClienteDTO,
   AsignacionesService
@@ -50,12 +48,6 @@ export class MisClientes implements OnInit {
   planProgresoId = '';
   cargandoPlanesProgreso = false;
   errorPlanesProgreso = '';
-  prediccion: PrediccionPlanDTO | null = null;
-  cargandoPrediccion = false;
-  errorPrediccion = '';
-  ironBotRespuesta: IronBotResponse | null = null;
-  cargandoIronBot = false;
-  errorIronBot = '';
   private progresoConsultaId = 0;
 
 
@@ -77,9 +69,7 @@ export class MisClientes implements OnInit {
     private asignacionesService: AsignacionesService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private planesService: Planes,
-    private prediccionesService: PrediccionesService,
-    private ironBotService: IronBotService
+    private planesService: Planes
   ) {}
 
   ngOnInit(): void {
@@ -182,12 +172,6 @@ export class MisClientes implements OnInit {
     this.planProgresoId = '';
     this.cargandoPlanesProgreso = false;
     this.errorPlanesProgreso = '';
-    this.prediccion = null;
-    this.cargandoPrediccion = false;
-    this.errorPrediccion = '';
-    this.ironBotRespuesta = null;
-    this.cargandoIronBot = false;
-    this.errorIronBot = '';
   }
 
   cargarPlanesProgreso(cliente: ClienteAsignadoVista): void {
@@ -228,61 +212,16 @@ export class MisClientes implements OnInit {
     cargarPagina(0);
   }
 
-  cambiarPlanProgreso(): void {
-    this.progresoConsultaId++;
-    this.prediccion = null;
-    this.errorPrediccion = '';
-    this.cargandoPrediccion = false;
-    this.ironBotRespuesta = null;
-    this.errorIronBot = '';
-    this.cargandoIronBot = false;
-  }
+  abrirAnalisisDelPlan(cliente: ClienteAsignadoVista): void {
+    const plan = this.planesDelCliente.find(item => item.id === this.planProgresoId);
+    if (!plan || plan.clienteId !== cliente.id) return;
 
-  consultarPrediccion(): void {
-    const planId = this.planProgresoId;
-    if (!planId || this.cargandoPrediccion || this.cargandoIronBot) return;
-    const consultaId = ++this.progresoConsultaId;
-    this.prediccion = null;
-    this.errorPrediccion = '';
-    this.ironBotRespuesta = null;
-    this.errorIronBot = '';
-    this.cargandoPrediccion = true;
-    this.prediccionesService.predecirPlan(planId).pipe(timeout(15000)).subscribe({
-      next: resultado => {
-        if (consultaId !== this.progresoConsultaId) return;
-        this.prediccion = resultado;
-        this.cargandoPrediccion = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        if (consultaId !== this.progresoConsultaId) return;
-        this.errorPrediccion = 'No se pudo generar la predicción del plan.';
-        this.cargandoPrediccion = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  interpretarConIronBot(): void {
-    const planId = this.planProgresoId;
-    if (!planId || !this.prediccion || this.cargandoIronBot) return;
-    const consultaId = ++this.progresoConsultaId;
-    this.ironBotRespuesta = null;
-    this.errorIronBot = '';
-    this.cargandoIronBot = true;
-    this.ironBotService.analizarPlan(planId).pipe(timeout(45000)).subscribe({
-      next: resultado => {
-        if (consultaId !== this.progresoConsultaId) return;
-        this.ironBotRespuesta = resultado;
-        this.cargandoIronBot = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        if (consultaId !== this.progresoConsultaId) return;
-        this.errorIronBot = 'No se pudo completar la interpretación de IronBot.';
-        this.cargandoIronBot = false;
-        this.cdr.detectChanges();
-      }
+    // Mis planes conserva Weka e IronBot. Abrimos el plan exacto,
+    // en la pestaña Progreso, sin ejecutar análisis duplicados aquí.
+    const buscar = (cliente.numDoc || '').trim() ||
+      (cliente.nombres || '').trim().split(/\\s+/)[0];
+    this.router.navigate(['/entrenador/MisPlanes'], {
+      queryParams: { buscar, plan: plan.id, tab: 'progreso' }
     });
   }
 
