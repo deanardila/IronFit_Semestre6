@@ -41,6 +41,7 @@ export class MisPlanes implements OnInit {
     if (this.modoEdicion) this.resetFormulario();
     this.planSeleccionado = null;
     this.planDetalleId = null;
+    this.mostrarAnalisisIronBot = false;
   }
   detalleTab: 'resumen' | 'rutinas' | 'progreso' | 'nutricion' = 'resumen';
 
@@ -53,6 +54,7 @@ export class MisPlanes implements OnInit {
   planIronBotId: string | null = null;
   cargandoIronBot = false;
   errorIronBot = '';
+  mostrarAnalisisIronBot = false;
 
   cargando = false;
   guardando = false;
@@ -119,6 +121,7 @@ export class MisPlanes implements OnInit {
     this.planSeleccionado = plan;
     this.planDetalleId = plan.id;
     this.detalleTab = 'resumen';
+    this.mostrarAnalisisIronBot = false;
   }
 
   private contextoRegreso(plan: PlanEntrenamientoDTO): Record<string, string | number> {
@@ -162,6 +165,17 @@ export class MisPlanes implements OnInit {
   }
 
 
+  alternarAnalisisIronBot(plan: PlanEntrenamientoDTO): void {
+    if (!plan?.id || this.cargandoIronBot) return;
+    const tieneResultado = this.planIronBotId === plan.id
+      && (!!this.ironBotRespuesta || !!this.errorIronBot);
+    if (tieneResultado) {
+      this.mostrarAnalisisIronBot = !this.mostrarAnalisisIronBot;
+      return;
+    }
+    this.analizarPlanConIronBot(plan);
+  }
+
   analizarPlanConIronBot(plan: PlanEntrenamientoDTO): void {
     if (!plan?.id || this.cargandoIronBot) {
       return;
@@ -169,6 +183,7 @@ export class MisPlanes implements OnInit {
 
     this.planDetalleId = plan.id;
     this.planIronBotId = plan.id;
+    this.mostrarAnalisisIronBot = true;
     this.cargandoIronBot = true;
     this.errorIronBot = '';
     this.ironBotRespuesta = null;
@@ -191,7 +206,9 @@ export class MisPlanes implements OnInit {
   }
 
   reanalizarPlanConIronBot(): void {
-    const plan = this.planesFiltrados.find(p => p.id === this.planIronBotId);
+    const plan = this.planSeleccionado?.id === this.planIronBotId
+      ? this.planSeleccionado
+      : this.planesFiltrados.find(p => p.id === this.planIronBotId);
     if (plan) {
       this.analizarPlanConIronBot(plan);
     }
