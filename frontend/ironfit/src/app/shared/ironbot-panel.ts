@@ -21,20 +21,20 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
             <button type="button" (click)="vista='todas'" [class.active]="vista==='todas'">Resumen</button>
             <button *ngIf="partes.alerta" type="button" (click)="vista='alerta'" [class.active]="vista==='alerta'">Ver alerta</button>
             <button *ngIf="partes.recomendacion" type="button" (click)="vista='recomendacion'" [class.active]="vista==='recomendacion'">Recomendación</button>
-            <button type="button" class="retry" [disabled]="cargando" (click)="reanalizar.emit()">Volver a analizar</button>
+            <button *ngIf="mostrarBotonActualizar" type="button" class="retry" [disabled]="cargando" (click)="reanalizar.emit()">Actualizar análisis</button>
           </div>
 
           <div class="ironbot-grid">
             <article class="ironbot-card" *ngIf="partes.estado && (vista==='todas' || vista==='estado')">
-              <span>Estado</span>
+              <span>Estado del seguimiento</span>
               <p>{{ partes.estado }}</p>
             </article>
             <article class="ironbot-card ironbot-card--alert" *ngIf="partes.alerta && (vista==='todas' || vista==='alerta')">
-              <span>Alerta</span>
+              <span>Aspecto por revisar</span>
               <p>{{ partes.alerta }}</p>
             </article>
             <article class="ironbot-card ironbot-card--recommendation" *ngIf="partes.recomendacion && (vista==='todas' || vista==='recomendacion')">
-              <span>Recomendación</span>
+              <span>Acción recomendada</span>
               <p>{{ partes.recomendacion }}</p>
             </article>
           </div>
@@ -105,6 +105,7 @@ export class IronBotPanel {
   @Input() respuesta: IronBotResponse | null = null;
   @Input() cargando = false;
   @Input() error = '';
+  @Input() mostrarBotonActualizar = true;
   @Output() reanalizar = new EventEmitter<void>();
 
   vista: IronBotVista = 'todas';
