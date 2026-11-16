@@ -303,10 +303,10 @@
 						<button class="btn-detalle-accion" type="button" (click)="gestionarNutricion(p)"
 							[disabled]="guardando || cambiandoEstadoId === p.id">Abrir nutrición</button>
 					</div>
-					<button *ngIf="detalleTab === 'progreso' && !modoEdicion" class="btn-ironbot-principal" type="button" (click)="analizarPlanConIronBot(p)"
+					<button *ngIf="detalleTab === 'progreso' && !modoEdicion" class="btn-ironbot-principal" type="button" (click)="alternarAnalisisIronBot(p)"
 						[disabled]="guardando || cambiandoEstadoId === p.id || cargandoIronBot">
 						<img class="ironbot-boton-logo" src="assets/ironfit/IronBot_Avatar.svg" alt="" aria-hidden="true">
-						<span>{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando con IronBot...' : 'Analizar con IronBot' }}</span>
+						<span>{{ cargandoIronBot && planIronBotId === p.id ? 'Analizando...' : (mostrarAnalisisIronBot && planIronBotId === p.id ? 'Ocultar análisis' : (planIronBotId === p.id && (ironBotRespuesta || errorIronBot) ? 'Mostrar análisis' : 'Analizar con IronBot')) }}</span>
 					</button>
 
 						<section
@@ -368,7 +368,7 @@
 							{{ errorPrediccion }}
 						</section>
 
-						<app-ironbot-panel *ngIf="detalleTab === 'progreso' && !modoEdicion && planIronBotId === p.id && (cargandoIronBot || ironBotRespuesta || errorIronBot)"
+						<app-ironbot-panel *ngIf="detalleTab === 'progreso' && !modoEdicion && mostrarAnalisisIronBot && planIronBotId === p.id && (cargandoIronBot || ironBotRespuesta || errorIronBot)"
 							[respuesta]="ironBotRespuesta"
 							[cargando]="cargandoIronBot"
 							[error]="errorIronBot"
