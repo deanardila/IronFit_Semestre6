@@ -17,11 +17,13 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
         </div>
 
         <ng-container *ngIf="respuesta.disponible">
-          <div class="ironbot-actions">
-            <button type="button" (click)="vista='todas'" [class.active]="vista==='todas'">Resumen</button>
-            <button *ngIf="partes.alerta" type="button" (click)="vista='alerta'" [class.active]="vista==='alerta'">Ver alerta</button>
-            <button *ngIf="partes.recomendacion" type="button" (click)="vista='recomendacion'" [class.active]="vista==='recomendacion'">Recomendación</button>
-            <button *ngIf="mostrarBotonActualizar" type="button" class="retry" [disabled]="cargando" (click)="reanalizar.emit()">Actualizar análisis</button>
+          <div class="ironbot-actions-row">
+            <div class="ironbot-tabs" role="group" aria-label="Secciones del análisis">
+              <button type="button" (click)="vista='todas'" [class.active]="vista==='todas'">Resumen</button>
+              <button *ngIf="partes.alerta" type="button" (click)="vista='alerta'" [class.active]="vista==='alerta'">Ver alerta</button>
+              <button *ngIf="partes.recomendacion" type="button" (click)="vista='recomendacion'" [class.active]="vista==='recomendacion'">Recomendación</button>
+            </div>
+            <button *ngIf="mostrarBotonActualizar" type="button" class="ironbot-refresh-btn" [disabled]="cargando" (click)="reanalizar.emit()">Actualizar análisis</button>
           </div>
 
           <div class="ironbot-grid">
@@ -47,58 +49,37 @@ type IronBotVista = 'todas' | 'estado' | 'alerta' | 'recomendacion';
     </section>
   `,
   styles: [`
-    .ironbot-panel{margin:22px 0;padding:20px;border:1px solid rgba(225,29,46,.35);border-radius:16px;background:#121212;color:#f5f5f5}
-    .ironbot-header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px}
-    .ironbot-kicker{color:#e11d2e;font-size:.76rem;font-weight:800;letter-spacing:.12em}
-    .ironbot-header h3{margin:4px 0 0;font-size:1.08rem}
-    .ironbot-source{font-size:.75rem;color:#9ca3af}
-    .ironbot-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-    .ironbot-actions button{border:1px solid #333;background:#1d1d1d;color:#ddd;border-radius:999px;padding:8px 12px;cursor:pointer}
-    .ironbot-actions button.active,.ironbot-actions button:hover{border-color:#e11d2e;color:#fff}
-    .ironbot-actions .retry{margin-left:auto;background:#e11d2e;border-color:#e11d2e;color:#fff}
-    .ironbot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    .ironbot-card{background:#191919;border:1px solid #292929;border-radius:12px;padding:14px}
-    .ironbot-card span{display:block;color:#9ca3af;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
-    .ironbot-card p{margin:0;line-height:1.45}
-    .ironbot-card--alert{border-color:rgba(225,29,46,.45)}
-    .ironbot-card--recommendation{border-color:#3f3f46}
-    .ironbot-loading,.ironbot-error,.ironbot-unavailable{padding:12px;border-radius:10px;background:#1b1b1b}
-    .ironbot-error{color:#fca5a5}
-    @media(max-width:760px){.ironbot-grid{grid-template-columns:1fr}.ironbot-header{flex-direction:column}.ironbot-actions .retry{margin-left:0}}
 
-
-    .ironbot-identity{display:flex;align-items:center;gap:13px;min-width:0}
-    .ironbot-avatar{display:block;flex:none;width:58px;height:58px;object-fit:contain;border:1px solid #39393e;border-radius:13px;background:#080809;padding:5px;box-sizing:border-box}
-    .ironbot-identity > div{min-width:0}
-    @media(max-width:760px){.ironbot-avatar{width:50px;height:50px}}
-    :host{display:block;font-family:'DM Sans',system-ui,sans-serif}
-    .ironbot-panel{padding:18px;background:#202023;border:1px solid #39393e;border-radius:11px}
-    .ironbot-loading,.ironbot-error,.ironbot-unavailable{margin:0;text-align:left}
-    .ironbot-footnotes{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-top:15px;color:#a1a1aa;font:500 11px/1.5 'DM Sans',sans-serif}
-    .ironbot-panel > .ironbot-footnotes:first-child{margin-top:0}
-
-    .ironbot-panel{margin:0;padding:22px;border:1px solid #303035;border-radius:14px;background:#171719;color:#f7f7f8}
-    .ironbot-header{align-items:center;padding-bottom:17px;border-bottom:1px solid #303035}
-    .ironbot-kicker{color:#f11d25;font:800 11px 'DM Sans',sans-serif;letter-spacing:.10em}
-    .ironbot-header h3{font:800 19px/1.3 'DM Sans',sans-serif;letter-spacing:0;color:#fff;margin:7px 0 0}
-    .ironbot-source{color:#a1a1aa;font:500 11px 'DM Sans',sans-serif}
-    .ironbot-actions{margin:18px 0 14px;gap:8px}
-    .ironbot-actions button{border:1px solid #39393e;border-radius:9px;padding:10px 13px;background:#202023;color:#eee;font:700 12px 'DM Sans',sans-serif}
-    .ironbot-actions button.active{background:rgba(241,29,37,.12);border-color:#f11d25;color:#fff}
-    .ironbot-actions button:hover:not(:disabled){background:#29292d;border-color:#f11d25;color:#fff}
-    .ironbot-actions .retry{border-color:#f11d25;background:#f11d25;color:#fff}
-    .ironbot-actions .retry:hover:not(:disabled){background:#d71a21}
-    .ironbot-grid{grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px}
-    .ironbot-card{min-width:0;background:#202023;border:1px solid #39393e;border-radius:11px;padding:17px}
-    .ironbot-card span{font:800 11px 'DM Sans',sans-serif;letter-spacing:.04em;text-transform:none;color:#a1a1aa}
-    .ironbot-card p{color:#e4e4e7;white-space:pre-line;overflow-wrap:anywhere;font:500 13px/1.65 'DM Sans',sans-serif}
-    .ironbot-card--alert{border-color:rgba(241,29,37,.35)}
-    .ironbot-card--recommendation{border-color:rgba(255,189,96,.32)}
-    .ironbot-loading,.ironbot-error,.ironbot-unavailable{margin-top:16px;background:#202023;border:1px solid #39393e;border-radius:10px;padding:15px;font:500 13px/1.55 'DM Sans',sans-serif}
-    .ironbot-error{color:#ff9aa0;border-color:rgba(241,29,37,.35)}
-    .ironbot-disclaimer{margin:16px 0 0;color:#a1a1aa;font:500 11px/1.45 'DM Sans',sans-serif}
-    .ironbot-actions button:disabled{opacity:.5;cursor:not-allowed}
-    @media(max-width:760px){.ironbot-panel{padding:16px}.ironbot-grid{grid-template-columns:1fr}}
+    :host { display:block; font-family:'DM Sans',system-ui,sans-serif; }
+    .ironbot-panel { box-sizing:border-box; container-type:inline-size; margin:0; padding:22px; border:1px solid #303035; border-radius:14px; background:#171719; color:#f7f7f8; }
+    .ironbot-loading,.ironbot-error,.ironbot-unavailable { padding:15px; border:1px solid #39393e; border-radius:10px; background:#202023; font:500 13px/1.55 'DM Sans',sans-serif; text-align:left; }
+    .ironbot-error { color:#ff9aa0; border-color:rgba(241,29,37,.35); }
+    .ironbot-actions-row { display:flex; align-items:center; justify-content:space-between; gap:12px; min-width:0; margin:0 0 18px; }
+    .ironbot-tabs { display:flex; align-items:center; flex-wrap:wrap; gap:9px; min-width:0; }
+    .ironbot-tabs button,.ironbot-refresh-btn { box-sizing:border-box; display:inline-flex; justify-content:center; align-items:center; min-height:44px; padding:10px 14px; border:1px solid #39393e; border-radius:9px; background:#202023; color:#eee; font:700 12px/1.35 'DM Sans',sans-serif; text-align:center; white-space:nowrap; cursor:pointer; }
+    .ironbot-tabs button.active { background:rgba(241,29,37,.12); border-color:#f11d25; color:#fff; }
+    .ironbot-tabs button:hover:not(:disabled) { background:#29292d; border-color:#f11d25; color:#fff; }
+    .ironbot-refresh-btn { margin-left:auto; flex-shrink:0; border-color:#f11d25; background:#f11d25; color:#fff; }
+    .ironbot-refresh-btn:hover:not(:disabled) { background:#d71a21; }
+    .ironbot-refresh-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .ironbot-tabs button:focus-visible,.ironbot-refresh-btn:focus-visible { outline:2px solid #FFBD60; outline-offset:3px; }
+    .ironbot-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(195px,1fr)); gap:12px; }
+    .ironbot-card { box-sizing:border-box; min-width:0; padding:17px; background:#202023; border:1px solid #39393e; border-radius:11px; }
+    .ironbot-card span { display:block; margin-bottom:7px; color:#a1a1aa; font:800 11px/1.4 'DM Sans',sans-serif; }
+    .ironbot-card p { margin:0; color:#e4e4e7; white-space:pre-line; overflow-wrap:anywhere; font:500 13px/1.65 'DM Sans',sans-serif; }
+    .ironbot-card--alert { border-color:rgba(241,29,37,.35); }
+    .ironbot-card--recommendation { border-color:rgba(255,189,96,.32); }
+    .ironbot-footnotes { display:flex; justify-content:space-between; flex-wrap:wrap; gap:9px; margin-top:15px; color:#a1a1aa; font:500 11px/1.5 'DM Sans',sans-serif; }
+    @container (max-width: 730px) {
+      .ironbot-actions-row { flex-direction:column; align-items:stretch; }
+      .ironbot-tabs { width:100%; }
+      .ironbot-tabs button { flex:1 1 120px; white-space:normal; }
+      .ironbot-refresh-btn { width:100%; margin-left:0; }
+    }
+    @container (max-width: 440px) {
+      .ironbot-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width:760px) { .ironbot-panel { padding:16px; } }
   `]
 })
 export class IronBotPanel {
