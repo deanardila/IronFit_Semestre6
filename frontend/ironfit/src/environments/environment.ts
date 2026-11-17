@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://ironfit-semestre6.onrender.com'
+    apiUrl: 'https://ironfit-semestre6-1.onrender.com'
 };
