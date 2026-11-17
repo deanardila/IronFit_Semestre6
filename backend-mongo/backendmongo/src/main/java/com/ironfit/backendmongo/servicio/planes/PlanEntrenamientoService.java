@@ -9,6 +9,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import com.ironfit.backendmongo.dto.planes.PlanEntrenamientoActualizarRequest;
 import com.ironfit.backendmongo.dto.planes.PlanEntrenamientoCrearRequest;
 import com.ironfit.backendmongo.dto.planes.PlanEntrenamientoResponse;
@@ -137,10 +141,8 @@ public class PlanEntrenamientoService {
 
         query.with(pageable);
 
-        List<PlanEntrenamientoResponse> contenido = mongoTemplate.find(query, PlanEntrenamiento.class)
-                .stream()
-                .map(this::convertirAResponse)
-                .toList();
+        List<PlanEntrenamiento> planesPagina = mongoTemplate.find(query, PlanEntrenamiento.class);
+        List<PlanEntrenamientoResponse> contenido = convertirPaginaAResponse(planesPagina);
 
         int totalPaginas = totalElementos == 0
                 ? 0
@@ -373,7 +375,46 @@ public class PlanEntrenamientoService {
         }
     }
 
+    // Recuperar los usuarios de una pagina en una sola consulta, evitando
+    // buscar individualmente el cliente y el entrenador de cada plan.
+    // Mantiene los mismos permisos, filtros y campos del resultado original.
+    private List<PlanEntrenamientoResponse> convertirPaginaAResponse(List<PlanEntrenamiento> planesPagina) {
+        if (planesPagina.isEmpty()) {
+            return List.of();
+        }
+
+        Set<String> idsUsuarios = new LinkedHashSet<>();
+        for (PlanEntrenamiento plan : planesPagina) {
+            if (plan.getClienteId() != null) idsUsuarios.add(plan.getClienteId());
+            if (plan.getEntrenadorId() != null) idsUsuarios.add(plan.getEntrenadorId());
+        }
+
+        Map<String, UserDocument> usuariosPorId = new HashMap<>();
+        if (!idsUsuarios.isEmpty()) {
+            userRepository.findAllById(idsUsuarios).forEach(usuario ->
+                    usuariosPorId.put(usuario.getId(), usuario));
+        }
+
+        return planesPagina.stream().map(plan -> {
+            PlanEntrenamientoResponse response = convertirAResponseBasica(plan);
+            UserDocument cliente = usuariosPorId.get(plan.getClienteId());
+            UserDocument entrenador = usuariosPorId.get(plan.getEntrenadorId());
+            if (cliente != null) response.setClienteNombre(construirNombreCompleto(cliente));
+            if (entrenador != null) response.setEntrenadorNombre(construirNombreCompleto(entrenador));
+            return response;
+        }).toList();
+    }
+
     private PlanEntrenamientoResponse convertirAResponse(PlanEntrenamiento plan) {
+        PlanEntrenamientoResponse response = convertirAResponseBasica(plan);
+        userRepository.findById(plan.getClienteId()).ifPresent(cliente ->
+                response.setClienteNombre(construirNombreCompleto(cliente)));
+        userRepository.findById(plan.getEntrenadorId()).ifPresent(entrenador ->
+                response.setEntrenadorNombre(construirNombreCompleto(entrenador)));
+        return response;
+    }
+
+    private PlanEntrenamientoResponse convertirAResponseBasica(PlanEntrenamiento plan) {
         PlanEntrenamientoResponse response = new PlanEntrenamientoResponse();
         response.setId(plan.getId());
         response.setNombre(plan.getNombre());
@@ -386,12 +427,6 @@ public class PlanEntrenamientoService {
         response.setActivo(plan.getActivo());
         response.setFechaCreacion(plan.getFechaCreacion());
         response.setFechaActualizacion(plan.getFechaActualizacion());
-
-        userRepository.findById(plan.getClienteId()).ifPresent(cliente ->
-                response.setClienteNombre(construirNombreCompleto(cliente)));
-
-        userRepository.findById(plan.getEntrenadorId()).ifPresent(entrenador ->
-                response.setEntrenadorNombre(construirNombreCompleto(entrenador)));
 
         return response;
     }
