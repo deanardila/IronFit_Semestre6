@@ -32,12 +32,10 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              
               {
                 "glob": "**/*",
                 "input": "public"
               },
-
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -62,7 +60,14 @@
                   "maximumError": "16kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": true,
+                "fonts": {
+                  "inline": false
+                }
+              }
             },
             "development": {
               "optimization": false,
