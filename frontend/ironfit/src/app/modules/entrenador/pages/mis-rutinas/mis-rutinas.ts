@@ -21,6 +21,7 @@ interface PlanRutinasResumen {
 })
 export class MisRutinas implements OnInit {
   private readonly requestTimeoutMs = 15000;
+  private gestionConsultaId = 0;
 
   cargando = false;
   guardando = false;
@@ -124,6 +125,7 @@ export class MisRutinas implements OnInit {
   }
 
   cargarTableroPlanes(): void {
+    this.gestionConsultaId++;
     this.cargando = true;
     this.error = '';
     this.mensajeExito = '';
@@ -208,76 +210,49 @@ export class MisRutinas implements OnInit {
   }
 
   cargarGestionPlan(planId: string): void {
+    const consultaId = ++this.gestionConsultaId;
     this.cargando = true;
     this.error = '';
     this.mensajeExito = '';
     this.mostrarFormulario = false;
     this.modoEdicion = false;
     this.rutinaEditandoId = null;
+
     // Conservar el detalle abierto si seguimos gestionando el mismo plan.
     const rutinaAbiertaId = this.rutinaSeleccionada?.planId === planId
       ? this.rutinaSeleccionada.id : null;
 
-    this.planesService.obtenerPlan(planId)
-      .pipe(timeout(this.requestTimeoutMs))
-      .subscribe({
-        next: (plan) => {
-          this.planSeleccionado = plan;
-
-          if (!this.planSeleccionado) {
-            this.error = 'No se encontró el plan seleccionado.';
-            this.rutinas = [];
-            this.rutinasFiltradas = [];
-            this.cargando = false;
-            this.cdr.detectChanges();
-            return;
-          }
-
-          this.rutinaService.getRutinasPorPlanGestion(planId)
-            .pipe(timeout(this.requestTimeoutMs))
-            .subscribe({
-              next: (rutinas) => {
-                this.rutinas = (rutinas || []).sort(
-                  (a, b) => (a.orden || 0) - (b.orden || 0)
-                );
-
-                this.aplicarFiltroDia();
-                this.rutinaSeleccionada = rutinaAbiertaId
-                  ? this.rutinas.find(rutina => rutina.id === rutinaAbiertaId) || null : null;
-
-                this.cargando = false;
-                this.cdr.detectChanges();
-              },
-              error: (err) => {
-                console.error('Error cargando rutinas del plan', err);
-
-                this.error = this.obtenerMensajeError(
-                  err,
-                  'No se pudieron cargar las rutinas del plan.'
-                );
-
-                this.rutinas = [];
-                this.rutinasFiltradas = [];
-                this.cargando = false;
-                this.cdr.detectChanges();
-              }
-            });
-        },
-        error: (err) => {
-          console.error('Error cargando plan seleccionado', err);
-
-          this.error = this.obtenerMensajeError(
-            err,
-            'No se pudo cargar el plan seleccionado.'
-          );
-
-          this.planSeleccionado = null;
-          this.rutinas = [];
-          this.rutinasFiltradas = [];
-          this.cargando = false;
-          this.cdr.detectChanges();
-        }
-      });
+    // Antes la consulta de rutinas esperaba a que terminara la del plan.
+    // Ambas son lecturas independientes y pueden ejecutarse en paralelo.
+    forkJoin({
+      plan: this.planesService.obtenerPlan(planId).pipe(timeout(this.requestTimeoutMs)),
+      rutinas: this.rutinaService.getRutinasPorPlanGestion(planId).pipe(timeout(this.requestTimeoutMs)),
+    }).subscribe({
+      next: ({ plan, rutinas }) => {
+        if (consultaId !== this.gestionConsultaId || this.planIdSeleccionado !== planId) return;
+        this.planSeleccionado = plan;
+        this.rutinas = [...(rutinas || [])].sort(
+          (a, b) => (a.orden || 0) - (b.orden || 0)
+        );
+        this.aplicarFiltroDia();
+        this.rutinaSeleccionada = rutinaAbiertaId
+          ? this.rutinas.find(rutina => rutina.id === rutinaAbiertaId) || null
+          : null;
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (consultaId !== this.gestionConsultaId || this.planIdSeleccionado !== planId) return;
+        console.error('Error cargando plan o rutinas', err);
+        this.error = this.obtenerMensajeError(err, 'No se pudo cargar el plan o sus rutinas.');
+        this.planSeleccionado = null;
+        this.rutinas = [];
+        this.rutinasFiltradas = [];
+        this.rutinaSeleccionada = null;
+        this.cargando = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   calcularEstadoRutinas(rutinas: RutinaDTO[]): 'PENDIENTE' | 'EN_PROCESO' | 'COMPLETO' {
